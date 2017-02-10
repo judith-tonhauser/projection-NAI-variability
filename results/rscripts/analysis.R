@@ -677,18 +677,19 @@ ggplot(t.proj, aes(x=ai,y=projective,group=1)) +
   xlab("NAI response mean")
 ggsave(file="graphs/correlation-raw-responses.pdf",width = 14, height = 6)
 
+
 p=ggplot(t.proj, aes(x=ai,y=projective,group=1)) +
   geom_point() +
-  # geom_smooth(method="lm", col = "red") +
+  geom_smooth(method="lm", col = "red") +
   #geom_errorbar(aes(ymin=pYMin, ymax=pYMax)) +
   #geom_errorbarh(aes(xmin=YMin, xmax=YMax)) +
   # geom_text(aes(label=short_trigger), vjust = 1, cex= 5, 
             # position=position_jitter(h=.01,w=0.02))+
   facet_wrap(~workerid) +
-  ylim(0,1) +
+  # ylim(0,1) +
   ylab("Projection response mean")+
   xlab("NAI response mean")
-ggsave(p,file="graphs/correlation-raw-responses-bysubject.pdf",width = 15, height = 20)
+ggsave(p,file="graphs/correlation-raw-responses-bysubject-smoothed.pdf",width = 15, height = 20)
 
 #### plot the correlation between mean NAI and mean projectivity for each projective content
 
