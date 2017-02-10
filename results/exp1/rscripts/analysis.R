@@ -1,6 +1,6 @@
 
 ####################### IGNORE THIS BIT ###############################
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/')
+setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1/')
 
 # read in the data
 d = readRDS(d, file="data/d.rds")
@@ -485,8 +485,8 @@ proj <- lmer(projective ~ short_trigger * ai + (1+short_trigger*ai|workerid) + (
 proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (1|content), data=t)
 summary(proj.1)
 contrasts(t$short_trigger)
-proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (0+ai|content), data=t)
-summary(proj.2)
+m.proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (0+ai|content), data=t)
+summary(m.proj.2)
 anova(proj.1,proj.2)
 
 proj.3 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
@@ -660,6 +660,21 @@ ggplot(agr, aes(x=MeanAI,y=MeanProj,color=content)) +
   # geom_smooth(method="lm") +
   facet_wrap(~short_trigger)
 ggsave("graphs/ai-proj-bytrigger.pdf",height=8,width=10)
+
+ggplot(agr, aes(x=MeanAI,y=MeanProj,color=short_trigger,group=short_trigger)) +
+  geom_abline(intercept=0,slope=1,color="gray",linetype="dashed") +
+  # geom_smooth(method="lm",se=F,alpha=.5) +
+  geom_errorbar(aes(ymin=MeanProj-ci.low.proj,ymax=MeanProj+ci.high.proj),alpha=.5,color="gray") +
+  geom_errorbarh(aes(xmin=MeanAI-ci.low.ai,xmax=MeanAI+ci.high.ai),alpha=.5,color="gray") + 
+  geom_point() +
+  xlim(0.4,1) +
+  ylim(0.4,1) +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  scale_color_brewer(name="Trigger",palette="Paired")
+  # scale_color_discrete(name="Trigger")
+ggsave("graphs/ai-proj-bytrigger-nofacets.pdf",height=4,width=5.75)
+# color_brewer palettes: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
 
 ### plot the not-at-issueness of the different projective content triggers
 
