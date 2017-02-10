@@ -11,7 +11,7 @@
 	- Discussion points:	
 		- discuss additional lexical trigger effect (ie, it's not ALL NAI-ness)
 		- discuss individual variability (looks like about a third of participants is generally at ceiling with projectivity; within the rest, most show the effect in the expected direction) -- show an individual variability plot?
-2. analyze exp 2 like exp 1
+2. analyze exp 2 like exp 1 and write up
 
 ## JT comments
 - NAI predicts projectivity, but the individual triggers also explain additional variance in projectivity 
