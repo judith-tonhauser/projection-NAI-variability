@@ -485,9 +485,17 @@ proj <- lmer(projective ~ short_trigger * ai + (1+short_trigger*ai|workerid) + (
 proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (1|content), data=t)
 summary(proj.1)
 contrasts(t$short_trigger)
-proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (1|content), data=t)
+proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (0+ai|content), data=t)
 summary(proj.2)
 anova(proj.1,proj.2)
+
+proj.3 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
+summary(proj.3)
+
+proj.4 <- lmer(projective ~ ai + (1+ai|workerid) + (0+ai|content) + (1|short_trigger), data=t)
+summary(proj.4)
+
+ranef(proj.4)
 
 # predict not-at-issueness
 nai <- lmer(ai ~ short_trigger + (1+short_trigger|workerid) + (1|content), data=t)
@@ -629,6 +637,29 @@ ggplot(variances, aes(x=ProjMean,y=AIMean)) +
 ggsave("graphs/ai-proj-subjectcorrelations.pdf",height=4,width=7)
 
 cor(variances$ProjMean,variances$AIMean) # by-subject correlation: .61
+
+agr = t.proj %>%
+  group_by(content,short_trigger) %>%
+  summarize(MeanProj=mean(projective),MeanAI=mean(ai),ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective),ci.low.ai=ci.low(ai),ci.high.ai=ci.high(ai))
+
+ggplot(agr, aes(x=MeanAI,y=MeanProj,color=short_trigger)) +
+  geom_point() +
+  geom_errorbar(aes(ymin=MeanProj-ci.low.proj,ymax=MeanProj+ci.high.proj)) +
+  geom_errorbarh(aes(xmin=MeanAI-ci.low.ai,xmax=MeanAI+ci.high.ai)) + 
+  # geom_smooth(method="lm") +
+  facet_wrap(~content)
+ggsave("graphs/ai-proj-bycontent.pdf",height=8,width=10)
+
+ggplot(agr, aes(x=MeanAI,y=MeanProj,color=content)) +
+  geom_point() +
+  geom_errorbar(aes(ymin=MeanProj-ci.low.proj,ymax=MeanProj+ci.high.proj)) +
+  geom_errorbarh(aes(xmin=MeanAI-ci.low.ai,xmax=MeanAI+ci.high.ai)) + 
+  geom_abline(intercept=0,slope=1,color="gray") +
+  xlim(0,1) +
+  ylim(0,1) +
+  # geom_smooth(method="lm") +
+  facet_wrap(~short_trigger)
+ggsave("graphs/ai-proj-bytrigger.pdf",height=8,width=10)
 
 ### plot the not-at-issueness of the different projective content triggers
 
