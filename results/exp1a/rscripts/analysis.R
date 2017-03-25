@@ -1,26 +1,29 @@
 
-####################### IGNORE THIS BIT ###############################
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1/')
+## JD working directory
+setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
+## JT working directory
+setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1a/')
 
-# read in the data
-d = readRDS(d, file="data/d.rds")
+## code for both starts here
 source('rscripts/helpers.R')
 
-# theme_set(theme_bw())
-# 
-# library(plyr)
-# library(ggplot2)
-# library(tidyr)
-# library(dplyr)
-# library(languageR)
-# library(lme4)
-# require(foreign)
-# require(ggplot2)
-# require(MASS)
-# require(Hmisc)
-# require(reshape2)
-# library(ucminf)
-# library(scales)
+# read in the data
+d = readRDS(file="data/d.rds")
+
+theme_set(theme_bw())
+
+library(plyr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(languageR)
+library(lme4)
+require(foreign)
+require(MASS)
+require(Hmisc)
+require(reshape2)
+library(ucminf)
+library(scales)
 
 ############## Pre-analysis data clean-up #################
 
@@ -173,6 +176,7 @@ length(unique(d$workerid)) # 210 remaining Turkers (11 Turkers excluded)
 # clean data = cd
 cd = d
 head(cd)
+saveRDS(cd, file="data/cd.rds")
 
 ################## Exclusion Turkers based on response times ############
 ################# no Turkers were excluded #######################
@@ -305,6 +309,7 @@ ggplot(fast_rt, aes(x=workerid,y=rt)) +
 length(unique(d$workerid)) #210 remaining Turkers
 
 ################## Properties of the data #############
+cd <- readRDS("data/cd.rds")
 
 # age info
 names(cd)
@@ -338,11 +343,11 @@ table(cd$content,cd$short_trigger)
 
 ################## test if block order mattered ############################
 length(unique(cd$workerid)) #210
-
+head(cd)
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
 tmp = cd %>%
-  select(response, short_trigger, content, question_type, trigger_class, workerid, block)
+  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid, block)
 nrow(tmp) #6300 (6300 / 210 Turkers = 30 items per Turker)
 
 head(tmp)
@@ -359,7 +364,11 @@ table(tmp$block,tmp$question_type)
 # 116 + 94 = 210 Turkers
 
 str(tmp$response)
-#library(lmerTest)
+library(lmerTest)
+
+# predict response from trigger and block, no interaction
+m = lmer(response ~ question_type * block + (1+question_type|workerid) + (1+question_type|content), data=tmp)
+summary(m)
 
 # make a subset of the data that only includes the target data with question about at-issueness
 tmp_ai = subset(tmp, (trigger_class != "NonProj" & question_type == "ai"))
@@ -437,7 +446,7 @@ length(unique(cd$workerid)) #210
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
 tmp = cd %>%
-  select(response, short_trigger, content, question_type, trigger_class, workerid)
+  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid)
 nrow(tmp) #6300 (6300 / 210 Turkers = 30 items per Turker)
 
 # make a new column "variable" that codes a trigger-content-class-workerid combination
@@ -469,6 +478,8 @@ str(t$content)
 t$content <- as.factor(t$content)
 head(t)
 table(t$short_trigger)
+
+saveRDS(t, file="data/t.rds")
 
 ### are projective contents significantly more projective and NAI than main clauses?
 names(t)
@@ -555,6 +566,8 @@ comp_proj_c <- glht(triggers2_c, mcp(short_trigger="Tukey"))
 summary(comp_proj_c)
 
 #####################  Plotting ############################ 
+t = readRDS(file="data/t.rds")
+
 names(t)
 head(t)
 table(t$trigger_class)
@@ -607,9 +620,11 @@ p=ggplot(t.proj, aes(x=trigger_proj, y=projective)) +
   theme(axis.text.x=element_text(angle=45,vjust=1,hjust=1))
 ggsave(p,file="graphs/variability-projection.pdf",height=20,width=20)
 
+head(t.proj)
+
 variances = t.proj %>%
   group_by(workerid) %>%
-  summarize(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective),AIVariance = var(ai),AIMean=mean(ai),AI.ci.low=ci.low(ai),AI.ci.high=ci.high(ai))
+  summarise(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective),AIVariance = var(ai),AIMean=mean(ai),AI.ci.low=ci.low(ai),AI.ci.high=ci.high(ai))
 variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
@@ -621,10 +636,12 @@ ggsave("graphs/projection-subjectmeans.pdf",height=4,width=10)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
+  theme(text = element_text(size=14),axis.text.x=element_blank()) +
   xlab("Participant") +
-  ylab("At-issue mean")
-ggsave("graphs/ai-subjectmeans.pdf",height=4,width=10)
+  ylab("Mean not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=4,width=9)
 
 ggplot(variances, aes(x=ProjMean,y=AIMean)) +
   geom_point() +
@@ -686,6 +703,8 @@ mean_nai
 
 # save mean not-at-issueness for comparison to experiment 5 / experiment 1b
 mean_nai_Exp4 <- mean_nai
+saveRDS(mean_nai_Exp4,file="data/mean_nai_Exp4.rds")
+
 t.proj$trigger_ai <-factor(t.proj$short_trigger, levels=mean_nai[order(mean_nai$ai), "short_trigger"])
 
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
@@ -697,8 +716,9 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
-  ylab("Not-at-issueness ('asking whether')")+
-  xlab("Expression")
+  theme(text = element_text(size=11)) +
+  ylab("Not-at-issue rating ('asking whether')")+
+  xlab("Projective content")
 ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=6)
 
 ##### Correlation between not-at-issueness and projectivity #################

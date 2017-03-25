@@ -1,25 +1,14 @@
+## JD working directory
+setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1b/')
 
-####################### IGNORE THIS BIT ###############################
-setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/6-factive-verbs/results')
+## JT working directory
+setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1b/')
 
-# read in the data
-d_real = read.csv("../run-AMT-experiment/experiment.csv")
-nrow(d_real) #7500 (250 Turkers x 30 responses)
-names(d_real)
-head(d_real)
-summary(d_real)
-
-# anonymize the data
-d_real$workerid <- match(d_real$workerid, unique(sort(d_real$workerid)))
-d <- d_real
-table(d$workerid)
-saveRDS(d, file="data/d.rds")
-
-####################### START HERE #####################################
+## code for both starts here
+source('rscripts/helpers.R')
 
 # read in the data
 d = readRDS(d, file="data/d.rds")
-source('helpers.R')
 
 theme_set(theme_bw())
 library(plyr)
@@ -37,6 +26,11 @@ library(ucminf)
 library(scales)
 
 ############## Pre-analysis data clean-up #################
+
+# age info
+table(d$age) #18-74
+median(d$age) #32
+mean(d$age) #34.3
 
 # look at Turkers' comments
 unique(d$comments)
