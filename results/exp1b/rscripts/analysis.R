@@ -342,9 +342,9 @@ cd = readRDS(cd, file="data/cd.rds")
 
 # age info
 names(cd)
-table(cd$age) #19-68
+table(cd$age) #18-74
 median(cd$age) #33
-mean(cd$age) #36.1
+mean(cd$age) #34.7
 
 # What's the distribution of contents across the triggers?
 table(cd$content,cd$short_trigger)
@@ -520,9 +520,46 @@ ggsave(f="graphs/violin-projection.pdf",height=3,width=10)
 ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Projectivity")+
-  xlab("Expression")
-ggsave(f="graphs/boxplot-projection.pdf",height=3,width=10)
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-projection.pdf",height=3,width=9)
+
+### judith d's added code for investigating individual variability
+p=ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
+  # geom_violin(trim=TRUE,scale="area",adjust=1,alpha=.5) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  facet_wrap(~workerid) +
+  theme(axis.text.x=element_text(angle=45,vjust=1,hjust=1))
+ggsave(p,file="graphs/variability-projection.pdf",height=20,width=20)
+
+head(t.proj)
+
+variances = t.proj %>%
+  group_by(workerid) %>%
+  summarise(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective),AIVariance = var(ai),AIMean=mean(ai),AI.ci.low=ci.low(ai),AI.ci.high=ci.high(ai))
+variances = as.data.frame(variances)
+
+ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
+  geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  geom_errorbar(aes(ymin=ProjMean-Proj.ci.low,ymax=ProjMean+Proj.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  xlab("Participant") +
+  ylab("Projectivity")
+ggsave("graphs/projection-subjectmeans.pdf",height=3,width=9)
+
+ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
+  geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  xlab("Participant") +
+  ylab("Not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=3,width=9)
 
 ### plot the not-at-issueness of the different projective content triggers
 
@@ -547,9 +584,12 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=10)
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Not-at-issueness ('asking whether')")+
-  xlab("Expression")
-ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=10)
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3.1,width=9)
+
 
 ##### Correlation between not-at-issueness and projectivity #################
 

@@ -197,12 +197,13 @@ length(unique(d$workerid))
 # 238 Turkers remain
 
 ################## Properties of the data #############
+cd = readRDS(cd, file="data/cd.rds")
 
 # age info
-length(which(is.na(d$age))) #everybody gave their age
-table(d$age) #18-77 
-median(d$age) #30
-mean(d$age) #31.5
+length(which(is.na(cd$age))) #everybody gave their age
+table(cd$age) #18-77 
+median(cd$age) #30
+mean(cd$age) #31.5
 
 # What's the distribution of contents across the triggers?
 table(d$content,d$short_trigger)
@@ -262,7 +263,7 @@ saveRDS(t, file="data/t.rds")
 
 ############# Plotting ######################
 t <- readRDS(t, file="data/t.rds")
-nrow(t) #3570 / 15 = 238 Turkers
+nrow(t) #4760 / 20 = 238 Turkers
 
 ### are the 20 contents more NAI when realized with trigger than with main clause?
 agr = aggregate(response~short_trigger+content, data=t, FUN="mean")
@@ -301,9 +302,31 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=10)
 ggplot(t.proj, aes(x=trigger_ai, y=response)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
-  ylab("Not-at-issueness ('Are you sure?')")+
-  xlab("Expression")
-ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=10)
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness ('asking whether')")+
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3.1,width=9)
+
+# JT inserted JD's code here for calculating individual variability
+head(t.proj)
+
+variances = t.proj %>%
+  group_by(workerid) %>%
+  summarise(AIMean=mean(response),AI.ci.low=ci.low(response),AI.ci.high=ci.high(response))
+variances = as.data.frame(variances)
+
+ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
+  geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  xlab("Participant") +
+  ylab("Not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=3,width=9)
+
+
 
 
 ######## Analysis ################

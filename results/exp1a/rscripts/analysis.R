@@ -481,6 +481,8 @@ table(t$short_trigger)
 
 saveRDS(t, file="data/t.rds")
 
+t = readRDS(file="data/t.rds")
+
 ### are projective contents significantly more projective and NAI than main clauses?
 names(t)
 library(lmerTest)
@@ -607,10 +609,11 @@ ggsave(f="graphs/violin-projection.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Projectivity")+
-  xlab("Expression")
+  xlab("Projective content trigger")
 ggsave(f="graphs/boxplot-projection.pdf",height=3,width=6)
-
 
 ### judith d's added code for investigating individual variability
 p=ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
@@ -629,19 +632,23 @@ variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=ProjMean-Proj.ci.low,ymax=ProjMean+Proj.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Projective mean")
-ggsave("graphs/projection-subjectmeans.pdf",height=4,width=10)
+  ylab("Projectivity")
+ggsave("graphs/projection-subjectmeans.pdf",height=3,width=6)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
-  theme(text = element_text(size=14),axis.text.x=element_blank()) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Mean not-at-issueness ('asking whether')")
-ggsave("graphs/ai-subjectmeans.pdf",height=4,width=9)
+  ylab("Not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=3,width=6)
 
 ggplot(variances, aes(x=ProjMean,y=AIMean)) +
   geom_point() +
@@ -716,10 +723,12 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
-  theme(text = element_text(size=11)) +
-  ylab("Not-at-issue rating ('asking whether')")+
-  xlab("Projective content")
-ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=6)
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness ('asking whether')")+
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3.1,width=6)
+
 
 ##### Correlation between not-at-issueness and projectivity #################
 

@@ -491,10 +491,10 @@ For each participant, a set of 15 polar question stimuli was randomly created: e
 \begin{center}
 \fbox{\includegraphics[width=12cm]{exp1-trial}}
 \end{center}
-\caption{A sample (at-issueness) trial in experiment 1a}\label{f-trial-exp1}
+\caption{A sample (at-issueness) trial in Experiment 1a}\label{f-trial-exp1}
 \end{figure}
 
-A `yes' response to `certain that' questions was taken to indicate that the person who uttered the polar question (e.g., Michelle in the sample trial) was committed to the relevant content, i.e., that the content projects, whereas a `no' response was taken to indicate that the content did not project. For the `asking whether' questions, a `yes'  response was taken to indicate that the speaker was asking about the relevant content, i.e., that it was at-issue, whereas a `no' response was taken to indicate that the content was not at-issue. 
+A `yes' response to a `certain that' question was taken to indicate that the person who uttered the polar question (e.g., Michelle in the sample trial) was committed to the relevant content, i.e., that the content projects, whereas a `no' response was taken to indicate that the content did not project. For the `asking whether' questions, a `yes'  response was taken to indicate that the speaker was asking about the relevant content, i.e., that it was at-issue, whereas a `no' response was taken to indicate that the content was not at-issue. (To explore the hypothesis that projectivity and not-at-issueness are positively related,  `yes' responses to a `certain that' questions and `no' responses to `asking whether' questions were coded as 1.)
 
 After responding to their 30 polar question stimuli, participants completed a short survey about their age, their native language(s) and, if English is their native language, whether they are a speaker of American English (as opposed to, e.g., Australian or Indian English). To encourage them to respond truthfully, participants were told that they would be paid no matter what answers they gave in the survey.
 
@@ -503,30 +503,38 @@ After responding to their 30 polar question stimuli, participants completed a sh
 
 \subsubsection{Results}
 
-The results about projection variability and the relation between at-issueness and projectivity that are discussed in this section are based on the data from 210 participants (ages: 19-68; median: 33). We excluded the data from 29 participants who did not self-identify as native speakers of American English. Inspection of the response means of the remaining 221 American English-speaking participants to the `certain that' and `asking whether' questions for the control polar questions revealed 11 participants whose response means were more than 3 standard deviations above the group means (which were 0.07 for `certain that' and 0.04 for `asking whether' questions). Closer inspection revealed that these participants' responses to the control polar questions were systematically higher than the group means and involved 16 of the 17 contents, suggesting that these participants did not attend to the task or interpreted the task differently. The data from these 11 participants were also excluded.\footnote{Of the 210 participants, 116 first completed the `asking whether' block and 94 first completed the `certain that' block. To examine whether block order had an effect on participants' responses, we fitted a linear mixed-effects model predicting response from \jt{Judith, I can't figure out which kind of model is the most suitable to fit here; this starts on line 344 of the R script.}}
+The results discussed in this section are based on the responses to the stimuli with projective content triggers by 210 participants (ages: 19-68; median: 33).  We excluded the data from 29 participants who did not self-identify as native speakers of American English. Inspection of the response means of the remaining 221 American English-speaking participants to the `certain that' and `asking whether' questions for the control polar questions revealed 11 participants whose response means to either were more than 3 standard deviations above the group means (which were 0.07 for `certain that' and 0.04 for `asking whether' questions). Closer inspection revealed that these participants' responses to the control polar questions were systematically higher than the group means and involved 16 of the 17 contents, suggesting that these participants did not attend to the task or interpreted the task differently. The data from these 11 participants were also excluded.\footnote{Of the 210 participants, 116 first completed the `asking whether' block and 94 first completed the `certain that' block. To examine whether block order had an effect on participants' responses, we fitted a linear mixed-effects model predicting response from \jt{Judith, I can't figure out which kind of model is the most suitable to fit here; this starts on line 344 of the R script.}}
 
-\paragraph{Projection variability}
-
-\jt{Judith Degen writes up this bit}
-
-\jt{Judith Degen commented: Interesting that in general, the variability appears to be in the response variance, not the response medians.}
-
-Box plot showing projection variability:
+\paragraph{Projection variability} The upper panel of Figure \ref{f-proj-1a} shows the mean projectivity rating for each of the 210 participants as a blue dot; the error bars indicate 95\% confidence intervals. About one third of the participants took the projective contents to be robustly projective. For the remaining participants, the decreasing means reveal a decrease in the overall projectivity of the 9 projective contents and the increasingly longer error bars reveal an increase in projection variability among the 9 projective contents. In the lower panel of Figure \ref{f-proj-1a}, the box plots show the response variance for each of the 9 projective content triggers; the blue dot shows the mean projectivity rating. The median projectivity ratings are all at ceiling, suggesting that for each projective content at least half of the participants took it to be robustly projective. At the same time, the decreasing mean response and the increasing response variance show that the projectivity of projective content is not just subject to participant variability but also to item variability.
 
 \begin{figure}[!h]
 
 \begin{center}
+\includegraphics[width=12cm]{../results/exp1a/graphs/projection-subjectmeans}
+
 \includegraphics[width=12cm]{../results/exp1a/graphs/boxplot-projection}
 
 \end{center}
-\caption{Projection variability}
+\caption{Projectivity by participant (top panel) and projective content trigger (bottom panel)}
 \label{f-proj-1a}
 \end{figure}
 
+\jt{Judith Degen insert analysis / projectivity comparison}
 
-\paragraph{Influence of at-issueness on projectivity}
 
-\jt{Judith Degen writes up this bit}
+\paragraph{Influence of at-issueness on projectivity} Before examining the influence of at-issueness on projectivity, it is instructive to examine the at-issueness by participant and by projective content trigger. The upper panel of Figure \ref{f-ai-1a} shows the mean at-issueness rating for each of the 210 participants as a blue dot; the error bars again indicate 95\% confidence intervals. About one third of the participants took the projective contents to be robustly not-at-issue. For the remaining participants, the decreasing means reveal a increase in the overall at-issueness of the 9 projective contents and the increasingly longer error bars reveal an increase in at-issueness variability among the 9 projective contents. In the lower panel of Figure \ref{f-ai-1a}, the box plots show the response variance for each of the 9 projective content triggers; the blue dot shows the mean at-issueness rating. The median at-issueness ratings are all at ceiling, suggesting that for each projective content at least half of the participants took it to be robustly not-at-issue. At the same time, the decreasing mean response and the increasing response variance show that the at-issueness of projective content is not just subject to participant variability but also to item variability.
+
+\begin{figure}[!h]
+\begin{center}
+
+\includegraphics[width=12cm]{../results/exp1a/graphs/ai-subjectmeans}
+
+\includegraphics[width=12cm]{../results/exp1a/graphs/boxplot-not-at-issueness}
+
+\end{center}
+\caption{At-issueness by participant (top panel) and projective content trigger (bottom panel)}
+\label{f-ai-1a}
+\end{figure}
 
 \begin{figure}[!h]
 
@@ -538,20 +546,22 @@ Box plot showing projection variability:
 \caption{Projectivity by not-at-issueness by trigger -- not content?}\label{f-proj-ai-1a}
 \end{figure}
 
+\jt{Now we look at the relation between at-issueness and projectivity}
+
+
 \newpage
 
 
 \subsubsection{Discussion}
 
-Experiment 1a was designed to explore variability in the projectivity of projective contents and the relation between the information-structural status of projective contents and their projectivity. The observed differences in projectivity challenge conventionalist approaches to projection that assume that projectivity derives from the conventionally specified requirement that the relevant projective contents be entailed by or satisfied in the common ground prior to utterance (e.g., \citealt{heim83,vds92}). Experiment 1a shows that there is variability but this variability is not predicted by conventionalist approaches to projection, according to which all of the 9 triggers lexically specify that the content of their complement is required to be entailed by or satisfied in the common ground prior to utterance, which produces the effect of projection.
+Experiment 1a was designed to explore the hypothesis that projective content varies in how projective it is, and the hypothesis that the information-structural status of projective content influences its projectivity. The experiment provides empirical support for both hypotheses. Regarding the first hypothesis, we found both within-participant and within-item variability in how robustly projective content projects. Regarding the second hypothesis, we found that the information-structural status of projective content, i.e., how not-at-issue it is, is a significant predictor of its projectivity.
 
-Local accommodation also doesn't help. One way would be to rely on the process of `local accommodation', by which projective content can be accommodated in the scope of entailment-canceling operators, e.g., to avoid contradictions, uninformativity or problems with binding (\citealt{heim83,vds92}), and to argue that some projective content, like that of {\em win, announce} or {\em discover}, can more readily be locally accommodated than, e.g., the projective content of clefts or {\em regret}. This way forward, however, is contingent on a better understanding of local accommodation and the question of why some but not all projective content seems to resist local accommodation. (For relevant discussion see, e.g., \citealt{beaver-zeevat07}.)  But in our experiments, there is no chance for local accommodation because we have minimal contexts. 
+Conventional approaches to projection lead us to expect that different experiment participants will take different projective contents to be robustly and uniformly projective. This expectation derives from the fact that such approaches assume that projectivity derives from a conventionally specified requirement that the relevant content be entailed by or satisfied in the common ground prior to utterance (e.g., \citealt{heim83,vds92}). For instance, if the content of the complement of {\em discover} and {\em annoyed} is conventionally required to be part of the common ground of the interlocutors prior to utterance, then the contents of the complements of these predicates should project equally robustly, and participants should not differ in how much they take the content of the complement to project. Thus, our finding that there is both within-participant and within-item variability in how robustly projective content projects provides an empirical challenge to conventional approaches to projection.
 
-Non-conventionalist approaches attempt to derive projectivity from independently-motivated properties of the meanings of the expressions that contribute projective content, such as {\em discover}, and their use in context (e.g., \citealt{stalnaker74,wilson75,simons01,simons04,abusch10,abrusan2011,best-question}). Atlas  2005,  Bo\"er  \&  Lycan  1976,  \citealt{ccmg90},  Kadmon  2001,  Kempson 1975, Levinson 1983. Another way forward is to assume that some projective content is not conventionally specified to project, and therefore projects less robustly and in context-dependent ways (see, e.g., \citealt{simons01,abusch10,abrusan2011,best-question}).
+Conventional approaches are not helped here by an appeal to local accommodation, the process by which projective content can be accommodated in the scope of an entailment-canceling operator, e.g., to avoid contradictions, uninformativity or problems with binding (\citealt{heim83,vds92}). For one, local accommodation is a poorly understood process, and hence quite unconstrained. (For relevant discussion see, e.g., \citealt{beaver-zeevat07}.) More importantly, the minimal context in which the stimuli were presented to participants in Experiment 1a do not justify an appeal to local accommodation: given these minimal contexts, why should the content of the complement of {\em discover} be more likely to be accommodated than the content of the complement of {\em annoyed}? 
 
-At-issueness correlates with projection. This finding supports \citet{brst-salt10}. 
+In general, we take the observation that there is variability in how robustly projective content projects as empirical support for non-conventional approaches to projection, which attempt to derive projectivity from independently-motivated properties of projective content triggers and their use in context (e.g., \citealt{stalnaker74,kempson75,wilson75,boer-lycan76,levinson83,kadmon01,simons01,simons04,atlas05,abusch10,abrusan2011,best-question}). The finding that the information-structural status of projective content is a significant predictor of its projectivity provides empirical support for one specific non-conventional approach to projection, namely that advanced in \citealt{brst-salt10}, according to which projective content projects if and only if it is not at-issue. In Experiment 1b, we examine this hypothesis about projection to a wider range of projective contents, namely the contents of the complements of various (semi-)factive predicates.
 
-some contents show much less variability than others
 
 \subsection{Experiment 1b}\label{s-exp1b} 
 
@@ -618,13 +628,49 @@ For each participant, a set of 20 polar question stimuli was randomly created: e
 
 \subsubsection{Results}
 
-The results about projection variability and the relation between at-issueness and projectivity that are discussed in this section are based on the data from 235 participants (ages 18-74; median: 33). We excluded the data from 3 participants who did not self-identify as native speakers of American English. Inspection of the response means of the remaining 247 American-English speaking participants to the `certain that' and `asking whether' questions for the control polar questions revealed 12 participants whose response means were more than 3 standard deviations above the group means (the group means were 0.08 for `certain that' and 0.04 for `asking whether' questions). Further inspection revealed that these participants' responses to the control questions were systematically higher than the group means and involved all of the 20 projective contents, suggesting that these participants did not attend to the task or interpreted the task differently. The data from these 12 participants were also excluded.\footnote{Of the 235 participants, 120 first completed the `asking whether' block and 115 first completed the `certain that' block. \jt{investigate block order effects}}
+The results about projection variability and the relation between at-issueness and projectivity that are discussed in this section are based on the data from 235 participants (ages 18-74; median: 33). We excluded the data from 3 participants who did not self-identify as native speakers of American English. Inspection of the response means of the remaining 247 American-English speaking participants to the `certain that' and `asking whether' questions for the control polar questions revealed 12 participants whose response means to either were more than 3 standard deviations above the group means (the group means were 0.08 for `certain that' and 0.04 for `asking whether' questions). Further inspection revealed that these participants' responses to the control questions were systematically higher than the group means and involved all of the 20 projective contents, suggesting that these participants did not attend to the task or interpreted the task differently. The data from these 12 participants were also excluded.\footnote{Of the 235 participants, 120 first completed the `asking whether' block and 115 first completed the `certain that' block. \jt{investigate block order effects}}
 
-\paragraph{Projection variability} \jt{Judith Degen writes this up}
+\paragraph{Projection variability} The upper panel of Figure \ref{f-proj-1b} shows the mean projectivity rating for each of the 235 participants as a blue dot; the error bars indicate 95\% confidence intervals. As with Experiment 1a, we observe variation among the participants in how robustly projective they took the projective contents to be. Compared to Experiment 1a, relatively few participants took the projective contents to be robustly projective. In the lower panel of Figure \ref{f-proj-1b}, the box plots show the response variance for each of the 12 projective content triggers; the blue dot shows the mean projectivity rating. The median projectivity ratings are at ceiling for most of the predicates, with the exception of {\em established, confessed} and {\em revealed}. At the same time, the decreasing mean response and the increasing response variance show that the projectivity of these projective contents is not just subject to participant variability but also to item variability.
 
-\paragraph{Influence of at-issueness on projectivity} \jt{Judith Degen writes this up}
+\begin{figure}[!h]
+
+\begin{center}
+\includegraphics[width=16cm]{../results/exp1b/graphs/projection-subjectmeans}
+
+\includegraphics[width=16cm]{../results/exp1b/graphs/boxplot-projection}
+
+\end{center}
+\caption{Projectivity by participant (top panel) and projective content trigger (bottom panel)}
+\label{f-proj-1b}
+\end{figure}
+
+\jt{Judith Degen insert analysis / projectivity comparison; how do discover and annoyed compare in projectivity here, compared to Exp1a?}
+
+
+\paragraph{Influence of at-issueness on projectivity} Before examining the influence of at-issueness on projectivity, it is instructive to examine the at-issueness by participant and by projective content trigger. The upper panel of Figure \ref{f-ai-1b} shows the mean at-issueness rating for each of the 235 participants as a blue dot; the error bars again indicate 95\% confidence intervals. Here, about one third of the participants took the projective contents to be robustly not-at-issue. For the remaining participants, the decreasing means reveal a increase in the overall at-issueness of the 12 projective contents. In the lower panel of Figure \ref{f-ai-1b}, the box plots show the response variance for each of the 12 projective content triggers; the blue dot shows the mean at-issueness rating. The median at-issueness ratings are at ceiling, except for {\em established}, suggesting that for each projective content at least half of the participants took it to be robustly not-at-issue. At the same time, the decreasing mean response and the increasing response variances show that the at-issueness of projective content is not just subject to participant variability but also to item variability.
+
+\begin{figure}[!h]
+\begin{center}
+
+\includegraphics[width=16cm]{../results/exp1b/graphs/ai-subjectmeans}
+
+\includegraphics[width=16cm]{../results/exp1b/graphs/boxplot-not-at-issueness}
+
+\end{center}
+\caption{At-issueness by participant (top panel) and projective content trigger (bottom panel)}
+\label{f-ai-1b}
+\end{figure}
+
+\jt{How do discover and annoyed compare in not-at-issueness here, compared to Exp1a?}
+
+\jt{Now examine relation between at-issueness and projectivity}
 
 \subsubsection{Discussion}
+
+Like Experiment 1a, Experiment 1b was designed to explore the hypothesis that projective content varies in how projective it is, and the hypothesis that the information-structural status of projective content influences its projectivity. Experiment 1b provides further empirical support for both hypotheses, now from polar questions with (semi-)factive predicates. Regarding the first hypothesis, we again found again within-participant and within-item variability in how robustly projective content projects. Regarding the second hypothesis, we again found that the information-structural status of projective content, i.e., how not-at-issue it is, is a significant predictor of its projectivity.
+
+The findings of this experiment further extend the challenge to conventional approaches to projection and further support the hypothesis advanced in \citealt{brst-salt10}, according to which projective content projects if and only if it is not at-issue. 
+
 
 \subsection{Summary and discussion of Experiments 1a and 1b}
 
@@ -689,9 +735,10 @@ As in Experiment 1a, a set of 15 stimuli was randomly created for each participa
 \paragraph{Procedure.} Participants were told to imagine that they are at a party and, upon walking into the kitchen, overhear a short conversation between two people. Participants were then presented with their 15 stimuli in random order and were asked to assess, for each stimulus, whether the speaker of the first/third turn answered the question of the speaker of the second turn. Participants gave their responses on a slider marked `no' at one end and `yes' at the other, as shown in Figure \ref{f-trial-exp2a}. A `yes' response was taken to indicate that the relevant content was taken to be the antecedent of the implicit propositional anaphor, i.e., that the content was at-issue; a `no' response was taken to indicate that the relevant content was not taken to be the antecedent of the implicit propositional anaphor, i.e., that the content was not at-issue.
 After responding to the 15 stimuli, participants completed the same survey as in Experiment 1a.
 
+
 \begin{figure}[!h]
 \begin{center}
-\includegraphics[width=12cm]{exp2-trial}
+\fbox{\includegraphics[width=12cm]{exp2-trial}}
 \end{center}
 \caption{A sample trial in Experiment 2a}\label{f-trial-exp2a}
 \end{figure}
@@ -704,66 +751,20 @@ The results about the relation between at-issueness and projectivity that are di
 
 \jt{Judith Degen: analysis needed}
 
-The boxplots in Figure \ref{f-exp2a} illustrate the not-at-issueness of the nine expression/content pairs, which are again are ordered by their mean (given by the blue dots), with the expression/content pairs with the lowest not-at-issueness on the left. 
+The boxplots in Figure \ref{f-ai-2a} 
 
 \begin{figure}[!h]
-
 \begin{center}
 
-\includegraphics[width=12cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/5-NAI/results/graphs/boxplot-not-at-issueness}
-\end{center}
+\includegraphics[width=12cm]{../results/exp2a/graphs/ai-subjectmeans}
 
-\caption{Boxplots of responses to nine expression/content pairs in {\em Are you sure?}-diagnostic; the blue dots show the mean responses}\label{f-exp2a}
+\includegraphics[width=12cm]{../results/exp2a/graphs/boxplot-not-at-issueness}
+
+\end{center}
+\caption{At-issueness by participant (top panel) and projective content trigger (bottom panel)}
+\label{f-ai-2a}
 \end{figure}
 
-\begin{itemize}
-
-\item {\tt nai.1} shows that all contents significantly more NAI than main clauses
-
-\item {\tt comp\_nai} shows that significant differences among contents
-
-only, stop, stupid, discover, know $<$ annoyed
-
-discover $<$ know, NomApp, NRRC, possNP
-
-stop, stupid $<$ discover 
-
-stupid, only $<$ know $<$ NomApp, NRRC, possNP
-
-only, stop, stupid $<$ NomApp
-
-only, possNP, stop $<$ NRRC
-
-only $<$ possNP, only, stupid
-
-stop, stupid $<$ possNP
-
-\item Correlation of the two not-at-issueness diagnostics:
-
-\begin{figure}[!h]
-
-\begin{center}
-
-\includegraphics[width=16.5cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/5-NAI/results/graphs/correlation-means-NAI-NAI}
-\end{center}
-
-\caption{Correlation of the means of the two not-at-issueness diagnostics (Experiments 1a and 2a)}\label{f-corr1}
-\end{figure}
-
-
-\item Correlation of projectivity with the new not-at-issueness diagnostic:
-
-\begin{figure}[!h]
-
-\begin{center}
-
-\includegraphics[width=16.5cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/5-NAI/results/graphs/correlation-means-NAI-NAI-Proj}
-\end{center}
-
-\caption{Correlation of the mean projectivity with the two not-at-issueness diagnostics (Experiments 1a and 2a)}\label{f-corr2}
-\end{figure}
-
-\end{itemize}
 
 
 \subsubsection{Discussion}
@@ -812,40 +813,18 @@ The results about the relation between at-issueness and projectivity that are di
 
 \jt{Judith Degen: analysis needed}
 
-
-The boxplots in Figure \ref{f-exp2b} illustrate the not-at-issueness of the contents of the complements of the twelve factive predicates, which are again are ordered by their mean (given by the blue dots), with the factive predicate whose complement was least not-at-issue on the left.
-
 \begin{figure}[!h]
-
 \begin{center}
 
-\includegraphics[width=16.5cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/7-NAI-factive-verbs/results/graphs/boxplot-not-at-issueness}
-\end{center}
+\includegraphics[width=16cm]{../results/exp2b/graphs/ai-subjectmeans}
 
-\caption{Boxplots of responses to the contents of the complements of the twelve attitude predicates in {\em Are you sure?}-diagnostic; the blue dots show the mean responses}\label{f-exp2b}
+\includegraphics[width=16cm]{../results/exp2b/graphs/boxplot-not-at-issueness}
+
+\end{center}
+\caption{At-issueness by participant (top panel) and projective content trigger (bottom panel)}
+\label{f-ai-2b}
 \end{figure}
 
-\begin{figure}[!h]
-
-\begin{center}
-
-\includegraphics[width=16.5cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/7-NAI-factive-verbs/results/graphs/correlation-means-NAI-NAI}
-\end{center}
-
-\caption{Correlation of the means of the two not-at-issueness diagnostics (Experiments 1b and 2b)}\label{f-corr3}
-\end{figure}
-
-Correlation of projectivity with the new not-at-issueness diagnostic:
-
-\begin{figure}[!h]
-
-\begin{center}
-
-\includegraphics[width=16.5cm]{/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/7-NAI-factive-verbs/results/graphs/correlation-means-NAI-NAI-Proj}
-\end{center}
-
-\caption{Correlation of the mean projectivity with the two not-at-issueness diagnostics (Experiments 1b and 2b)}\label{f-corr4}
-\end{figure}
 
 \subsubsection{Discussion}
 

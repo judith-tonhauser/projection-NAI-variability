@@ -255,9 +255,11 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_ai, y=response)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
-  ylab("Not-at-issueness ('Are you sure?')")+
-  xlab("Expression")
-ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=6)
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness ('asking whether')")+
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3.1,width=6)
 
 # JT inserted JD's code here for calculating individual variability
 head(t.proj)
@@ -271,10 +273,12 @@ ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
-  theme(text = element_text(size=14),axis.text.x=element_blank()) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Mean not-at-issueness ('Are you sure?')")
-ggsave("graphs/ai-subjectmeans.pdf",height=4,width=9)
+  ylab("Not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=3,width=6)
+
 
 ######## Analysis ################
 library(lmerTest)
