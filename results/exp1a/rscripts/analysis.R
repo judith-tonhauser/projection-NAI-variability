@@ -342,7 +342,7 @@ table(cd$content,cd$short_trigger)
 # veggie          0        0    0 164    132   62    0      0    0      0
 
 ################## test if block order mattered ############################
-length(unique(cd$workerid)) #210
+length(unique(cd$workerid)) #210 
 head(cd)
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
@@ -366,9 +366,24 @@ table(tmp$block,tmp$question_type)
 str(tmp$response)
 library(lmerTest)
 
-# predict response from trigger and block, no interaction
-m = lmer(response ~ question_type * block + (1+question_type|workerid) + (1+question_type|content), data=tmp)
+# make a subset of the data that only includes the target data 
+tmp_t = droplevels(subset(tmp, trigger_class != "NonProj"))
+
+# predict response from trigger and block (block1, block2), and interaction
+# interaction term included because we want to know, e.g., if projection in block1 
+# received higher responses than projection in block2
+m = lmer(response ~ question_type * block + (1|workerid) + (1|content), data=tmp_t)
 summary(m)
+
+# test for linearity
+pdf("graphs/test-for-linearity.pdf",width=9, height=4)
+plot(fitted(m),residuals(m))
+dev.off()
+
+# test for normality of residuals
+pdf("graphs/normality-of-residuals.pdf",width=9, height=4)
+hist(residuals(m))
+dev.off()
 
 # make a subset of the data that only includes the target data with question about at-issueness
 tmp_ai = subset(tmp, (trigger_class != "NonProj" & question_type == "ai"))
