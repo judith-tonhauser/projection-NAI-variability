@@ -1,5 +1,7 @@
 */.RData
 */node_modules/
+paper/variability.pdf
+*.out
 *.bbl
 *.blg
 *.log

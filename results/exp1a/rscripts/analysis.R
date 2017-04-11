@@ -1,9 +1,9 @@
 
 ####################### IGNORE THIS BIT ###############################
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1/')
+setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
 
 # read in the data
-d = readRDS(d, file="data/d.rds")
+d = readRDS(file="data/d.rds")
 source('rscripts/helpers.R')
 
 # theme_set(theme_bw())
@@ -480,22 +480,53 @@ contrasts(t$short_trigger)
 t$short_trigger <- relevel(t$short_trigger, ref = "MC")
 
 # predict projectivity
-proj <- lmer(projective ~ short_trigger * ai + (1+short_trigger*ai|workerid) + (1|content), data=t)
-# proj does not converge
-proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (1|content), data=t)
+proj.0 <- lmer(projective ~ short_trigger + (1+ai|workerid) + (1|content), data=t)
+summary(proj.0)
+
+# load library for multiple comparisons
+library(multcomp)
+
+# multiple comparison wrt projectivity
+comp_proj.1 <- glht(proj.0, mcp(short_trigger="Tukey"))
+summary(comp_proj.1)
+# all are different from main clauses
+# discover-annoyed
+# only-annoyed
+# 
+
+# means by trigger
+means = t %>%
+  group_by(short_trigger) %>%
+  summarize(mean=mean(projective))
+means
+
+proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
 summary(proj.1)
 contrasts(t$short_trigger)
+
+# is there by-content variation in ai effect justified?
+proj.1a <- lmer(projective ~ short_trigger * ai + (1+ai|workerid), data=t)
+summary(proj.1a)
+
+# Model comparison suggests that adding by-content slopes for ai is justified. Suggests that there is variation in the AI effect by content; suggesting that AIness interacts differently with prior beliefs -- something to be tested by eliciting prior beliefs about each content?
+anova(proj.1a,proj.1)
+
+# do the same thing without main clauses, ie only looking for variability among the target triggers
+nomc = t %>% filter(short_trigger != "MC")
+nomc = droplevels(nomc)
+proj.2 <- lmer(projective ~ short_trigger * ai + (0+ai|workerid) + (0+ai|content), data=nomc)
+summary(proj.2)
+contrasts(nomc$short_trigger)
+
+
 m.proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (0+ai|content), data=t)
 summary(m.proj.2)
-anova(proj.1,proj.2)
+anova(m.proj.2,proj.1)
 
-proj.3 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
-summary(proj.3)
+m.proj.3 <- lmer(projective ~ ai + (1+ai|workerid) + (0+ai|content), data=t)
+summary(m.proj.3)
 
-proj.4 <- lmer(projective ~ ai + (1+ai|workerid) + (0+ai|content) + (1|short_trigger), data=t)
-summary(proj.4)
-
-ranef(proj.4)
+anova(m.proj.3,m.proj.2)
 
 # predict not-at-issueness
 nai <- lmer(ai ~ short_trigger + (1+short_trigger|workerid) + (1|content), data=t)
@@ -503,11 +534,8 @@ nai <- lmer(ai ~ short_trigger + (1+short_trigger|workerid) + (1|content), data=
 nai.1 <- lmer(ai ~ short_trigger + (1|workerid) + (1|content), data=t)
 summary(nai.1)
 
-# load library for multiple comparisons
-library(multcomp)
 
-# multiple comparison wrt projectivity
-comp_proj.1 <- glht(proj.1, mcp(short_trigger="Tukey"))
+
 #covariate interactions found -- default contrast might be inappropriate
 comp_proj.2 <- glht(proj.2, mcp(short_trigger="Tukey"))
 summary(comp_proj.2)
