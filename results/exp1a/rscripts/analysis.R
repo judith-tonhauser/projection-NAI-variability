@@ -1,26 +1,28 @@
-
-####################### IGNORE THIS BIT ###############################
+## JD working directory
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
+## JT working directory
+setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1a/')
+
+## code for both starts here
+source('rscripts/helpers.R')
 
 # read in the data
 d = readRDS(file="data/d.rds")
-source('rscripts/helpers.R')
 
-# theme_set(theme_bw())
-# 
-# library(plyr)
-# library(ggplot2)
-# library(tidyr)
-# library(dplyr)
-# library(languageR)
-# library(lme4)
-# require(foreign)
-# require(ggplot2)
-# require(MASS)
-# require(Hmisc)
-# require(reshape2)
-# library(ucminf)
-# library(scales)
+theme_set(theme_bw())
+
+library(plyr)
+library(ggplot2)
+library(tidyr)
+library(dplyr)
+library(languageR)
+library(lme4)
+require(foreign)
+require(MASS)
+require(Hmisc)
+require(reshape2)
+library(ucminf)
+library(scales)
 
 ############## Pre-analysis data clean-up #################
 
@@ -173,6 +175,7 @@ length(unique(d$workerid)) # 210 remaining Turkers (11 Turkers excluded)
 # clean data = cd
 cd = d
 head(cd)
+saveRDS(cd, file="data/cd.rds")
 
 ################## Exclusion Turkers based on response times ############
 ################# no Turkers were excluded #######################
@@ -305,6 +308,7 @@ ggplot(fast_rt, aes(x=workerid,y=rt)) +
 length(unique(d$workerid)) #210 remaining Turkers
 
 ################## Properties of the data #############
+cd <- readRDS("data/cd.rds")
 
 # age info
 names(cd)
@@ -337,12 +341,12 @@ table(cd$content,cd$short_trigger)
 # veggie          0        0    0 164    132   62    0      0    0      0
 
 ################## test if block order mattered ############################
-length(unique(cd$workerid)) #210
-
+length(unique(cd$workerid)) #210 
+head(cd)
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
 tmp = cd %>%
-  select(response, short_trigger, content, question_type, trigger_class, workerid, block)
+  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid, block)
 nrow(tmp) #6300 (6300 / 210 Turkers = 30 items per Turker)
 
 head(tmp)
@@ -359,7 +363,26 @@ table(tmp$block,tmp$question_type)
 # 116 + 94 = 210 Turkers
 
 str(tmp$response)
-#library(lmerTest)
+library(lmerTest)
+
+# make a subset of the data that only includes the target data 
+tmp_t = droplevels(subset(tmp, trigger_class != "NonProj"))
+
+# predict response from trigger and block (block1, block2), and interaction
+# interaction term included because we want to know, e.g., if projection in block1 
+# received higher responses than projection in block2
+m = lmer(response ~ question_type * block + (1|workerid) + (1|content), data=tmp_t)
+summary(m)
+
+# test for linearity
+pdf("graphs/test-for-linearity.pdf",width=9, height=4)
+plot(fitted(m),residuals(m))
+dev.off()
+
+# test for normality of residuals
+pdf("graphs/normality-of-residuals.pdf",width=9, height=4)
+hist(residuals(m))
+dev.off()
 
 # make a subset of the data that only includes the target data with question about at-issueness
 tmp_ai = subset(tmp, (trigger_class != "NonProj" & question_type == "ai"))
@@ -437,7 +460,7 @@ length(unique(cd$workerid)) #210
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
 tmp = cd %>%
-  select(response, short_trigger, content, question_type, trigger_class, workerid)
+  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid)
 nrow(tmp) #6300 (6300 / 210 Turkers = 30 items per Turker)
 
 # make a new column "variable" that codes a trigger-content-class-workerid combination
@@ -470,6 +493,10 @@ t$content <- as.factor(t$content)
 head(t)
 table(t$short_trigger)
 
+saveRDS(t, file="data/t.rds")
+
+t = readRDS(file="data/t.rds")
+
 ### are projective contents significantly more projective and NAI than main clauses?
 names(t)
 library(lmerTest)
@@ -480,53 +507,22 @@ contrasts(t$short_trigger)
 t$short_trigger <- relevel(t$short_trigger, ref = "MC")
 
 # predict projectivity
-proj.0 <- lmer(projective ~ short_trigger + (1+ai|workerid) + (1|content), data=t)
-summary(proj.0)
-
-# load library for multiple comparisons
-library(multcomp)
-
-# multiple comparison wrt projectivity
-comp_proj.1 <- glht(proj.0, mcp(short_trigger="Tukey"))
-summary(comp_proj.1)
-# all are different from main clauses
-# discover-annoyed
-# only-annoyed
-# 
-
-# means by trigger
-means = t %>%
-  group_by(short_trigger) %>%
-  summarize(mean=mean(projective))
-means
-
-proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
+proj <- lmer(projective ~ short_trigger * ai + (1+short_trigger*ai|workerid) + (1|content), data=t)
+# proj does not converge
+proj.1 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (1|content), data=t)
 summary(proj.1)
 contrasts(t$short_trigger)
-
-# is there by-content variation in ai effect justified?
-proj.1a <- lmer(projective ~ short_trigger * ai + (1+ai|workerid), data=t)
-summary(proj.1a)
-
-# Model comparison suggests that adding by-content slopes for ai is justified. Suggests that there is variation in the AI effect by content; suggesting that AIness interacts differently with prior beliefs -- something to be tested by eliciting prior beliefs about each content?
-anova(proj.1a,proj.1)
-
-# do the same thing without main clauses, ie only looking for variability among the target triggers
-nomc = t %>% filter(short_trigger != "MC")
-nomc = droplevels(nomc)
-proj.2 <- lmer(projective ~ short_trigger * ai + (0+ai|workerid) + (0+ai|content), data=nomc)
-summary(proj.2)
-contrasts(nomc$short_trigger)
-
-
 m.proj.2 <- lmer(projective ~ short_trigger + ai + (1+ai|workerid) + (0+ai|content), data=t)
 summary(m.proj.2)
-anova(m.proj.2,proj.1)
+anova(proj.1,proj.2)
 
-m.proj.3 <- lmer(projective ~ ai + (1+ai|workerid) + (0+ai|content), data=t)
-summary(m.proj.3)
+proj.3 <- lmer(projective ~ short_trigger * ai + (1+ai|workerid) + (0+ai|content), data=t)
+summary(proj.3)
 
-anova(m.proj.3,m.proj.2)
+proj.4 <- lmer(projective ~ ai + (1+ai|workerid) + (0+ai|content) + (1|short_trigger), data=t)
+summary(proj.4)
+
+ranef(proj.4)
 
 # predict not-at-issueness
 nai <- lmer(ai ~ short_trigger + (1+short_trigger|workerid) + (1|content), data=t)
@@ -534,8 +530,11 @@ nai <- lmer(ai ~ short_trigger + (1+short_trigger|workerid) + (1|content), data=
 nai.1 <- lmer(ai ~ short_trigger + (1|workerid) + (1|content), data=t)
 summary(nai.1)
 
+# load library for multiple comparisons
+library(multcomp)
 
-
+# multiple comparison wrt projectivity
+comp_proj.1 <- glht(proj.1, mcp(short_trigger="Tukey"))
 #covariate interactions found -- default contrast might be inappropriate
 comp_proj.2 <- glht(proj.2, mcp(short_trigger="Tukey"))
 summary(comp_proj.2)
@@ -583,6 +582,8 @@ comp_proj_c <- glht(triggers2_c, mcp(short_trigger="Tukey"))
 summary(comp_proj_c)
 
 #####################  Plotting ############################ 
+t = readRDS(file="data/t.rds")
+
 names(t)
 head(t)
 table(t$trigger_class)
@@ -622,10 +623,11 @@ ggsave(f="graphs/violin-projection.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Projectivity")+
-  xlab("Expression")
+  xlab("Projective content trigger")
 ggsave(f="graphs/boxplot-projection.pdf",height=3,width=6)
-
 
 ### judith d's added code for investigating individual variability
 p=ggplot(t.proj, aes(x=trigger_proj, y=projective)) + 
@@ -635,24 +637,32 @@ p=ggplot(t.proj, aes(x=trigger_proj, y=projective)) +
   theme(axis.text.x=element_text(angle=45,vjust=1,hjust=1))
 ggsave(p,file="graphs/variability-projection.pdf",height=20,width=20)
 
+head(t.proj)
+
 variances = t.proj %>%
   group_by(workerid) %>%
-  summarize(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective),AIVariance = var(ai),AIMean=mean(ai),AI.ci.low=ci.low(ai),AI.ci.high=ci.high(ai))
+  summarise(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective),AIVariance = var(ai),AIMean=mean(ai),AI.ci.low=ci.low(ai),AI.ci.high=ci.high(ai))
 variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=ProjMean-Proj.ci.low,ymax=ProjMean+Proj.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Projective mean")
-ggsave("graphs/projection-subjectmeans.pdf",height=4,width=10)
+  ylab("Projectivity")
+ggsave("graphs/projection-subjectmeans.pdf",height=3,width=6)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
+  theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("At-issue mean")
-ggsave("graphs/ai-subjectmeans.pdf",height=4,width=10)
+  ylab("Not-at-issueness ('asking whether')")
+ggsave("graphs/ai-subjectmeans.pdf",height=3,width=6)
 
 ggplot(variances, aes(x=ProjMean,y=AIMean)) +
   geom_point() +
@@ -714,6 +724,8 @@ mean_nai
 
 # save mean not-at-issueness for comparison to experiment 5 / experiment 1b
 mean_nai_Exp4 <- mean_nai
+saveRDS(mean_nai_Exp4,file="data/mean_nai_Exp4.rds")
+
 t.proj$trigger_ai <-factor(t.proj$short_trigger, levels=mean_nai[order(mean_nai$ai), "short_trigger"])
 
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
@@ -725,9 +737,12 @@ ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=6)
 ggplot(t.proj, aes(x=trigger_ai, y=ai)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Not-at-issueness ('asking whether')")+
-  xlab("Expression")
-ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3,width=6)
+  xlab("Projective content trigger")
+ggsave(f="graphs/boxplot-not-at-issueness.pdf",height=3.1,width=6)
+
 
 ##### Correlation between not-at-issueness and projectivity #################
 
