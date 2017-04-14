@@ -1,18 +1,10 @@
 
-<<<<<<< HEAD
-####################### IGNORE THIS BIT ###############################
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
-
-# read in the data
-d = readRDS(file="data/d.rds")
-=======
 ## JD working directory
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
 ## JT working directory
 setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1a/')
 
 ## code for both starts here
->>>>>>> ecb7167aeacdb48ae1401c799bd31914a7b62743
 source('rscripts/helpers.R')
 
 # read in the data
@@ -405,6 +397,30 @@ tmp_proj = droplevels(tmp_proj)
 head(tmp_proj)
 table(tmp_proj$block,tmp_proj$question_type)
 
+
+# do same for projectivity
+m.proj = lmer(response ~ short_trigger *  * block + (1|workerid) + (1|content), data=tmp_proj)
+summary(m.proj)
+# responses in block2 not different from block1
+
+# Bonferroni-corrected pairwise comparisons suggests no difference in projectivity between NRRC, annoyed, NomApp, possNP, and know. But the others are all different from each other (except that know is not different from stop, stop isn't different from discover and stupid, and discover isn't different from stupid)
+tmp_proj$trigger = factor(x=as.character(tmp_proj$short_trigger),levels=c("NRRC","annoyed","NomApp","possNP","know","stop","discover","stupid","only"))
+pairwise.t.test(tmp_proj$response, tmp_proj$trigger, p.adj = "bonf")
+
+m.proj.2 = lmer(response ~ short_trigger + block + (1|workerid) + (1|content), data=tmp_proj)
+summary(m.proj.2)
+# responses in block2 not different from block1, no interactions significant
+
+m.proj.3 = lmer(response ~ block + (1|workerid) + (1|content), data=tmp_proj)
+summary(m.proj.3)
+
+anova(m.proj.2,m.proj)
+# model with interaction is not better, so block order did not matter for projectivity
+
+
+
+
+
 # predict at-issueness response from trigger and block, no interaction
 m.ai.2 = lmer(response ~ short_trigger + block + (1|workerid) + (1|content), data=tmp_ai)
 summary(m.ai.2)
@@ -434,24 +450,7 @@ agr
 anova(m.ai.2,m.ai)
 # model with interaction is better, so effect is carried by "only", not in general by block order
 
-# do the same for projectivity results
-m.proj = lmer(response ~ short_trigger * block + (1|workerid) + (1|content), data=tmp_proj)
-summary(m.proj)
-# responses in block2 not different from block1
 
-# Bonferroni-corrected pairwise comparisons suggests no difference in projectivity between NRRC, annoyed, NomApp, possNP, and know. But the others are all different from each other (except that know is not different from stop, stop isn't different from discover and stupid, and discover isn't different from stupid)
-tmp_proj$trigger = factor(x=as.character(tmp_proj$short_trigger),levels=c("NRRC","annoyed","NomApp","possNP","know","stop","discover","stupid","only"))
-pairwise.t.test(tmp_proj$response, tmp_proj$trigger, p.adj = "bonf")
-
-m.proj.2 = lmer(response ~ short_trigger + block + (1|workerid) + (1|content), data=tmp_proj)
-summary(m.proj.2)
-# responses in block2 not different from block1, no interactions significant
-
-m.proj.3 = lmer(response ~ block + (1|workerid) + (1|content), data=tmp_proj)
-summary(m.proj.3)
-
-anova(m.proj.2,m.proj)
-# model with interaction is not better, so block order did not matter for projectivity
 
 ggplot(tmp_ai, aes(x=response,fill=trigger)) +
   geom_density(alpha=.5)
@@ -469,11 +468,14 @@ length(unique(cd$workerid)) #210
 # make a data structure tmp that includes only info relevant to the analyses
 # use dplyr::select to make sure that select comes from the dplyr package
 tmp = cd %>%
-  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid)
+  dplyr::select(response, short_trigger, content, question_type, trigger_class, workerid,block)
+tmp$block_ai = tmp$block
+tmp[tmp$question_type == "projective" & tmp$block == "block1",]$block_ai = "block2"
+tmp[tmp$question_type == "projective" & tmp$block == "block2",]$block_ai = "block1"
 nrow(tmp) #6300 (6300 / 210 Turkers = 30 items per Turker)
 
 # make a new column "variable" that codes a trigger-content-class-workerid combination
-tmp$variable = paste(tmp$short_trigger, tmp$content, tmp$trigger_class, tmp$workerid)
+tmp$variable = paste(tmp$short_trigger, tmp$content, tmp$trigger_class, tmp$workerid, tmp$block_ai)
 tmp$variable
 str(tmp$variable)
 head(tmp)
@@ -488,6 +490,7 @@ t$short_trigger = sapply(strsplit(as.character(t$variable)," "), "[", 1)
 t$content = sapply(strsplit(as.character(t$variable)," "), "[", 2)
 t$trigger_class = sapply(strsplit(as.character(t$variable)," "), "[", 3)
 t$workerid = sapply(strsplit(as.character(t$variable)," "), "[", 4)
+t$block_ai = sapply(strsplit(as.character(t$variable)," "), "[", 5)
 head(t)
 nrow(t) #3150 (correct: half of 6300)
 
@@ -506,6 +509,9 @@ saveRDS(t, file="data/t.rds")
 
 t = readRDS(file="data/t.rds")
 
+### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
+# MAIN ANALYSIS OF INTEREST: PREDICT PROJECTIVITY FROM FIXED EFFECTS OF TRIGGER, AT-ISSUENESS, INTERACTION (AND CONTROL FOR BLOCK)
+
 ### are projective contents significantly more projective and NAI than main clauses?
 names(t)
 library(lmerTest)
@@ -514,6 +520,76 @@ library(lmerTest)
 t$short_trigger = as.factor(as.character(t$short_trigger))
 contrasts(t$short_trigger)
 t$short_trigger <- relevel(t$short_trigger, ref = "MC")
+t$block_ai = as.factor(t$block_ai)
+t$cblock_ai = myCenter(t$block_ai)
+t$cai = myCenter(t$ai)
+
+m = lmer(projective ~ ai*short_trigger + cblock_ai + (1+ai|workerid) + (1+ai|content), data=t)
+summary(m)
+
+# do the same without main clauses
+t_nomc = droplevels(subset(t, short_trigger != "MC"))
+t_nomc$cblock_ai = myCenter(t_nomc$block_ai)
+t_nomc$cai = myCenter(t_nomc$ai)
+contrasts(t_nomc$short_trigger)
+
+# Of the following models (up to and excluding m.mr), I believe they're not the right way of analyzing the data: too unwieldy because the trigger variable has too many levels. Instead, have trigger be random effect (which I think is conceptually nice because ideally one would want to be able to run this experiment with arbitrarily many triggers and not have to worry about generating a giant covariance matrix)
+m = lmer(projective ~ cai*short_trigger + cblock_ai + (0+cai|workerid) + (0+cai|content), data=t_nomc)
+summary(m)
+
+m.1 = lmer(projective ~ cai*short_trigger + cblock_ai + (1+cai|workerid) + (0+cai|content), data=t_nomc)
+summary(m.1)
+
+anova(m, m.1)
+
+m.2 = lmer(projective ~ cai*short_trigger + cblock_ai + (0+cai|workerid) + (1+cai|content), data=t_nomc)
+summary(m.2)
+
+anova(m, m.2)
+
+m.3 = lmer(projective ~ cai*short_trigger + cblock_ai + (1+cai|workerid) + (1+cai|content), data=t_nomc)
+summary(m.3)
+
+anova(m.1, m.3)
+anova(m.2, m.3)
+
+m.a = lmer(projective ~ cai*short_trigger*cblock_ai + (0+cai|workerid) + (0+cai|content), data=t_nomc)
+summary(m.a)
+
+anova(m,m.a) # justified, but also there are 17 additional degrees of freedom when you allow block to interact with short_trigger
+
+plot(fitted(m),residuals(m))
+plot(fitted(m),t_nomc$projective)
+histogram(residuals(m))
+histogram(t_nomc$projective)
+
+m.mr = lmer(projective ~ cai + cblock_ai + (0+cai|workerid) + (0+cai|content) + (0+cai|short_trigger), data=t_nomc)
+summary(m.mr)
+
+m.mr.inter = lmer(projective ~ cai * cblock_ai + (0+cai|workerid) + (0+cai|content) + (0+cai|short_trigger), data=t_nomc)
+summary(m.mr.inter)
+
+anova(m.mr, m.mr.inter) # adding interaction between bock and AI doesn't do anything
+
+
+### THE MODEL CURRENTLY REPORTED IN THE PAPER
+m.mr.1 = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (1+cai|content) + (1+cai|short_trigger), data=t_nomc)
+summary(m.mr.1)
+
+anova(m.mr, m.mr.1) # adding not just random slopes but random intercepts as well captures variance, so we're doing it.
+
+# plot fixed and random effects in various ways -- exploratory
+library(sjPlot)
+library(sjmisc)
+
+sjp.lmer(m.mr.1,type="fe")
+sjp.lmer(m.mr.1,type="re.qq")
+ranef(m.mr.1)
+plot(ranef(m.mr.1)$short_trigger[,1],ranef(m.mr.1)$short_trigger[,2])
+plot(ranef(m.mr.1)$content[,1],ranef(m.mr.1)$content[,2])
+plot(ranef(m.mr.1)$workerid[,1],ranef(m.mr.1)$workerid[,2])
+
+### END OF JUDITH D'S ANALYSIS CODE FOR EXP 1A
 
 # predict projectivity
 proj.0 <- lmer(projective ~ short_trigger + (1+ai|workerid) + (1|content), data=t)
