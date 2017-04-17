@@ -96,7 +96,7 @@
 \renewcommand\Authands{ and }
 
 \newcommand{\jt}[1]{\textbf{\color{blue}JT: #1}}
-\newcommand{\jd}[1]{\textbf{\color{blue}[jd: #1]}}  
+\newcommand{\jd}[1]{\textbf{\color{Green}[jd: #1]}}  
 
 \begin{document}
 
@@ -544,7 +544,7 @@ to the main clause controls: for these stimuli, we expect low responses to both 
 
 We begin by addressing the two main questions of interest, namely whether there is projection variability across target expressions and whether projectivity a function of at-issueness, as predicted by the Projection Principle. By-expression variability can be seen in \figref{fig:proj-triggmeans}:  while median projectivity ratings were all close to ceiling (suggesting that for each projective content at least half of the participants took it to be robustly projective), the variable mean responses, box sizes and whisker lengths provide evidence of variability in projectivity across target expressions. For example, mean projectivity of of the prejacent of \emph{only} was relatively low at .76, while mean projectivity of the projective contents of NRRCs and \emph{annoyed} was close to ceiling at .96. \figref{fig:proj-subjmeans} shows that about one third of participants took the 9 projective contents they judged to be robustly projective. For the remaining participants, the decreasing means (from right to left) reveal a decrease in the overall projectivity of the 9 projective contents and the increasingly larger error bars reveal an increase in projection variability among the 9 projective contents. 
 
-\jt{I will fix x-axis label of upper panel}
+\jt{I will fix x-axis label of upper panel} \jd{and add main clauses to show control condition?}
 
 \begin{figure}[!h]
 \centering
@@ -577,7 +577,7 @@ Mean projectivity ratings for the lexical contents that each target expression w
 \label{fig:f-proj-ai-1a}
 \end{figure}
 
-These qualitative observations about projection variability and the relation between at-issueness and projectivity are borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating.\jt{JD, provide details on the function/package you used?} In order to control for block order effects, the model also included a centered fixed effect of block order. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants).  P-values were obtained by remove-one model comparison. The analysis was only conducted on non-main-clause trials, since we are specifically interested in variability in projectivity for contents that have the potential to project. 
+These qualitative observations about projection variability and the relation between at-issueness and projectivity are borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants).  P-values were obtained by remove-one model comparison. The analysis was only conducted on non-main-clause trials, since we are specifically interested in variability in projectivity for contents that have the potential to project. Analyses were conducted using the \verb|lme4| package \citep{bates2015} in R \citep{r}.
 
 There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.37, $SE$ = 0.16, $t$ = 3.48, $p <$ .006). This finding suggests that the information-structural status of a projective content is related to its projectivity, as predicted by the Projection Principle. 
 Stepwise model comparison revealed that each random effect was justified, suggesting that there was by-participant, by-expression and by-content variability in projectivity, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This finding suggests that there are target expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = -0.01, $SE$ = 0.01, $t$ = -1.20, $p >$ .23), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way.\jt{JD, include info about random effects.}
@@ -629,12 +629,16 @@ Experiment 1a was designed to explore projection variability for projective cont
 
 The experiment also provided empirical support for the Projection Principle since the at-issueness of projective content was a significant predictor of its projectivity. This finding suggests that the extent to which a speaker is taken to be committed to a particular projective content is related to the extent to which the projective content is at-issue in the speaker's utterance. The experiment also provided empirical evidence that the target expressions differ in the extent to which the projective content they are associated with projects. This finding suggests that both the information-structural status of the projective content and the conventional meaning of the target expressions may play a role the extent to which a speaker is taken to be committed to a projective content.
 
+\jd{add a discussion point somewhere (maybe even in the motivation for the experiments) that makes explicit the fact that the Projection Principle makes a claim about there existing a causal relation between at-issueness and projectivity, but that here the most we can do is establish a correlation. But since correlation is necessary for causation, and it's unclear what could be mediating the correlation, this is nice preliminary support for the Projection Principle. Also acknowledge that an explicit at-issueness manipulation would be a stronger test, which will be the next step, but also make clear that this is the most reasonable first step (because if there's not correlation in the first place, there's no use in going after an explicit manipulation).}
 
 \subsection{Experiment 1b}\label{s-exp1b} 
 
-Experiment 1b was designed to explore the projectivity and at-issueness of the projective contents of the 12 predicates in (\ref{pairs1b2b}), i.e., the contents of the complements of the emotive factives ({\em be amused, be annoyed}), the cognitive factives ({\em know, be aware}), sensory factives ({\em see}), cognitive semi-factives ({\em discover, find out, realize, learn, establish}) and the communication semi-factives ({\em confess, reveal}).
+Experiment 1b was designed to explore the projectivity and at-issueness of the projective contents of the 12 syntactically more homogeneous predicates in (\ref{pairs1b2b}), i.e., the contents of the complements of the emotive factives ({\em be amused, be annoyed}), the cognitive factives ({\em know, be aware}), sensory factives ({\em see}), cognitive semi-factives ({\em discover, find out, realize, learn, establish}) and the communication semi-factives ({\em confess, reveal}).
+
 
 \subsubsection{Methods}
+
+\paragraph{Participants.} 250 participants with U.S.\ IP addresses and at least 97\% of previous HITs approved were recruited on Amazon's Mechanical Turk platform (ages: 18-74; median: 32). They were paid \$1 for participating in the experiment. \jd{this is EXACTLY the same as for exp 1a?!}
 
 \paragraph{Materials.} The 12 projective contents explored in this experiment were instantiated by the 20 lexical contents shown in (\ref{contents2}). Each of the 12 projective contents was instantiated by each of these 20 lexical contents, for a total of 200 target stimuli. 
 
@@ -691,7 +695,6 @@ For each participant, a set of 20 polar question stimuli was randomly created: e
 
 \paragraph{Procedure.} The procedure of Experiment 1b was the same as for Experiment 1a, described in section \ref{s-methods-1a}, except that participants responded to 20 `certain that' and 20 `asking whether' questions. (There are more trials in Experiment 1b than in Experiment 1a because each participant judged the projectivity and at-issueness of 20  rather than 15 contents.)
 
-\paragraph{Participants.} 250 participants with U.S.\ IP addresses and at least 97\% of previous HITs approved were recruited on Amazon's Mechanical Turk platform (ages: 18-74; median: 32). They were paid \$1 for participating in the experiment. 
 
 \paragraph{Data exclusion.} Prior to analysis, we excluded the data from 3 participants who did not self-identify as native speakers of American English. For the remaining 247 participants, we inspected their response means to the `certain that' and `asking whether' questions to the main clause controls. The response means of 12 participants were more than 3 standard deviations above the group means for at least one type of question (the group means were 0.08 for `certain that' and 0.04 for `asking whether' questions). Further inspection revealed that these participants' responses to the control questions were systematically higher than the group means and involved all of the 20 lexical contents, suggesting that these participants did not attend to the task or interpreted the task differently. The data from these 12 participants were also excluded, leaving data from 235 participants (ages 18-74; median: 33).
 
@@ -728,14 +731,34 @@ Mean projectivity ratings for the lexical contents that each target expression w
 \begin{figure}[!h]
 
 \begin{center}
-\includegraphics[width=12cm]{../results/exp1b/graphs/ai-proj-bytrigger-nofacets}
+\includegraphics[width=12cm]{../results/exp1b/graphs/ai-proj-bytrigger-bycontent}
 \end{center}
 
-\caption{Mean projectivity against mean not-at-issueness by target expression and lexical content. Error bars indicate bootstrapped 95\% confidence intervals.}
+\caption{Mean projectivity against mean not-at-issueness by target expression and lexical content. Error bars indicate bootstrapped 95\% confidence intervals. Dashed line indicates perfect correlation line.}
 \label{fig:f-proj-ai-1b}
 \end{figure}
 
-These qualitative observations about projection variability and the relation between at-issueness and projectivity are borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating.\jt{JD, provide details on the function/package you used?} In order to control for block order effects, the model also included a centered fixed effect of block order. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants).  P-values were obtained by remove-one model comparison. The analysis was only conducted on non-main-clause trials, since we are specifically interested in variability in projectivity for contents that have the potential to project. 
+\begin{figure}[!h]
+
+\begin{center}
+\includegraphics[width=12cm]{../results/exp1b/graphs/ai-proj-bytrigger}
+\end{center}
+
+\caption{Mean projectivity against mean not-at-issueness by target expression, collapsing across lexical content. Error bars indicate bootstrapped 95\% confidence intervals. Dashed line indicates perfect correlation line.}
+\label{fig:f-proj-ai-trigg-1b}
+\end{figure}
+
+\begin{figure}[!h]
+
+\begin{center}
+\includegraphics[width=\textwidth]{../results/exp1b/graphs/ai-proj-bytrigger-byblock}
+\end{center}
+
+\caption{Mean projectivity against mean not-at-issueness by target expression, collapsing across lexical content, separately for each block order. Error bars indicate bootstrapped 95\% confidence intervals. Dashed line indicates perfect correlation line.}
+\label{fig:f-proj-ai-trigg-block-1b}
+\end{figure}
+
+These qualitative observations about projection variability and the relation between at-issueness and projectivity are borne out statistically. We conducted the same mixed-effects linear regression as for the data collected in Exp.~1a. Projectivity rating was predicted by a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order. \jd{interaction between block and at-issueness also significant. decide whether to include interactions in both experiments or only in second one? see plots below} The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants).  P-values were obtained by remove-one model comparison. The analysis was only conducted on non-main-clause trials, since we are specifically interested in variability in projectivity for contents that have the potential to project. 
 
 There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.XX, $SE$ = 0.XX, $t$ = XX, $p <$ XX). This finding suggests that the information-structural status of a projective content is related to its projectivity, in support of the Projection Principle. 
 Stepwise model comparison revealed that each random effect was justified, suggesting that there was by-participant, by-expression and by-content variability, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This finding suggests that there are expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = XX, $SE$ = XX, $t$ = XX, $p >$ XX), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way.\jt{JD, include info about random effects.}
