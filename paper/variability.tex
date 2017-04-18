@@ -565,24 +565,49 @@ We begin by addressing the two main questions of interest, namely whether there 
 \end{figure}
 
 
-Mean projectivity ratings for the lexical contents that each target expression was paired with are visualized as a function of their mean not-at-issueness ratings in \figref{fig:f-proj-ai-1a}. There is a clear relationship between at-issueness and projectivity: lexical contents that received lower projectivity ratings are also lexical contents that participants considered to be more at-issue. \figref{fig:f-proj-ai-1a} also reveals projection variability between the lexical contents of each projective content trigger. 
+Mean projectivity ratings for the lexical contents that each target expression was paired with are visualized as a function of their mean not-at-issueness ratings in \figref{fig:f-proj-ai-1a}. There is a clear relationship between at-issueness and projectivity: lexical contents that received higher projectivity ratings are also lexical contents that participants considered to be less at-issue. 
 
 \begin{figure}[!h]
 
 \begin{center}
-\includegraphics[width=12cm]{../results/exp1a/graphs/ai-proj-bytrigger-nofacets}
+\includegraphics[width=12cm]{../results/exp1a/graphs/ai-proj-bytrigger}
 \end{center}
 
-\caption{Mean projectivity against mean not-at-issueness by target expression and lexical content. Error bars indicate bootstrapped 95\% confidence intervals.}
+\caption{Mean projectivity against mean not-at-issueness by target expression. Error bars indicate bootstrapped 95\% confidence intervals. Dashed line indicates perfect correlation line.}
 \label{fig:f-proj-ai-1a}
 \end{figure}
 
-These qualitative observations about projection variability and the relation between at-issueness and projectivity are borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants).  P-values were obtained by remove-one model comparison. The analysis was only conducted on non-main-clause trials, since we are specifically interested in variability in projectivity for contents that have the potential to project. Analyses were conducted using the \verb|lme4| package \citep{bates2015} in R \citep{r}.
+These qualitative observations about projection variability and the relation between at-issueness and projectivity were borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order and the interaction of block order and at-issueness. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants). P-values were obtained by likelihood ratio tests of the full model with the effect in question against the model without the effect in question. The analysis was conducted on non-main-clause trials only (1890 data points) because we were specifically interested in variability in projectivity for contents that have the potential to project. Analyses were conducted using the \verb|lme4| package \citep{bates2015} in R \citep{r}.
 
-There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.37, $SE$ = 0.16, $t$ = 3.48, $p <$ .006). This finding suggests that the information-structural status of a projective content is related to its projectivity, as predicted by the Projection Principle. 
-Stepwise model comparison revealed that each random effect was justified, suggesting that there was by-participant, by-expression and by-content variability in projectivity, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This finding suggests that there are target expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = -0.01, $SE$ = 0.01, $t$ = -1.20, $p >$ .23), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way.\jt{JD, include info about random effects.}
+There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.37, $SE$ = 0.10, $t$ = 3.70, $\chi^2(1)$ = 9.20, $p <$ .003). This suggests that the information-structural status of a projective content is related to its projectivity, as predicted by the Projection Principle. Likelihood ratio tests revealed that each random effect was justified (see \tableref{tab:random1a} for standard deviations and p-values); that is, there was by-participant, by-expression and by-content variability in projectivity, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This suggests that there are target expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = -0.02, $SE$ = 0.01, $t$ = -1.56, $\chi^2(1)$ = 2.39, $p >$ .12), nor did the interaction term ($\beta$ = 0.08, $SE$ = 0.08, $t$ = 0.98, $\chi^2(1)$ = 0.96, $p >$ .32), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way. 
 
-We conducted Bonferroni-corrected pairwise comparisons between triggers.\jt{JD, provide details on what function/package you used.} The results, displayed in \tableref{tab:pairwise}, suggest no difference in the projectivity of the projective contents of NRRCs, \emph{annoyed}, nominal appositives, possessive NPs, and \emph{know}. The projective contents of the other triggers differed from each other in projectivity, except for the pairs \emph{know/stop}, \emph{stop/discover}, \emph{stop/stupid} and \emph{discover/stupid}. However, the details of these differences between projective content triggers need to be taken with a grain of salt: since the triggers differed in the contents with which they occurred, and the regression analysis suggests that there is projection variability by content, these differences may not be due merely to differences between triggers but also to differences between contents.
+% Random effects:
+% Groups        Name        Variance Std.Dev. Corr 
+% workerid      (Intercept) 0.003534 0.05945       
+%               cai         0.152839 0.39095  -0.69
+% content       (Intercept) 0.000613 0.02476       
+%               cai         0.034367 0.18538  -0.74
+% short_trigger (Intercept) 0.001353 0.03678       
+%               cai         0.048460 0.22014  -0.73
+% Residual                  0.025980 0.16118       
+%Number of obs: 1890, groups:
+
+\begin{table}
+\caption{Standard deviations (first row) and conservative p-values (second row, $\chi^2(2)$) for random effects in Exp.~1a model.}
+\begin{tabular}{c c c c c c }
+\toprule
+\multicolumn{3}{c}{Intercepts} & \multicolumn{3}{c}{Slopes for at-issueness}\\
+Target expression & Lexical content & Participant & Target expression & Lexical content & Participant\\
+\midrule
+.04 & .02 & .06 & .22 & .19 & .39\\
+$< .0001$ & $< .003$ & $< .0001$ & $< .0001$ & $< .0001$ & $< .0001$ \\
+\bottomrule
+\end{tabular}
+\label{tab:random1a}
+\end{table}
+
+\jd{need to re-run multiple comparisons. have uncertainty about best way to do this for linear mixed effects models. waiting for dave kleinschmidt's response. maybe multcomp, maybe lsmeans. lsmeans not working properly and can't compare output.}
+In order to determine which of the target expressions differed from each other in projectivity, we conducted post hoc Tukey tests using the \verb|multcomp| package \citep{tukey}. We conducted Bonferroni-corrected pairwise comparisons between triggers. The results, displayed in \tableref{tab:pairwise}, suggest no difference in the projectivity of the projective contents of NRRCs, \emph{annoyed}, nominal appositives, possessive NPs, and \emph{know}. The projective contents of the other triggers differed from each other in projectivity, except for the pairs \emph{know/stop}, \emph{stop/discover}, \emph{stop/stupid} and \emph{discover/stupid}. However, the details of these differences between projective content triggers need to be taken with a grain of salt: since the triggers differed in the contents with which they occurred, and the regression analysis suggests that there is projection variability by content, these differences may not be due merely to differences between triggers but also to differences between contents.
 
 
 \begin{table}[!h]
@@ -602,7 +627,7 @@ only      &  $<$ 2e-16 & $<$ 2e-16 & $<$ 2e-16 & 1.1e-15 & 3.7e-13 & 2.2e-05 & 0
 \bottomrule
 \end{tabular}
 
-\caption{P-values associated with Bonferroni-corrected paired t-tests on trigger projectivity means.\jd{need to clean up this table if we want to keep it, but too tired right now} \jt{Rather than writing numbers in the table, can we just use * and ** and *** to indicate significance levels? Might be easier to read.}}
+\caption{P-values associated with Bonferroni-corrected paired t-tests on trigger projectivity means. \jt{Rather than writing numbers in the table, can we just use * and ** and *** to indicate significance levels? Might be easier to read.}}
 \label{tab:pairwise}
 \end{center}
 \end{table}
@@ -762,6 +787,21 @@ These qualitative observations about projection variability and the relation bet
 
 There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.XX, $SE$ = 0.XX, $t$ = XX, $p <$ XX). This finding suggests that the information-structural status of a projective content is related to its projectivity, in support of the Projection Principle. 
 Stepwise model comparison revealed that each random effect was justified, suggesting that there was by-participant, by-expression and by-content variability, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This finding suggests that there are expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = XX, $SE$ = XX, $t$ = XX, $p >$ XX), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way.\jt{JD, include info about random effects.}
+
+\begin{table}
+\caption{Standard deviations (first row) and conservative p-values (second row, $\chi^2(2)$) for random effects in Exp.~1a model.\jd{update to reflect exp 1b results}}
+\begin{tabular}{c c c c c c }
+\toprule
+\multicolumn{3}{c}{Intercepts} & \multicolumn{3}{c}{Slopes for at-issueness}\\
+Target expression & Lexical content & Participant & Target expression & Lexical content & Participant\\
+\midrule
+.04 & .02 & .06 & .22 & .19 & .39\\
+$< .0001$ & $< .003$ & $< .0001$ & $< .0001$ & $< .0001$ & $< .0001$ \\
+\bottomrule
+\end{tabular}
+\label{tab:random1a}
+\end{table}
+
 
 We conducted Bonferroni-corrected pairwise comparisons between triggers.\jt{JD, provide details on what function/package you used.} The results, displayed in \tableref{tab:pairwise-1b}, suggest no difference in the projectivity of the projective contents \ldots. The projective contents of the other triggers differed from each other in projectivity\ldots. 
 
