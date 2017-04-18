@@ -436,7 +436,7 @@ head(t)
 
 # now we have a semi-wide data structure t that codes for each Turker-item pair 
 # the ai and projective response by that Turker to that item
-t <- readRDS(t, file="data/t.rds")
+t <- readRDS(file="data/t.rds")
 nrow(t)
 
 str(t$projective)
@@ -448,12 +448,9 @@ t$content <- as.factor(t$content)
 head(t)
 table(t$short_trigger)
 
-### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
-# MAIN ANALYSIS OF INTEREST: PREDICT PROJECTIVITY FROM FIXED EFFECTS OF TRIGGER, AT-ISSUENESS, INTERACTION (AND CONTROL FOR BLOCK)
 
-### are projective contents significantly more projective and NAI than main clauses?
-names(t)
-#library(lmerTest)
+
+### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
@@ -472,97 +469,11 @@ t_nomc$cblock_ai = myCenter(t_nomc$block_ai)
 t_nomc$cai = myCenter(t_nomc$ai)
 contrasts(t_nomc$short_trigger)
 
-# Of the following models (up to and excluding m.mr), I believe they're not the right way of analyzing the data: too unwieldy because the trigger variable has too many levels. Instead, have trigger be random effect (which I think is conceptually nice because ideally one would want to be able to run this experiment with arbitrarily many triggers and not have to worry about generating a giant covariance matrix)
-m = lmer(projective ~ cai*short_trigger + cblock_ai + (0+cai|workerid) + (0+cai|content), data=t_nomc)
-summary(m)
-
-m.1 = lmer(projective ~ cai*short_trigger + cblock_ai + (1+cai|workerid) + (0+cai|content), data=t_nomc)
-summary(m.1)
-
-anova(m, m.1)
-
-m.2 = lmer(projective ~ cai*short_trigger + cblock_ai + (0+cai|workerid) + (1+cai|content), data=t_nomc)
-summary(m.2)
-
-anova(m, m.2)
-
-m.3 = lmer(projective ~ cai*short_trigger + cblock_ai + (1+cai|workerid) + (1+cai|content), data=t_nomc)
-summary(m.3)
-
-anova(m.1, m.3)
-anova(m.2, m.3)
-
-m.a = lmer(projective ~ cai*short_trigger*cblock_ai + (0+cai|workerid) + (0+cai|content), data=t_nomc)
-summary(m.a)
-
-anova(m,m.a) # justified, but also there are 17 additional degrees of freedom when you allow block to interact with short_trigger
-
-plot(fitted(m),residuals(m))
-plot(fitted(m),t_nomc$projective)
-histogram(residuals(m))
-histogram(t_nomc$projective)
-
-m.mr = lmer(projective ~ cai + cblock_ai + (0+cai|workerid) + (0+cai|content) + (0+cai|short_trigger), data=t_nomc)
-summary(m.mr)
-
-m.mr.inter = lmer(projective ~ cai * cblock_ai + (0+cai|workerid) + (0+cai|content) + (0+cai|short_trigger), data=t_nomc)
-summary(m.mr.inter)
-
-anova(m.mr, m.mr.inter) # adding interaction between block and AI is justified
-
-
-### THE MODEL CURRENTLY REPORTED IN THE PAPER FOR EXP1A DOESN'T OCNVERGE
-m.mr.1 = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (1+cai|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.1)
-
-# remove the by-content slope (barely any by-content variability anyway)
-m.mr.2 = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.2)
-
-m.mr.2.intercept = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (1|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.2.intercept)
-
-m.mr.2.slope = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.2.slope)
-
-anova(m.mr.2,m.mr.2.intercept) # no benefit of adding by-content intercept
-anova(m.mr.2,m.mr.2.slope) # no benefit of adding by-content slope for ai
-
-m.mr.1.inter = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (1+cai|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.1.inter)
-
-m.mr.1.inter.slope = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.1.inter.slope)
-
-m.mr.1.inter.intercept = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (1|content) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.1.inter.intercept)
-
-m.mr.1.inter.nocontent = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (1+cai|short_trigger), data=t_nomc)
-summary(m.mr.1.inter.nocontent)
-
-anova(m.mr.1.inter.nocontent,m.mr.1.inter.intercept) # no benefit of adding by-content intercept
-anova(m.mr.1.inter.nocontent,m.mr.1.inter.slope) # no benefit of adding by-content slope for ai
-anova(m.mr.1.inter.intercept,m.mr.1.inter) # no benefit of adding slopes on top of intercepts
-anova(m.mr.1.inter.slope,m.mr.1.inter) # no benefit of adding intercepts on top of slopes
-anova(m.mr.1.inter.nocontent,m.mr.1.inter) # again, no benefit of adding by-content random effects
-
-# THIS FIRST ONE IS THE ONE TO REPORT IN THE PAPER ONCE ISSUES RESOLVED
-summary(m.mr.1.inter.nocontent)
-summary(m.mr.1.inter)
-
-# plot fixed and random effects in various ways -- exploratory
-library(sjPlot)
-library(sjmisc)
-
-sjp.lmer(m.mr.1.inter.nocontent,type="fe")
-sjp.lmer(m.mr.1.inter.nocontent,type="re.qq")
-ranef(m.mr.1.inter.nocontent)
-plot(ranef(m.mr.1.inter.nocontent)$short_trigger[,1],ranef(m.mr.1.inter.nocontent)$short_trigger[,2])
-plot(ranef(m.mr.1.inter.nocontent)$workerid[,1],ranef(m.mr.1.inter.nocontent)$workerid[,2])
+t_nomc$Trigger = factor(x=as.character(t_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
 
 # this will only run if you don't load plyr
 agr = t_nomc %>%
-  group_by(content,short_trigger) %>%
+  group_by(content,Trigger) %>%
   summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
 agr = as.data.frame(agr)
 agr$YMin = agr$mean_proj - agr$ci.low.proj
@@ -570,7 +481,7 @@ agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
 
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger)) +
+ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
@@ -582,27 +493,30 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger)) +
 ggsave(file="graphs/ai-proj-bytrigger-bycontent.pdf",width=5.7,height=4)
 
 agr = t_nomc %>%
-  group_by(short_trigger) %>%
+  group_by(Trigger) %>%
   summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
 agr = as.data.frame(agr)
 agr$YMin = agr$mean_proj - agr$ci.low.proj
 agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger)) +
+ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
   geom_point() +
+  scale_color_discrete(name="Target expression") +
   xlab("Mean not-at-issueness rating") +
   ylab("Mean projectivity rating") +
   xlim(0.35,1) +
   ylim(0.35,1)
-ggsave(file="graphs/ai-proj-bytrigger.pdf",width=5.7,height=4)
+ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
+
+agr # proj means of annoyed (.92) and discover (.85) / ai means of annoyed (.94) and discover (.89)
 
 # block effect
 agr = t_nomc %>%
-  group_by(short_trigger,block_ai) %>%
+  group_by(Trigger,block_ai) %>%
   summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
 agr = as.data.frame(agr)
 agr$YMin = agr$mean_proj - agr$ci.low.proj
@@ -610,7 +524,7 @@ agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
 agr$Order = ifelse(agr$block_ai=="block1","ai-proj","proj-ai")
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger,group=Order)) +
+ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger,group=Order)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
@@ -622,6 +536,70 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger,group=Order)) +
   ylim(0.25,1) +
   facet_wrap(~Order)
 ggsave(file="graphs/ai-proj-bytrigger-byblock.pdf",width=8.5,height=4)
+
+
+# MAIN ANALYSIS OF INTEREST: PREDICT PROJECTIVITY FROM FIXED EFFECTS OF TRIGGER, AT-ISSUENESS, INTERACTION (AND CONTROL FOR BLOCK)
+# We're including trigger as a random rather than as a fixed effect. Why? Too unwieldy as fixed effect because the trigger variable has too many levels. Instead, have trigger be random effect (which I think is conceptually nice because ideally one would want to be able to run this experiment with arbitrarily many triggers -- i.e., the levels of the variable don't exhaust the population)
+
+### THE MODEL FROM EXP 1A DOESN'T CONVERGE BECAUSE THERE IS ZERO VARIATION IN BY-CONTENT INTERCEPTS, SO WE'RE REPORTING MODEL WITH NO BY-CONTENT INTERCEPTS INSTEAD. 
+#THE MODEL CURRENTLY REPORTED IN THE PAPER:
+m.mr.1 = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+summary(m.mr.1)
+
+m.mr.0a = lmer(projective ~ cai + cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+summary(m.mr.0a)
+
+m.mr.0b = lmer(projective ~ cai + cai : cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+summary(m.mr.0b)
+
+m.mr.0c = lmer(projective ~ cblock_ai + cai : cblock_ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+summary(m.mr.0c)
+
+anova(m.mr.0a,m.mr.1) #p-value for interaction
+anova(m.mr.0b,m.mr.1) #p-value for block
+anova(m.mr.0c,m.mr.1) #p-value for at-issueness
+
+# get p-values for random effects
+m.0a = lmer(projective ~ cai * cblock_ai + (0+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+m.0b = lmer(projective ~ cai * cblock_ai + (1|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+m.0c = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (1+cai|short_trigger), data=t_nomc, REML=F)
+m.0e = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (0+cai|content) + (0+cai|short_trigger), data=t_nomc, REML=F)
+m.0f = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (0+cai|content) + (1|short_trigger), data=t_nomc, REML=F)
+
+anova(m.0a,m.mr.1) # p-value for by-participant intercepts
+anova(m.0b,m.mr.1) # p-value for by-participant slopes for at-issueness
+anova(m.0c,m.mr.1) # p-value for by-content slopes for at-issueness (ns)
+anova(m.0e,m.mr.1) # p-value for by-trigger intercepts
+anova(m.0f,m.mr.1) # p-value for by-trigger slopes for at-issueness (ns)
+
+
+# simple effects for interaction interpretation
+m.mr.simple = lmer(projective ~ ai * block_ai - ai + (1+cai|workerid) + (0+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
+summary(m.mr.simple)
+
+# plot fixed and random effects in various ways -- exploratory
+library(sjPlot)
+library(sjmisc)
+
+sjp.lmer(m.mr.1,type="fe")
+sjp.lmer(m.mr.1,type="re.qq") # this looks reasonable
+ranef(m.mr.1)
+plot(ranef(m.mr.1)$short_trigger[,1],ranef(m.mr.1)$short_trigger[,2])
+plot(ranef(m.mr.1)$content[,1],ranef(m.mr.1)$content[,2])
+plot(ranef(m.mr.1)$workerid[,1],ranef(m.mr.1)$workerid[,2])
+
+
+# load library for multiple comparisons
+library(multcomp)
+
+# run the model again with trigger as fixed effect so you can do multiple comparisons
+m.mr.fixedtrigger = lmer(projective ~ cai * cblock_ai + short_trigger + (1+cai|workerid) + (0+cai|content), data=t_nomc, REML=F)
+summary(m.mr.fixedtrigger)
+
+mc = glht(m.mr.fixedtrigger, mcp(short_trigger="Tukey"))
+summary(mc)
+
+# not clear to me whether this is indeed the right way to do this.
 
 ### END OF JUDITH D'S ANALYSIS CODE FOR EXP 1B
 

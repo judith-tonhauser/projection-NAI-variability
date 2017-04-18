@@ -510,74 +510,6 @@ saveRDS(t, file="data/t.rds")
 t = readRDS(file="data/t.rds")
 
 ### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
-# MAIN ANALYSIS OF INTEREST: PREDICT PROJECTIVITY FROM FIXED EFFECTS OF TRIGGER, AT-ISSUENESS, INTERACTION (AND CONTROL FOR BLOCK)
-
-# this will only run if you don't load plyr
-agr = t_nomc %>%
-  group_by(content,short_trigger) %>%
-  summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
-agr = as.data.frame(agr)
-agr$YMin = agr$mean_proj - agr$ci.low.proj
-agr$YMax = agr$mean_proj + agr$ci.high.proj
-agr$XMin = agr$mean_ai - agr$ci.low.ai
-agr$XMax = agr$mean_ai + agr$ci.high.ai
-
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
-  geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
-  geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
-  geom_point() +
-  xlab("Mean not-at-issueness rating") +
-  ylab("Mean projectivity rating") +
-  xlim(0,1) +
-  ylim(0,1)
-ggsave(file="graphs/ai-proj-bytrigger-bycontent.pdf",width=5.7,height=4)
-
-agr = t_nomc %>%
-  group_by(short_trigger) %>%
-  summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
-agr = as.data.frame(agr)
-agr$YMin = agr$mean_proj - agr$ci.low.proj
-agr$YMax = agr$mean_proj + agr$ci.high.proj
-agr$XMin = agr$mean_ai - agr$ci.low.ai
-agr$XMax = agr$mean_ai + agr$ci.high.ai
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
-  geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
-  geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
-  geom_point() +
-  xlab("Mean not-at-issueness rating") +
-  ylab("Mean projectivity rating") +
-  xlim(0.35,1) +
-  ylim(0.35,1)
-ggsave(file="graphs/ai-proj-bytrigger.pdf",width=5.7,height=4)
-
-# block effect
-agr = t_nomc %>%
-  group_by(short_trigger,block_ai) %>%
-  summarise(mean_ai = mean(ai), ci.low.ai=ci.low(ai), ci.high.ai=ci.high(ai), mean_proj = mean(projective), ci.low.proj=ci.low(projective),ci.high.proj=ci.high(projective))
-agr = as.data.frame(agr)
-agr$YMin = agr$mean_proj - agr$ci.low.proj
-agr$YMax = agr$mean_proj + agr$ci.high.proj
-agr$XMin = agr$mean_ai - agr$ci.low.ai
-agr$XMax = agr$mean_ai + agr$ci.high.ai
-agr$Order = ifelse(agr$block_ai=="block1","ai-proj","proj-ai")
-ggplot(agr, aes(x=mean_ai,y=mean_proj,color=short_trigger,group=Order)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
-  geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
-  geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
-  geom_point() +
-  geom_smooth(method="lm") +
-  xlab("Mean not-at-issueness rating") +
-  ylab("Mean projectivity rating") +
-  xlim(0.25,1) +
-  ylim(0.25,1) +
-  facet_wrap(~Order)
-ggsave(file="graphs/ai-proj-bytrigger-byblock.pdf",width=8.5,height=4)
-
-### are projective contents significantly more projective and NAI than main clauses?
-names(t)
-#library(lmerTest)
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
@@ -639,6 +571,8 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   ylim(0.65,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+agr # proj means of annoyed (.96) and discover (.86)/ ai means of annoyed (.97) and discover (.87)
+
 # block effect
 agr = t_nomc %>%
   group_by(Trigger,block_ai) %>%
@@ -663,13 +597,8 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger,group=Order)) +
 ggsave(file="graphs/ai-proj-bytrigger-byblock.pdf",width=8.5,height=4)
 
 
+# MAIN ANALYSIS OF INTEREST: PREDICT PROJECTIVITY FROM FIXED EFFECTS OF TRIGGER, AT-ISSUENESS, INTERACTION (AND CONTROL FOR BLOCK)
 # We're including trigger as a random rather than as a fixed effect. Why? Too unwieldy as fixed effect because the trigger variable has too many levels. Instead, have trigger be random effect (which I think is conceptually nice because ideally one would want to be able to run this experiment with arbitrarily many triggers -- i.e., the levels of the variable don't exhaust the population)
-
-plot(fitted(m),residuals(m))
-plot(fitted(m),t_nomc$projective)
-histogram(residuals(m))
-histogram(t_nomc$projective)
-
 
 ### THE MODEL CURRENTLY REPORTED IN THE PAPER
 m.mr.1 = lmer(projective ~ cai * cblock_ai + (1+cai|workerid) + (1+cai|content) + (1+cai|short_trigger), data=t_nomc, REML=F)
