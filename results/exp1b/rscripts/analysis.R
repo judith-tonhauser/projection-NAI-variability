@@ -453,7 +453,7 @@ table(t$short_trigger)
 
 ### are projective contents significantly more projective and NAI than main clauses?
 names(t)
-library(lmerTest)
+#library(lmerTest)
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
