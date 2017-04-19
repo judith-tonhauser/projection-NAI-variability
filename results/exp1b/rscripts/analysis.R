@@ -588,18 +588,15 @@ plot(ranef(m.mr.1)$short_trigger[,1],ranef(m.mr.1)$short_trigger[,2])
 plot(ranef(m.mr.1)$content[,1],ranef(m.mr.1)$content[,2])
 plot(ranef(m.mr.1)$workerid[,1],ranef(m.mr.1)$workerid[,2])
 
-
-# load library for multiple comparisons
-library(multcomp)
-
 # run the model again with trigger as fixed effect so you can do multiple comparisons
 m.mr.fixedtrigger = lmer(projective ~ cai * cblock_ai + short_trigger + (1+cai|workerid) + (0+cai|content), data=t_nomc, REML=F)
 summary(m.mr.fixedtrigger)
 
-mc = glht(m.mr.fixedtrigger, mcp(short_trigger="Tukey"))
-summary(mc)
+# pairwise comparisons on short_trigger using tukey
+library(lsmeans)
 
-# not clear to me whether this is indeed the right way to do this.
+pc = lsmeans(m.mr.fixedtrigger, revpairwise~short_trigger, adjust="tukey")
+pc
 
 ### END OF JUDITH D'S ANALYSIS CODE FOR EXP 1B
 
