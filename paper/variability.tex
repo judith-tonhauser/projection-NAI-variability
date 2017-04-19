@@ -25,7 +25,15 @@
 \usepackage{tipa}
 \usepackage{multirow}
 \usepackage{authblk}
+\usepackage{adjustbox}
+\usepackage{array}
 
+\newcolumntype{R}[2]{%
+    >{\adjustbox{angle=#1,lap=\width-(#2)}\bgroup}%
+    l%
+    <{\egroup}%
+}
+\newcommand*\rot{\multicolumn{1}{R{60}{1em}}}% no optional argument here, please!
 
 \newcommand{\foc}{$_{\mbox{\small F}}$}
 \newcommand{\lp}{<_{\hspace*{-.1cm}p}}
@@ -606,9 +614,63 @@ $< .0001$ & $< .003$ & $< .0001$ & $< .0001$ & $< .0001$ & $< .0001$ \\
 \label{tab:random1a}
 \end{table}
 
-\jd{need to re-run multiple comparisons. have uncertainty about best way to do this for linear mixed effects models. waiting for dave kleinschmidt's response. maybe multcomp, maybe lsmeans. lsmeans not working properly and can't compare output.}
-In order to determine which of the target expressions differed from each other in projectivity, we conducted post hoc Tukey tests using the \verb|multcomp| package \citep{tukey}. We conducted Bonferroni-corrected pairwise comparisons between triggers. The results, displayed in \tableref{tab:pairwise}, suggest no difference in the projectivity of the projective contents of NRRCs, \emph{annoyed}, nominal appositives, possessive NPs, and \emph{know}. The projective contents of the other triggers differed from each other in projectivity, except for the pairs \emph{know/stop}, \emph{stop/discover}, \emph{stop/stupid} and \emph{discover/stupid}. However, the details of these differences between projective content triggers need to be taken with a grain of salt: since the triggers differed in the contents with which they occurred, and the regression analysis suggests that there is projection variability by content, these differences may not be due merely to differences between triggers but also to differences between contents.
+In order to determine which of the target expressions differed from each other in projectivity, we used the \verb|lsmeans| package \citep{tukey} to conduct post hoc pairwise comparisons using Tukey's method. P-values for each pair of target expressions are displayed in \tableref{tab:pairwise}. These results suggest no difference in the projectivity of the projective contents of non-restrictive relative clauses, \emph{annoyed}, nominal appositives, possessive NPs, \emph{know}, and \emph{stop}. The projective contents of the other target expressions differed from each other in projectivity, except for the pairs \emph{discover}/possessive NPs, \emph{discover/know}, \emph{discover/stop}, \emph{stupid/discover}, \emph{only/discover} and \emph{only/stupid}. However, the details of these differences between projective content triggers need to be taken with a grain of salt: since the triggers differed in the contents with which they occurred, and the regression analysis suggests that there is projection variability by content, these differences may not be due merely to differences between triggers but also to differences between contents.
 
+%$lsmeans
+% short_trigger    lsmean         SE      df  lower.CL  upper.CL
+% annoyed       0.9315271 0.01259000 1270.00 0.9068276 0.9562266
+% discover      0.8706940 0.01253432 1610.15 0.8461087 0.8952793
+% know          0.9116132 0.01255969 1544.76 0.8869774 0.9362491
+% NomApp        0.9259912 0.01267334  970.99 0.9011209 0.9508615
+% NRRC          0.9307409 0.01259531 1200.34 0.9060296 0.9554522
+% only          0.8257333 0.01310691 1642.75 0.8000253 0.8514413
+% possNP        0.9073848 0.01268872  894.35 0.8824817 0.9322880
+% stop          0.9065535 0.01331176 1372.99 0.8804399 0.9326671
+% stupid        0.8528980 0.01255132 1599.86 0.8282792 0.8775167
+%
+%Degrees-of-freedom method: satterthwaite 
+%Confidence level used: 0.95 
+%
+%$contrasts
+% contrast                estimate         SE      df t.ratio p.value
+% discover - annoyed -0.0608330604 0.01652579 1507.03  -3.681  0.0074
+% know - annoyed     -0.0199138659 0.01634846 1462.10  -1.218  0.9527
+% know - discover     0.0409191945 0.01649311 1575.13   2.481  0.2420
+% NomApp - annoyed   -0.0055359099 0.01636429 1210.88  -0.338  1.0000
+% NomApp - discover   0.0552971504 0.01661246 1370.34   3.329  0.0251
+% NomApp - know       0.0143779559 0.01643794 1332.20   0.875  0.9942
+% NRRC - annoyed     -0.0007861807 0.01629960 1298.52  -0.048  1.0000
+% NRRC - discover     0.0600468797 0.01653041 1519.70   3.633  0.0088
+% NRRC - know         0.0191276852 0.01631837 1520.04   1.172  0.9622
+% NRRC - NomApp       0.0047497293 0.01631104 1367.86   0.291  1.0000
+% only - annoyed     -0.1057938108 0.01720345 1492.79  -6.150  <.0001
+% only - discover    -0.0449607504 0.01703116 1622.19  -2.640  0.1710
+% only - know        -0.0858799449 0.01707845 1597.04  -5.029  <.0001
+% only - NomApp      -0.1002579008 0.01727766 1390.17  -5.803  <.0001
+% only - NRRC        -0.1050076301 0.01724076 1462.41  -6.091  <.0001
+% possNP - annoyed   -0.0241422425 0.01628856 1329.37  -1.482  0.8640
+% possNP - discover   0.0366908179 0.01661576 1327.34   2.208  0.4008
+% possNP - know      -0.0042283766 0.01637757 1419.93  -0.258  1.0000
+% possNP - NomApp    -0.0186063326 0.01638506 1120.16  -1.136  0.9687
+% possNP - NRRC      -0.0233560618 0.01626775 1378.15  -1.436  0.8839
+% possNP - only       0.0816515683 0.01726450 1334.23   4.729  0.0001
+% stop - annoyed     -0.0249735368 0.01724838 1467.01  -1.448  0.8789
+% stop - discover     0.0358595236 0.01720270 1571.18   2.085  0.4843
+% stop - know        -0.0050596709 0.01720723 1546.36  -0.294  1.0000
+% stop - NomApp      -0.0194376268 0.01728660 1386.98  -1.124  0.9706
+% stop - NRRC        -0.0241873561 0.01729886 1415.66  -1.398  0.8987
+% stop - only         0.0808202740 0.01750756 1294.65   4.616  0.0001
+% stop - possNP      -0.0008312943 0.01733808 1272.05  -0.048  1.0000
+% stupid - annoyed   -0.0786291211 0.01645040 1477.68  -4.780  0.0001
+% stupid - discover  -0.0177960607 0.01652539 1587.72  -1.077  0.9775
+% stupid - know      -0.0587152552 0.01643770 1559.59  -3.572  0.0110
+% stupid - NomApp    -0.0730932112 0.01649388 1407.10  -4.432  0.0003
+% stupid - NRRC      -0.0778429404 0.01645528 1459.83  -4.731  0.0001
+% stupid - only       0.0271646897 0.01700269 1619.76   1.598  0.8063
+% stupid - possNP    -0.0544868786 0.01650662 1315.92  -3.301  0.0275
+% stupid - stop      -0.0536555843 0.01722651 1501.46  -3.115  0.0488
+%
+%P value adjustment: tukey method for comparing a family of 9 estimates 
 
 \begin{table}[!h]
 \begin{center}
@@ -616,18 +678,18 @@ In order to determine which of the target expressions differed from each other i
 \toprule
  &   NRRC & annoyed & NomApp &  possNP &  know & stop & discover & stupid \\
  \midrule
-annoyed &  1.0  &  -  &        -   &       -  &        -  &   - &     -   &  -\\     
-NomApp  &  1.0 & 1.0 & -    &   -   &    -    &   -  &     -   & - \\    
-possNP  &    1.0 & 1.0 & 1.0 & - &      -  &     -     &  -   & - \\    
-know     &   1.0 & 1.0 & 1.0 & 1.0 & -   &    -   &    -       & -\\
-stop     &   8.9e-05 & 0.00023 & 0.00099 & 0.01568 & 0.19037 & - &  - & -\\      
-discover  &   9.1e-06 & 2.6e-05 & 0.00013 & 0.00265 & 0.04359 & 1.0 & - & -      \\
-stupid    &  6.3e-07 & 2.0e-06 & 1.1e-05 & 0.00031 & 0.00719 & 1.0 & 1.0 & - \\
-only      &  $<$ 2e-16 & $<$ 2e-16 & $<$ 2e-16 & 1.1e-15 & 3.7e-13 & 2.2e-05 & 0.00020 & 0.00174 \\
+annoyed &  \emph{ns}  &  -  &        -   &       -  &        -  &   - &     -   &  -\\     
+NomApp  &  \emph{ns} & \emph{ns} & -    &   -   &    -    &   -  &     -   & - \\    
+possNP  &    \emph{ns} & \emph{ns} & \emph{ns} & - &      -  &     -     &  -   & - \\    
+know     &   \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & -   &    -   &    -       & -\\
+stop     &   \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & - &  - & -\\      
+discover  &   ** & ** & * & \emph{ns} & \emph{ns} & \emph{ns} & - & -      \\
+stupid    &  *** & *** & ** & * & * & * & \emph{ns} & - \\
+only      &  *** & *** & *** & *** & *** & *** & \emph{ns} & \emph{ns} \\
 \bottomrule
 \end{tabular}
 
-\caption{P-values associated with Bonferroni-corrected paired t-tests on trigger projectivity means. \jt{Rather than writing numbers in the table, can we just use * and ** and *** to indicate significance levels? Might be easier to read.}}
+\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, and \emph{n.s} indicates no significant difference in means.}
 \label{tab:pairwise}
 \end{center}
 \end{table}
@@ -791,34 +853,117 @@ $< .0001$ & $< .0001$ & $> .20$ & $> .50$ & $< .0001$ \\
 \label{tab:random1b}
 \end{table}
 
-\jd{need to re-run multiple comparisons. waiting for dave kleinschmidt's response.}
-
-We conducted Bonferroni-corrected pairwise comparisons between triggers.\jt{JD, provide details on what function/package you used.} The results, displayed in \tableref{tab:pairwise-1b}, suggest no difference in the projectivity of the projective contents \ldots. The projective contents of the other triggers differed from each other in projectivity\ldots. 
-
-\jt{I can make this better, if we decide to keep this table, by tilting the top row 90 degrees}
+As in Exp.~1a,  we conducted post hoc pairwise comparisons using Tukey's method to determine which of the target expressions differed from each other in projectivity. P-values for each pair of target expressions are displayed in \tableref{tab:pairwise-1b}. The results suggest no difference in the projectivity of the projective contents of \emph{annoyed}, \emph{noticed}, \emph{aware}, \emph{realize}, \emph{amused}, \emph{saw}, \emph{found out}, \emph{learned} and \emph{discover} (though \emph{discover} was marginally different from \emph{annoyed}, \emph{noticed}, and \emph{aware}). The projective contents of the other target expressions differed from each other in projectivity.
+%$lsmeans
+% short_trigger    lsmean         SE      df  lower.CL  upper.CL
+% confessed     0.7050121 0.01408795 1962.39 0.6773832 0.7326411
+% discovered    0.8496784 0.01396559 1926.66 0.8222891 0.8770676
+% established   0.5007178 0.01516623 2106.56 0.4709754 0.5304601
+% found_out     0.8725319 0.01397433 1926.52 0.8451255 0.8999383
+% is_amused     0.8912457 0.01396470 1911.97 0.8638580 0.9186333
+% is_annoyed    0.9002764 0.01396139 1907.67 0.8728952 0.9276575
+% is_aware      0.9023857 0.01396334 1911.23 0.8750007 0.9297706
+% learned       0.8741852 0.01396491 1924.99 0.8467973 0.9015731
+% noticed       0.9061926 0.01396836 1918.15 0.8787979 0.9335874
+% realize       0.8972695 0.01396897 1919.41 0.8698735 0.9246654
+% revealed      0.7819930 0.01397920 1934.41 0.7545771 0.8094089
+% saw           0.8857288 0.01398681 1933.23 0.8582980 0.9131596
+%
+%Degrees-of-freedom method: satterthwaite 
+%Confidence level used: 0.95 
+%
+%$contrasts
+% contrast                     estimate         SE      df t.ratio p.value
+% discovered - confessed    0.144666229 0.01776008 2532.53   8.146  <.0001
+% established - confessed  -0.204294366 0.01858402 2575.38 -10.993  <.0001
+% established - discovered -0.348960595 0.01882905 2613.36 -18.533  <.0001
+% found_out - confessed     0.167519806 0.01778212 2527.65   9.421  <.0001
+% found_out - discovered    0.022853577 0.01759139 2482.02   1.299  0.9794
+% found_out - established   0.371814172 0.01894994 2611.96  19.621  <.0001
+% is_amused - confessed     0.186233560 0.01781034 2522.05  10.456  <.0001
+% is_amused - discovered    0.041567332 0.01757128 2466.35   2.366  0.4301
+% is_amused - established   0.390527926 0.01909130 2619.15  20.456  <.0001
+% is_amused - found_out     0.018713754 0.01753819 2459.17   1.067  0.9959
+% is_annoyed - confessed    0.195264225 0.01782317 2524.05  10.956  <.0001
+% is_annoyed - discovered   0.050597997 0.01757351 2466.52   2.879  0.1489
+% is_annoyed - established  0.399558591 0.01908882 2628.65  20.932  <.0001
+% is_annoyed - found_out    0.027744419 0.01754821 2458.95   1.581  0.9161
+% is_annoyed - is_amused    0.009030665 0.01750105 2439.80   0.516  1.0000
+% is_aware - confessed      0.197373529 0.01779012 2507.34  11.095  <.0001
+% is_aware - discovered     0.052707300 0.01757999 2471.31   2.998  0.1096
+% is_aware - established    0.401667895 0.01907864 2623.00  21.053  <.0001
+% is_aware - found_out      0.029853723 0.01753866 2457.60   1.702  0.8675
+% is_aware - is_amused      0.011139968 0.01749602 2440.27   0.637  1.0000
+% is_aware - is_annoyed     0.002109304 0.01750718 2440.65   0.120  1.0000
+% learned - confessed       0.169173078 0.01779223 2539.69   9.508  <.0001
+% learned - discovered      0.024506849 0.01759413 2487.25   1.393  0.9650
+% learned - established     0.373467444 0.01890649 2615.90  19.753  <.0001
+% learned - found_out       0.001653272 0.01756905 2475.29   0.094  1.0000
+% learned - is_amused      -0.017060483 0.01754263 2457.63  -0.973  0.9982
+% learned - is_annoyed     -0.026091148 0.01757187 2471.78  -1.485  0.9449
+% learned - is_aware       -0.028200451 0.01755639 2464.64  -1.606  0.9071
+% noticed - confessed       0.201180478 0.01777940 2519.07  11.315  <.0001
+% noticed - discovered      0.056514250 0.01759324 2479.74   3.212  0.0598
+% noticed - established     0.405474844 0.01903577 2622.07  21.301  <.0001
+% noticed - found_out       0.033660672 0.01754174 2454.46   1.919  0.7475
+% noticed - is_amused       0.014946918 0.01751810 2447.55   0.853  0.9995
+% noticed - is_annoyed      0.005916253 0.01751670 2447.29   0.338  1.0000
+% noticed - is_aware        0.003806949 0.01751977 2447.52   0.217  1.0000
+% noticed - learned         0.032007401 0.01757848 2480.60   1.821  0.8067
+% realize - confessed       0.192257321 0.01780172 2528.38  10.800  <.0001
+% realize - discovered      0.047591092 0.01759102 2480.86   2.705  0.2240
+% realize - established     0.396551687 0.01903085 2620.84  20.837  <.0001
+% realize - found_out       0.024737515 0.01755551 2467.56   1.409  0.9620
+% realize - is_amused       0.006023760 0.01750865 2440.02   0.344  1.0000
+% realize - is_annoyed     -0.003006904 0.01753020 2445.66  -0.172  1.0000
+% realize - is_aware       -0.005116208 0.01752184 2444.17  -0.292  1.0000
+% realize - learned         0.023084243 0.01756048 2466.10   1.315  0.9774
+% realize - noticed        -0.008923157 0.01754447 2457.62  -0.509  1.0000
+% revealed - confessed      0.076980852 0.01772535 2534.98   4.343  0.0009
+% revealed - discovered    -0.067685377 0.01762403 2502.11  -3.841  0.0070
+% revealed - established    0.281275218 0.01877270 2609.13  14.983  <.0001
+% revealed - found_out     -0.090538954 0.01760915 2489.85  -5.142  <.0001
+% revealed - is_amused     -0.109252709 0.01761489 2487.47  -6.202  <.0001
+% revealed - is_annoyed    -0.118283373 0.01762839 2486.71  -6.710  <.0001
+% revealed - is_aware      -0.120392677 0.01759776 2478.81  -6.841  <.0001
+% revealed - learned       -0.092192226 0.01762173 2505.57  -5.232  <.0001
+% revealed - noticed       -0.124199626 0.01761218 2487.18  -7.052  <.0001
+% revealed - realize       -0.115276469 0.01763486 2499.06  -6.537  <.0001
+% saw - confessed           0.180716661 0.01777287 2541.40  10.168  <.0001
+% saw - discovered          0.036050432 0.01760934 2498.22   2.047  0.6606
+% saw - established         0.385011026 0.01889891 2602.99  20.372  <.0001
+% saw - found_out           0.013196855 0.01759846 2490.29   0.750  0.9998
+% saw - is_amused          -0.005516900 0.01756043 2462.82  -0.314  1.0000
+% saw - is_annoyed         -0.014547565 0.01758151 2471.34  -0.827  0.9996
+% saw - is_aware           -0.016656868 0.01757299 2470.19  -0.948  0.9986
+% saw - learned             0.011543583 0.01757460 2478.92   0.657  1.0000
+% saw - noticed            -0.020463818 0.01757702 2478.42  -1.164  0.9915
+% saw - realize            -0.011540660 0.01757681 2473.46  -0.657  1.0000
+% saw - revealed            0.103735809 0.01763005 2511.07   5.884  <.0001
+%
+%P value adjustment: tukey method for comparing a family of 12 estimates
 
 \begin{table}[!h]
+\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, `.' trend at .15, and \emph{n.s} indicates no significant difference in means.}
 \begin{center}
-\begin{tabular}{l l l l l l l l l l l l l}
+\begin{tabular}{l l l l l l l l l l l l }
 \toprule
- &  established & confessed & revealed &  discovered &  learned & found out & saw & amused & realize & aware & noticed & annoyed \\
+ &   \rot{annoyed} & \rot{noticed} & \rot{aware} &  \rot{realize} &  \rot{amused} & \rot{saw} & \rot{found out} & \rot{learned} & \rot{discover} & \rot{revealed} & \rot{confessed} \\
  \midrule
-established & & & & & & & & & & & & \\ 
-confessed & & & & & & & & & & & & \\ 
-revealed & & & & & & & & & & & & \\ 
-discovered & & & & & & & & & & & & \\ 
-learned & & & & & & & & & & & & \\ 
-found out & & & & & & & & & & & & \\ 
-saw  & & & & & & & & & & & & \\ 
-amused & & & & & & & & & & & & \\ 
-realize  & & & & & & & & & & & & \\   
-aware  & & & & & & & & & & & & \\ 
-noticed    & & & & & & & & & & & & \\ 
-annoyed   & & & & & & & & & & & & \\ 
+noticed & \emph{n.s} & - & - & - & - & - & - & - & - & - & - \\ 
+aware & \emph{n.s} & \emph{n.s} & -&- &- &- &- &- &- &- &-  \\ 
+realize & \emph{n.s} & \emph{n.s} & \emph{n.s} & - & - &- &- &- &- &- &-  \\ 
+amused & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & - & - & - & - & - & - & -  \\ 
+saw & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & - &- &- &- &- &-  \\ 
+found out & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s}& \emph{n.s} & -& -& -& -& -\\ 
+learned  & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s}  & - & - & - & - \\ 
+discover & . & . & . & \emph{n.s}& \emph{n.s} & \emph{n.s} & \emph{n.s} & \emph{n.s.} & - &- &-  \\ 
+revealed  & *** & ***  & *** & *** & *** & *** & *** & *** & ** & -&-  \\   
+confessed  & *** & *** & *** & *** & *** & *** & *** &  *** & *** & ** & - \\ 
+established    & *** & *** & *** & *** & *** & *** & *** & *** & *** & *** & *** \\
 \bottomrule
 \end{tabular}
 
-\caption{P-values associated with Bonferroni-corrected paired t-tests on trigger projectivity means.\jd{need to clean up this table if we want to keep it, but too tired right now} \jt{Rather than writing numbers in the table, can we just use * and ** and *** to indicate significance levels? Might be easier to read.}}
 \label{tab:pairwise-1b}
 \end{center}
 \end{table}
