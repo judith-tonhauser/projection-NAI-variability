@@ -261,6 +261,141 @@ head(t)
 # save data structure t 
 saveRDS(t, file="data/t.rds")
 
+
+############# START OF JD'S ANALYSIS CODE ######################
+t <- readRDS(file="data/t.rds")
+
+# aggregate responses by trigger for merging in means from exp 1b to plot
+tagr = t %>%
+  group_by(short_trigger) %>%
+  summarise(mean_ai = mean(response), ci_low_ai = ci.low(response), ci_high_ai = ci.high(response))
+tagr = as.data.frame(tagr)
+tagr$ci_min_ai = tagr$mean_ai - tagr$ci_low_ai
+tagr$ci_max_ai = tagr$mean_ai + tagr$ci_high_ai
+
+# load and aggregate data from exp 1a to merge in projectivity means
+t.proj <- readRDS(file="../exp1b/data/t.rds")
+tagr.proj = t.proj %>%
+  group_by(short_trigger) %>%
+  summarise(mean_proj = mean(projective), ci_low_proj = ci.low(projective), ci_high_proj = ci.high(projective))
+tagr.proj = as.data.frame(tagr.proj)
+tagr.proj$ci_min_proj = tagr.proj$mean_proj - tagr.proj$ci_low_proj
+tagr.proj$ci_max_proj = tagr.proj$mean_proj + tagr.proj$ci_high_proj
+head(tagr.proj)
+
+means = tagr %>%
+  select(short_trigger,mean_ai,ci_min_ai,ci_max_ai) %>%
+  inner_join(tagr.proj[,c("short_trigger","mean_proj","ci_min_proj","ci_max_proj")],by=c("short_trigger"))
+
+means_nomc = droplevels(means[means$short_trigger != "MC",])
+nrow(means_nomc) 
+
+means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realized","is_aware","noticed","is_annoyed"))
+
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
+  geom_point() +
+  # geom_smooth(method="lm") +
+  scale_color_discrete(name="Target expression") +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0.3,1) +
+  ylim(0.3,1)
+ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
+
+
+# aggregate responses by trigger and content for merging in means from exp 1a to plot and run regression analysis
+tagr = t %>%
+  group_by(short_trigger, content) %>%
+  summarise(mean_ai = mean(response), ci_low_ai = ci.low(response), ci_high_ai = ci.high(response))
+tagr = as.data.frame(tagr)
+tagr$ci_min_ai = tagr$mean_ai - tagr$ci_low_ai
+tagr$ci_max_ai = tagr$mean_ai + tagr$ci_high_ai
+
+# load and aggregate data from exp 1a to merge in projectivity means
+t.proj <- readRDS(file="../exp1b/data/t.rds")
+tagr.proj = t.proj %>%
+  group_by(short_trigger, content) %>%
+  summarise(mean_proj = mean(projective), ci_low_proj = ci.low(projective), ci_high_proj = ci.high(projective))
+tagr.proj = as.data.frame(tagr.proj)
+tagr.proj$ci_min_proj = tagr.proj$mean_proj - tagr.proj$ci_low_proj
+tagr.proj$ci_max_proj = tagr.proj$mean_proj + tagr.proj$ci_high_proj
+head(tagr.proj)
+
+means = tagr %>%
+  select(short_trigger,content,mean_ai,ci_min_ai,ci_max_ai) %>%
+  inner_join(tagr.proj[,c("short_trigger","content","mean_proj","ci_min_proj","ci_max_proj")],by=c("short_trigger","content"))
+
+nrow(means) # this leaves 260 data points for analysis (of which 20 are MCs, i.e., 240)
+saveRDS(means, file="data/means.rds")
+
+means_nomc = droplevels(means[means$short_trigger != "MC",])
+nrow(means_nomc)
+means_nomc$cmean_ai = myCenter(means_nomc$mean_ai)
+
+means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realized","is_aware","noticed","is_annoyed"))
+
+# plot it all -- this will only run if you don't load plyr
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
+  # geom_smooth(method="lm") +
+  geom_point() +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1)
+ggsave(file="graphs/ai-proj-bytrigger-bycontent.pdf",width=5.7,height=4)
+
+# plot with ai-effect smoothers by trigger
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
+  geom_point(alpha=.5) +
+  geom_smooth(method="lm",se=F) +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1)
+ggsave(file="graphs/ai-proj-bytrigger-bycontent-smoothers.pdf",width=5.7,height=4)
+
+
+m = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
+summary(m)
+
+m.1 = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1|content), data = means_nomc, REML=F)
+summary(m.1)
+
+m.2 = lmer(mean_proj ~ cmean_ai + (1|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML = F)
+summary(m.2)
+
+m.3 = lmer(mean_proj ~ cmean_ai + (0+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
+summary(m.3)
+
+m.4 = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (0+cmean_ai|content), data = means_nomc, REML=F)
+summary(m.4)
+
+anova(m.1,m) # p-value for by-content slope -- ns
+anova(m.2,m) # p-value for by-trigger slope -- ns
+anova(m.3,m) # p-value for by-trigger intercept -- .0001
+anova(m.4,m) # p-value for by-content intercept -- .ns
+
+# so, only include by-trigger intercepts. this is the model reported in the paper:
+m.report = lmer(mean_proj ~ cmean_ai + (1|short_trigger), data = means_nomc, REML=F)
+summary(m.report)
+
+m.report.0 = lmer(mean_proj ~ 1 + (1|short_trigger), data = means_nomc, REML=F)
+summary(m.report.0)
+
+anova(m.report.0,m.report) # p-value for at-issueness -- ns
+
+
+############# END OF JD'S ANALYSIS CODE ######################
+
 ############# Plotting ######################
 t <- readRDS(t, file="data/t.rds")
 nrow(t) #4760 / 20 = 238 Turkers
