@@ -393,6 +393,15 @@ summary(m.report.0)
 
 anova(m.report.0,m.report) # p-value for at-issueness -- ns
 
+m.report = lmer(mean_proj ~ exp(cmean_ai) + (1|short_trigger), data = means_nomc, REML=F)
+summary(m.report)
+
+m.norandom = lm(mean_proj ~ cmean_ai, data = means_nomc)
+summary(m.norandom)
+
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj)) +
+  geom_point() +
+  geom_smooth(method="lm")
 
 ############# END OF JD'S ANALYSIS CODE ######################
 

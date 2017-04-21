@@ -1196,6 +1196,37 @@ As in Exp.~1b, each participant saw each of the 12 target predicates and 8 contr
 \label{fig:f-proj-ai-2b}
 \end{figure}
 
+\jd{at-issueness not significant in mixed effects regression (only in simple regression) -- see commented content below for model.}
+
+
+%Formula: mean_proj ~ cmean_ai + (1 | short_trigger)
+%   Data: means_nomc
+%
+%     AIC      BIC   logLik deviance df.resid 
+%  -554.1   -540.1    281.0   -562.1      236 
+%
+%Scaled residuals: 
+%    Min      1Q  Median      3Q     Max 
+%-3.0835 -0.5640  0.1461  0.6739  2.4186 
+%
+%Random effects:
+% Groups        Name        Variance Std.Dev.
+% short_trigger (Intercept) 0.020061 0.14164 
+% Residual                  0.004494 0.06704 
+%Number of obs: 240, groups:  short_trigger, 12
+%
+%Fixed effects:
+%            Estimate Std. Error t value
+%(Intercept)  0.83092    0.04112  20.209
+%cmean_ai     0.03320    0.04014   0.827
+%
+%Correlation of Fixed Effects:
+%         (Intr)
+%cmean_ai 0.000 
+
+\jd{not sure how to discuss this result and that of 2a. on the one hand, some further support for at-issueness effect. on the other hand, lack of effect for 2b (though signiifcant without random effects, but the fact that random by-trigger intercepts important means we can't just throw these out). to keep in mind: less data, less power in exps 2 than in exps 1.}
+
+
 \begin{figure}[!h]
 \begin{center}
 
