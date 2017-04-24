@@ -550,7 +550,9 @@ to the main clause controls: for these stimuli, we expect low responses to both 
 
 \subsubsection{Results}
 
-We begin by addressing the two main questions of interest, namely whether there is projection variability across target expressions and whether projectivity a function of at-issueness, as predicted by the Projection Principle. By-expression variability can be seen in \figref{fig:proj-triggmeans}:  while median projectivity ratings were all close to ceiling (suggesting that for each projective content at least half of the participants took it to be robustly projective), the variable mean responses, box sizes and whisker lengths provide evidence of variability in projectivity across target expressions. For example, mean projectivity of of the prejacent of \emph{only} was relatively low at .76, while mean projectivity of the projective contents of NRRCs and \emph{annoyed} was close to ceiling at .96. \figref{fig:proj-subjmeans} shows that about one third of participants took the 9 projective contents they judged to be robustly projective. For the remaining participants, the decreasing means (from right to left) reveal a decrease in the overall projectivity of the 9 projective contents and the increasingly larger error bars reveal an increase in projection variability among the 9 projective contents. 
+We begin by addressing the two main questions of interest, namely whether there is projection variability across target expressions and whether projectivity a function of at-issueness, as predicted by the Projection Principle. 
+
+\paragraph{Projection variability.} By-expression variability can be seen in \figref{fig:proj-triggmeans}:  while median projectivity ratings were all close to ceiling (suggesting that for each projective content at least half of the participants took it to be robustly projective), the variable mean responses, box sizes and whisker lengths provide evidence of variability in projectivity across target expressions. For example, mean projectivity of of the prejacent of \emph{only} was relatively low at .76, while mean projectivity of the projective contents of NRRCs and \emph{annoyed} was close to ceiling at .96. \figref{fig:proj-subjmeans} shows that about one third of participants took the 9 projective contents they judged to be robustly projective. For the remaining participants, the decreasing means (from right to left) reveal a decrease in the overall projectivity of the 9 projective contents and the increasingly larger error bars reveal an increase in projection variability among the 9 projective contents. 
 
 \jt{I will fix x-axis label of upper panel} \jd{and add main clauses to show control condition?}
 
@@ -572,8 +574,88 @@ We begin by addressing the two main questions of interest, namely whether there 
 \label{fig:f-proj-1a}
 \end{figure}
 
+In order to determine which of the target expressions differed from each other in projectivity, we conducted post hoc pairwise comparisons using Tukey's method (allowing for by-participant variability), using the \verb|lsmeans| package \citep{tukey} in R \citep{r}. P-values for each pair of target expressions are displayed in \tableref{tab:pairwise}. These results suggest no difference in the projectivity of the projective contents of non-restrictive relative clauses, \emph{annoyed}, nominal appositives, possessive NPs, and \emph{know}. The projective contents of the other target expressions differed from each other in projectivity, except for the pairs \emph{discover/know} (which displayed only a marginally significant difference), \emph{discover/stop}, \emph{stupid/discover}, and \emph{stupid/stop}. 
 
-Mean projectivity ratings for the lexical contents that each target expression was paired with are visualized as a function of their mean not-at-issueness ratings in \figref{fig:f-proj-ai-1a}. There is a clear relationship between at-issueness and projectivity: lexical contents that received higher projectivity ratings are also lexical contents that participants considered to be less at-issue. 
+%$lsmeans
+% short_trigger    lsmean         SE      df  lower.CL  upper.CL
+% annoyed       0.9595714 0.01473729 1675.74 0.9306660 0.9884769
+% discover      0.8556667 0.01473729 1675.74 0.8267612 0.8845721
+% know          0.9233810 0.01473729 1675.74 0.8944755 0.9522864
+% NomApp        0.9528571 0.01473729 1675.74 0.9239517 0.9817626
+% NRRC          0.9637619 0.01473729 1675.74 0.9348565 0.9926673
+% only          0.7604286 0.01473729 1675.74 0.7315231 0.7893340
+% possNP        0.9386667 0.01473729 1675.74 0.9097612 0.9675721
+% stop          0.8650476 0.01473729 1675.74 0.8361422 0.8939531
+% stupid        0.8455238 0.01473729 1675.74 0.8166184 0.8744293
+%
+%Degrees-of-freedom method: satterthwaite 
+%Confidence level used: 0.95 
+%
+%$contrasts
+% contrast               estimate         SE   df t.ratio p.value
+% discover - annoyed -0.103904762 0.01947976 1680  -5.334  <.0001
+% know - annoyed     -0.036190476 0.01947976 1680  -1.858  0.6431
+% know - discover     0.067714286 0.01947976 1680   3.476  0.0153
+% NomApp - annoyed   -0.006714286 0.01947976 1680  -0.345  1.0000
+% NomApp - discover   0.097190476 0.01947976 1680   4.989  <.0001
+% NomApp - know       0.029476190 0.01947976 1680   1.513  0.8496
+% NRRC - annoyed      0.004190476 0.01947976 1680   0.215  1.0000
+% NRRC - discover     0.108095238 0.01947976 1680   5.549  <.0001
+% NRRC - know         0.040380952 0.01947976 1680   2.073  0.4923
+% NRRC - NomApp       0.010904762 0.01947976 1680   0.560  0.9998
+% only - annoyed     -0.199142857 0.01947976 1680 -10.223  <.0001
+% only - discover    -0.095238095 0.01947976 1680  -4.889  <.0001
+% only - know        -0.162952381 0.01947976 1680  -8.365  <.0001
+% only - NomApp      -0.192428571 0.01947976 1680  -9.878  <.0001
+% only - NRRC        -0.203333333 0.01947976 1680 -10.438  <.0001
+% possNP - annoyed   -0.020904762 0.01947976 1680  -1.073  0.9780
+% possNP - discover   0.083000000 0.01947976 1680   4.261  0.0007
+% possNP - know       0.015285714 0.01947976 1680   0.785  0.9973
+% possNP - NomApp    -0.014190476 0.01947976 1680  -0.728  0.9984
+% possNP - NRRC      -0.025095238 0.01947976 1680  -1.288  0.9349
+% possNP - only       0.178238095 0.01947976 1680   9.150  <.0001
+% stop - annoyed     -0.094523810 0.01947976 1680  -4.852  <.0001
+% stop - discover     0.009380952 0.01947976 1680   0.482  0.9999
+% stop - know        -0.058333333 0.01947976 1680  -2.995  0.0689
+% stop - NomApp      -0.087809524 0.01947976 1680  -4.508  0.0002
+% stop - NRRC        -0.098714286 0.01947976 1680  -5.068  <.0001
+% stop - only         0.104619048 0.01947976 1680   5.371  <.0001
+% stop - possNP      -0.073619048 0.01947976 1680  -3.779  0.0051
+% stupid - annoyed   -0.114047619 0.01947976 1680  -5.855  <.0001
+% stupid - discover  -0.010142857 0.01947976 1680  -0.521  0.9999
+% stupid - know      -0.077857143 0.01947976 1680  -3.997  0.0022
+% stupid - NomApp    -0.107333333 0.01947976 1680  -5.510  <.0001
+% stupid - NRRC      -0.118238095 0.01947976 1680  -6.070  <.0001
+% stupid - only       0.085095238 0.01947976 1680   4.368  0.0005
+% stupid - possNP    -0.093142857 0.01947976 1680  -4.782  0.0001
+% stupid - stop      -0.019523810 0.01947976 1680  -1.002  0.9857
+%
+%P value adjustment: tukey method for comparing a family of 9 estimates  
+
+\begin{table}[!h]
+\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, `.' marginal significance at .1, and \emph{n.s} indicates no significant difference in means.}
+\begin{center}
+\begin{tabular}{l l l l l l l l l}
+\toprule
+ &   NRRC & annoyed & NomApp &  possNP &  know & stop & discover & stupid \\
+ \midrule
+annoyed &  \emph{ns}  &  -  &        -   &       -  &        -  &   - &     -   &  -\\     
+NomApp  &  \emph{ns} & \emph{ns} & -    &   -   &    -    &   -  &     -   & - \\    
+possNP  &    \emph{ns} & \emph{ns} & \emph{ns} & - &      -  &     -     &  -   & - \\    
+know     &   \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & -   &    -   &    -       & -\\
+stop     &   *** & *** & ** & ** & . & - &  - & -\\      
+discover  &   *** & *** & *** & ** & * & \emph{ns} & - & -      \\
+stupid    &  *** & *** & *** & *** & ** & \emph{ns} & \emph{ns} & - \\
+only      &  *** & *** & *** & *** & *** & *** & *** & ** \\
+\bottomrule
+\end{tabular}
+\label{tab:pairwise}
+\end{center}
+\end{table}
+
+This brings us to our second question: how much of the observed  variability in projectivity can be attributed to the at-issueness of the  contents in question?
+
+\paragraph{At-issueness.} Mean projectivity ratings for each target expression are visualized as a function of their mean not-at-issueness ratings in \figref{fig:f-proj-ai-1a}. There is a clear relationship between at-issueness and projectivity: those lexical contents that received higher projectivity ratings were also considered to be less at-issue. 
 
 \begin{figure}[!h]
 
@@ -585,7 +667,7 @@ Mean projectivity ratings for the lexical contents that each target expression w
 \label{fig:f-proj-ai-1a}
 \end{figure}
 
-These qualitative observations about projection variability and the relation between at-issueness and projectivity were borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order and the interaction of block order and at-issueness. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants). Here and in the remainder of the paper, p-values were obtained by likelihood ratio tests of the full model with the effect in question against the model without the effect in question. The analysis was conducted on non-main-clause trials only (1890 data points) because we were specifically interested in variability in projectivity for contents that have the potential to project. Analyses were conducted using the \verb|lme4| package \citep{bates2015} in R \citep{r}.
+These qualitative observations about projection variability and the relation between at-issueness and projectivity were borne out statistically. We conducted a mixed-effects linear regression predicting projectivity rating from a centered fixed effect of at-issueness rating. In order to control for block order effects, the model also included a centered fixed effect of block order and the interaction of block order and at-issueness. The model included the maximal random effects structure justified by the data and the theoretical questions: random by-expression intercepts (capturing differences in projectivity between target expressions),  random by-content intercepts (capturing differences in projectivity between lexical contents), random by-participant intercepts (capturing individual variability in projectivity), and random slopes for at-issueness by target expression, lexical content, and participant (capturing that the effect of at-issueness may vary across target expressions, lexical contents, and participants). Here and in the remainder of the paper, p-values were obtained by likelihood ratio tests of the full model with the effect in question against the model without the effect in question. The analysis was conducted on non-main-clause trials only (1890 data points) because we were specifically interested in variability in projectivity for contents that have the potential to project. Analyses were conducted using the \verb|lme4| package \citep{bates2015}.
 
 There was a significant main effect of at-issueness such that more not-at-issue items received higher projectivity ratings ($\beta$ = 0.37, $SE$ = 0.10, $t$ = 3.70, $\chi^2(1)$ = 9.20, $p <$ .003). This suggests that the information-structural status of a projective content is related to its projectivity, as predicted by the Projection Principle. Likelihood ratio tests revealed that each random effect was justified (see \tableref{tab:random1a} for standard deviations and p-values); that is, there was by-participant, by-expression and by-content variability in projectivity, as well as variability in the at-issueness effect across participants, target expressions, and lexical contents. This suggests that there are target expression-specific, conventional, effects in projectivity. The block effect did not reach significance ($\beta$ = -0.02, $SE$ = 0.01, $t$ = -1.56, $\chi^2(1)$ = 2.39, $p >$ .12), nor did the interaction term ($\beta$ = 0.08, $SE$ = 0.08, $t$ = 0.98, $\chi^2(1)$ = 0.96, $p >$ .32), suggesting that the order in which participants completed the tasks (projectivity, at-issueness) did not affect their judgments in a systematic way. 
 
@@ -612,86 +694,6 @@ $< .0001$ & $< .003$ & $< .0001$ & $< .0001$ & $< .0001$ & $< .0001$ \\
 \bottomrule
 \end{tabular}
 \label{tab:random1a}
-\end{table}
-
-In order to determine which of the target expressions differed from each other in projectivity, we used the \verb|lsmeans| package \citep{tukey} to conduct post hoc pairwise comparisons using Tukey's method. P-values for each pair of target expressions are displayed in \tableref{tab:pairwise}. These results suggest no difference in the projectivity of the projective contents of non-restrictive relative clauses, \emph{annoyed}, nominal appositives, possessive NPs, \emph{know}, and \emph{stop}. The projective contents of the other target expressions differed from each other in projectivity, except for the pairs \emph{discover}/possessive NPs, \emph{discover/know}, \emph{discover/stop}, \emph{stupid/discover}, \emph{only/discover} and \emph{only/stupid}. However, the details of these differences between projective content triggers need to be taken with a grain of salt: since the triggers differed in the contents with which they occurred, and the regression analysis suggests that there is projection variability by content, these differences may not be due merely to differences between triggers but also to differences between contents.
-
-%$lsmeans
-% short_trigger    lsmean         SE      df  lower.CL  upper.CL
-% annoyed       0.9315271 0.01259000 1270.00 0.9068276 0.9562266
-% discover      0.8706940 0.01253432 1610.15 0.8461087 0.8952793
-% know          0.9116132 0.01255969 1544.76 0.8869774 0.9362491
-% NomApp        0.9259912 0.01267334  970.99 0.9011209 0.9508615
-% NRRC          0.9307409 0.01259531 1200.34 0.9060296 0.9554522
-% only          0.8257333 0.01310691 1642.75 0.8000253 0.8514413
-% possNP        0.9073848 0.01268872  894.35 0.8824817 0.9322880
-% stop          0.9065535 0.01331176 1372.99 0.8804399 0.9326671
-% stupid        0.8528980 0.01255132 1599.86 0.8282792 0.8775167
-%
-%Degrees-of-freedom method: satterthwaite 
-%Confidence level used: 0.95 
-%
-%$contrasts
-% contrast                estimate         SE      df t.ratio p.value
-% discover - annoyed -0.0608330604 0.01652579 1507.03  -3.681  0.0074
-% know - annoyed     -0.0199138659 0.01634846 1462.10  -1.218  0.9527
-% know - discover     0.0409191945 0.01649311 1575.13   2.481  0.2420
-% NomApp - annoyed   -0.0055359099 0.01636429 1210.88  -0.338  1.0000
-% NomApp - discover   0.0552971504 0.01661246 1370.34   3.329  0.0251
-% NomApp - know       0.0143779559 0.01643794 1332.20   0.875  0.9942
-% NRRC - annoyed     -0.0007861807 0.01629960 1298.52  -0.048  1.0000
-% NRRC - discover     0.0600468797 0.01653041 1519.70   3.633  0.0088
-% NRRC - know         0.0191276852 0.01631837 1520.04   1.172  0.9622
-% NRRC - NomApp       0.0047497293 0.01631104 1367.86   0.291  1.0000
-% only - annoyed     -0.1057938108 0.01720345 1492.79  -6.150  <.0001
-% only - discover    -0.0449607504 0.01703116 1622.19  -2.640  0.1710
-% only - know        -0.0858799449 0.01707845 1597.04  -5.029  <.0001
-% only - NomApp      -0.1002579008 0.01727766 1390.17  -5.803  <.0001
-% only - NRRC        -0.1050076301 0.01724076 1462.41  -6.091  <.0001
-% possNP - annoyed   -0.0241422425 0.01628856 1329.37  -1.482  0.8640
-% possNP - discover   0.0366908179 0.01661576 1327.34   2.208  0.4008
-% possNP - know      -0.0042283766 0.01637757 1419.93  -0.258  1.0000
-% possNP - NomApp    -0.0186063326 0.01638506 1120.16  -1.136  0.9687
-% possNP - NRRC      -0.0233560618 0.01626775 1378.15  -1.436  0.8839
-% possNP - only       0.0816515683 0.01726450 1334.23   4.729  0.0001
-% stop - annoyed     -0.0249735368 0.01724838 1467.01  -1.448  0.8789
-% stop - discover     0.0358595236 0.01720270 1571.18   2.085  0.4843
-% stop - know        -0.0050596709 0.01720723 1546.36  -0.294  1.0000
-% stop - NomApp      -0.0194376268 0.01728660 1386.98  -1.124  0.9706
-% stop - NRRC        -0.0241873561 0.01729886 1415.66  -1.398  0.8987
-% stop - only         0.0808202740 0.01750756 1294.65   4.616  0.0001
-% stop - possNP      -0.0008312943 0.01733808 1272.05  -0.048  1.0000
-% stupid - annoyed   -0.0786291211 0.01645040 1477.68  -4.780  0.0001
-% stupid - discover  -0.0177960607 0.01652539 1587.72  -1.077  0.9775
-% stupid - know      -0.0587152552 0.01643770 1559.59  -3.572  0.0110
-% stupid - NomApp    -0.0730932112 0.01649388 1407.10  -4.432  0.0003
-% stupid - NRRC      -0.0778429404 0.01645528 1459.83  -4.731  0.0001
-% stupid - only       0.0271646897 0.01700269 1619.76   1.598  0.8063
-% stupid - possNP    -0.0544868786 0.01650662 1315.92  -3.301  0.0275
-% stupid - stop      -0.0536555843 0.01722651 1501.46  -3.115  0.0488
-%
-%P value adjustment: tukey method for comparing a family of 9 estimates 
-
-\begin{table}[!h]
-\begin{center}
-\begin{tabular}{l l l l l l l l l}
-\toprule
- &   NRRC & annoyed & NomApp &  possNP &  know & stop & discover & stupid \\
- \midrule
-annoyed &  \emph{ns}  &  -  &        -   &       -  &        -  &   - &     -   &  -\\     
-NomApp  &  \emph{ns} & \emph{ns} & -    &   -   &    -    &   -  &     -   & - \\    
-possNP  &    \emph{ns} & \emph{ns} & \emph{ns} & - &      -  &     -     &  -   & - \\    
-know     &   \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & -   &    -   &    -       & -\\
-stop     &   \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & \emph{ns} & - &  - & -\\      
-discover  &   ** & ** & * & \emph{ns} & \emph{ns} & \emph{ns} & - & -      \\
-stupid    &  *** & *** & ** & * & * & * & \emph{ns} & - \\
-only      &  *** & *** & *** & *** & *** & *** & \emph{ns} & \emph{ns} \\
-\bottomrule
-\end{tabular}
-
-\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, and \emph{n.s} indicates no significant difference in means.}
-\label{tab:pairwise}
-\end{center}
 \end{table}
 
 %
@@ -944,7 +946,7 @@ As in Exp.~1a,  we conducted post hoc pairwise comparisons using Tukey's method 
 %P value adjustment: tukey method for comparing a family of 12 estimates
 
 \begin{table}[!h]
-\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, `.' trend at .15, and \emph{n.s} indicates no significant difference in means.}
+\caption{P-values associated with pairwise comparison of target expression projectivity means using Tukey's method. `***' indicates significance at .0001, `**' at .01, `*' at .05, `.' marginal significance at .1, and \emph{n.s} indicates no significant difference in means.}
 \begin{center}
 \begin{tabular}{l l l l l l l l l l l l }
 \toprule

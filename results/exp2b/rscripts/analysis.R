@@ -290,7 +290,7 @@ means = tagr %>%
 means_nomc = droplevels(means[means$short_trigger != "MC",])
 nrow(means_nomc) 
 
-means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realized","is_aware","noticed","is_annoyed"))
+means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
 
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
