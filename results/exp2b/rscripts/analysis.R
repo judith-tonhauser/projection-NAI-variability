@@ -335,7 +335,7 @@ means_nomc = droplevels(means[means$short_trigger != "MC",])
 nrow(means_nomc)
 means_nomc$cmean_ai = myCenter(means_nomc$mean_ai)
 
-means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realized","is_aware","noticed","is_annoyed"))
+means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
 
 # plot it all -- this will only run if you don't load plyr
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
@@ -367,6 +367,9 @@ ggsave(file="graphs/ai-proj-bytrigger-bycontent-smoothers.pdf",width=5.7,height=
 m = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
 summary(m)
 
+m.0 = lmer(mean_proj ~  (1+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
+summary(m.0)
+
 m.1 = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1|content), data = means_nomc, REML=F)
 summary(m.1)
 
@@ -383,6 +386,7 @@ anova(m.1,m) # p-value for by-content slope -- ns
 anova(m.2,m) # p-value for by-trigger slope -- ns
 anova(m.3,m) # p-value for by-trigger intercept -- .0001
 anova(m.4,m) # p-value for by-content intercept -- .ns
+anova(m.0,m) # p-value for by-content intercept -- .ns
 
 # so, only include by-trigger intercepts. this is the model reported in the paper:
 m.report = lmer(mean_proj ~ cmean_ai + (1|short_trigger), data = means_nomc, REML=F)
@@ -393,15 +397,14 @@ summary(m.report.0)
 
 anova(m.report.0,m.report) # p-value for at-issueness -- ns
 
-m.report = lmer(mean_proj ~ exp(cmean_ai) + (1|short_trigger), data = means_nomc, REML=F)
-summary(m.report)
+# power analysis
+library(simr)
+# effect sizes of at-issueness in exp. 1a and 1b, for comparison: .37, .34. in exp. 2a: .29. let's test for power of m.report to detect effect size of .29.
+fixef(m.report)["cmean_ai"] = .29
+fixef(m.report)["cmean_ai"]
+powerSim(m) # power:  60.40% (57.29, 63.45)
 
-m.norandom = lm(mean_proj ~ cmean_ai, data = means_nomc)
-summary(m.norandom)
 
-ggplot(means_nomc, aes(x=mean_ai,y=mean_proj)) +
-  geom_point() +
-  geom_smooth(method="lm")
 
 ############# END OF JD'S ANALYSIS CODE ######################
 

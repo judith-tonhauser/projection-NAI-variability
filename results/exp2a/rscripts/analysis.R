@@ -348,7 +348,7 @@ library(simr)
 # m -- has full maximal random effects structure and detected only marginally significant effect of at-issueness (beta = .25)
 fixef(m)["cmean_ai"]
 powerSim(m) # power: 60.40% (57.29, 63.45)
-pcm = powerCurve(m)
+
 # Power for predictor 'cmean_ai', (95% confidence interval):
 #   60.40% (57.29, 63.45)
 # 
