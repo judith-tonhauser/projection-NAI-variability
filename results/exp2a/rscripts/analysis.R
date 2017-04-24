@@ -308,6 +308,9 @@ ggsave(file="graphs/ai-proj-bytrigger-bycontent.pdf",width=5.7,height=4)
 m = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
 summary(m)
 
+m.0 = lmer(mean_proj ~ (1+cmean_ai|short_trigger) + (1+cmean_ai|content), data = means_nomc, REML=F)
+summary(m.0)
+
 m.1 = lmer(mean_proj ~ cmean_ai + (1+cmean_ai|short_trigger) + (1|content), data = means_nomc, REML=F)
 summary(m.1)
 
@@ -324,6 +327,7 @@ anova(m.1,m) # p-value for by-content slope -- ns
 anova(m.2,m) # p-value for by-trigger slope -- ns
 anova(m.3,m) # p-value for by-trigger intercept -- ns
 anova(m.4,m) # p-value for by-content intercept -- .02
+anova(m.0,m) # p-value for at-issueness -- .06
 
 # so, only include by-content intercepts. this is the model reported in the paper:
 m.report = lmer(mean_proj ~ cmean_ai + (1|content), data = means_nomc, REML=F)
@@ -332,8 +336,48 @@ summary(m.report)
 m.report.0 = lmer(mean_proj ~ 1 + (1|content), data = means_nomc, REML=F)
 summary(m.report.0)
 
-anova(m.report.0,m.report) # p-value for at-issueness -- .0001
+anova(m.report.0,m.report) # p-value for at-issueness -- .0001  (but if you instead report the one with max random effects structure, p-value for at-issueness is only marginally significant)
 
+# power analysis
+library(simr)
+# effect sizes of at-issueness in exp. 1a and 1b, for comparison: .37, .34. if we wanted to test for power of m to detect effect size of .35, we would say the following before running powerSim:
+# fixef(m)["cmean_ai"] = .35
+# effect sizes in exp. 2a and 2b: .25/.29 (depending on random effects structure)
+
+# we analyze the power of two different models: 
+# m -- has full maximal random effects structure and detected only marginally significant effect of at-issueness (beta = .25)
+fixef(m)["cmean_ai"]
+powerSim(m) # power: 60.40% (57.29, 63.45)
+pcm = powerCurve(m)
+# Power for predictor 'cmean_ai', (95% confidence interval):
+#   60.40% (57.29, 63.45)
+# 
+# Test: Kenward Roger (package pbkrtest)
+# Effect size for cmean_ai is 0.25
+# 
+# Based on 1000 simulations, (171 warnings, 0 errors)
+# alpha = 0.05, nrow = 43
+# 
+# Time elapsed: 0 h 20 m 53 s
+
+# m.report -- has only by-content random intercepts after model comparison (beta = .29)
+fixef(m.report)["cmean_ai"]
+powerSim(m.report) # power: 99.80% (99.28, 99.98)
+# Power for predictor 'cmean_ai', (95% confidence interval):
+#   99.80% (99.28, 99.98)
+# 
+# Test: Kenward Roger (package pbkrtest)
+# Effect size for cmean_ai is 0.29
+# 
+# Based on 1000 simulations, (0 warnings, 0 errors)
+# alpha = 0.05, nrow = 43
+# 
+# Time elapsed: 0 h 9 m 21 s
+
+# we want to know: does m have 80% power to detect .25 effect of at-issueness? does m.report? 
+# if m doesn't and m.report does: ok. but that means we don't have a way of estimating the random effects (tough luck)
+# if both do: guess it's probably not real then.
+# if neither do: UNDERPOWERED
 
 ############# END OF JD'S ANALYSIS CODE ######################
 
