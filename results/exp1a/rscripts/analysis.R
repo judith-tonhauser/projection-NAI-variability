@@ -510,6 +510,7 @@ saveRDS(t, file="data/t.rds")
 t = readRDS(file="data/t.rds")
 
 ### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
+t = readRDS(file="data/t.rds")
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
@@ -649,8 +650,8 @@ plot(ranef(m.mr.1)$workerid[,1],ranef(m.mr.1)$workerid[,2])
 # load library for multiple comparisons
 library(multcomp)
 
-# run the model again with trigger as fixed effect so you can do multiple comparisons
-m.mr.fixedtrigger = lmer(projective ~ cai * cblock_ai + short_trigger + (1+cai|workerid) + (0+cai|content), data=t_nomc, REML=F)
+# run the model again with trigger as fixed effect so you can do multiple comparisons (and no at-issueness or block)
+m.mr.fixedtrigger = lmer(projective ~ short_trigger + (1+cai|workerid) + (0+cai|content), data=t_nomc, REML=F)
 summary(m.mr.fixedtrigger)
 
 # pairwise comparisons on short_trigger using tukey
