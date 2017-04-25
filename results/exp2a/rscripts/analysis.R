@@ -259,6 +259,19 @@ ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   ylim(0.3,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
+  geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
+  geom_point() +
+  # geom_smooth(method="lm") +
+  scale_color_discrete(name="Target expression") +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0.3,1) +
+  ylim(0.3,1)
+ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
 
 # aggregate responses by trigger and content for merging in means from exp 1a to plot and run regression analysis
 tagr = t %>%

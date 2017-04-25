@@ -305,6 +305,20 @@ ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   ylim(0.3,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
+  geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
+  geom_point() +
+  # geom_smooth(method="lm") +
+  scale_color_discrete(name="Target expression") +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0.3,1) +
+  ylim(0.3,1)
+ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
+
 
 # aggregate responses by trigger and content for merging in means from exp 1a to plot and run regression analysis
 tagr = t %>%
@@ -397,13 +411,28 @@ summary(m.report.0)
 
 anova(m.report.0,m.report) # p-value for at-issueness -- ns
 
-# power analysis
+# at-issueness significant in model with no random effects
+m.norandom = lm(mean_proj~cmean_ai,data=means_nomc)
+summary(m.norandom)
+
+# power analysis -- definitely enough power
 library(simr)
 # effect sizes of at-issueness in exp. 1a and 1b, for comparison: .37, .34. in exp. 2a: .29. let's test for power of m.report to detect effect size of .29.
 fixef(m.report)["cmean_ai"] = .29
 fixef(m.report)["cmean_ai"]
-powerSim(m) # power:  60.40% (57.29, 63.45)
+powerSim(m.report) # power:  100% (99.63, 100)
 
+fixef(m)["cmean_ai"] = .29
+fixef(m)["cmean_ai"]
+powerSim(m) # power:  100% (99.63, 100)
+
+# plot fixed and random effects in various ways -- exploratory
+library(sjPlot)
+library(sjmisc)
+
+sjp.lmer(m.report,type="fe")
+sjp.lmer(m.report,type="re.qq") # this doesn't look very normally distributed...
+ranef(m.report)
 
 
 ############# END OF JD'S ANALYSIS CODE ######################

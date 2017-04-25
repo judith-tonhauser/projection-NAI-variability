@@ -512,6 +512,20 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   ylim(0.35,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
+  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
+  geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
+  geom_point() +
+  # geom_smooth(method="lm") +
+  scale_color_discrete(name="Target expression") +
+  xlab("Mean not-at-issueness rating") +
+  ylab("Mean projectivity rating") +
+  xlim(0.35,1) +
+  ylim(0.35,1)
+ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
+
 agr # proj means of annoyed (.92) and discover (.85) / ai means of annoyed (.94) and discover (.89)
 
 # block effect
