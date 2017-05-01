@@ -2,7 +2,7 @@
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp2b/')
 
 ## JT working directory
-setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp2b/')
+setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp2b/')
 
 ## code for both starts here
 source('rscripts/helpers.R')

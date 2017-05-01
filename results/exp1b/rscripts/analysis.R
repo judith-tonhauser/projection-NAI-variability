@@ -2,7 +2,7 @@
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1b/')
 
 ## JT working directory
-setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1b/')
+setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1b/')
 
 ## code for both starts here
 source('rscripts/helpers.R')
@@ -30,7 +30,6 @@ library(scales)
 # age info
 table(d$age) #18-74
 median(d$age) #32
-mean(d$age) #34.3
 
 # look at Turkers' comments
 unique(d$comments)
@@ -470,6 +469,8 @@ t_nomc$cai = myCenter(t_nomc$ai)
 contrasts(t_nomc$short_trigger)
 
 t_nomc$Trigger = factor(x=as.character(t_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
+names(t_nomc)
+table(t_nomc$Trigger)
 
 # this will only run if you don't load plyr
 agr = t_nomc %>%
@@ -527,6 +528,9 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
 ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
 
 agr # proj means of annoyed (.92) and discover (.85) / ai means of annoyed (.94) and discover (.89)
+round(agr$mean_proj,2)
+#established  confessed revealed  discovered  learned found_out saw   is_amused realize is_aware  noticed is_annoyed
+#0.42         0.69      0.78      0.85        0.88    0.88      0.89  0.91      0.91    0.92      0.92    0.92
 
 # block effect
 agr = t_nomc %>%
@@ -669,6 +673,23 @@ ggplot(agr, aes(x=short_trigger, y=projective)) +
   facet_wrap(~content,ncol=1)
 ggsave(f="graphs/contents-mean-projective-nonprojective.pdf",height=20,width=6)
 
+### plot the projectivity of the different triggers, including main clauses
+mean_proj = aggregate(projective~short_trigger, data=t, FUN="mean")
+mean_proj$YMin = mean_proj$projective - aggregate(projective~short_trigger, data=t, FUN="ci.low")$projective
+mean_proj$YMax = mean_proj$projective + aggregate(projective~short_trigger, data=t, FUN="ci.high")$projective
+mean_proj
+
+t$trigger_proj <-factor(t$short_trigger, levels=mean_proj[order(mean_proj$projective), "short_trigger"])
+
+ggplot(t, aes(x=trigger_proj, y=projective)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Projectivity")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-projection-with-MCs.pdf",height=3,width=10)
+
 ### plot the projectivity of the different triggers
 str(t$projective)
 table(t$short_trigger)
@@ -720,7 +741,7 @@ ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
   ylab("Projectivity")
-ggsave("graphs/projection-subjectmeans.pdf",height=3,width=9)
+ggsave("graphs/projection-subjectmeans.pdf",height=3,width=10)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
