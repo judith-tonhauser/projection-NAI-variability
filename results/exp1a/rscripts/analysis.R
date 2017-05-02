@@ -584,7 +584,7 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_point() +
   # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
-  xlab("Mean not-at-issueness rating") +
+  xlab("Mean not-at-issueness rating ('asking whether')") +
   ylab("Mean projectivity rating") +
   xlim(0.65,1) +
   ylim(0.65,1)

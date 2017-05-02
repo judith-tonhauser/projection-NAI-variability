@@ -290,7 +290,9 @@ means = tagr %>%
 means_nomc = droplevels(means[means$short_trigger != "MC",])
 nrow(means_nomc) 
 
-means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
+means_nomc$Trigger = factor(x=ifelse(means_nomc$short_trigger == "established","establish",ifelse(means_nomc$short_trigger == "confessed","confess",ifelse(means_nomc$short_trigger == "revealed","reveal",ifelse(means_nomc$short_trigger == "discovered","discover",ifelse(means_nomc$short_trigger == "learned","learn",ifelse(means_nomc$short_trigger == "found_out","find_out",ifelse(means_nomc$short_trigger == "saw","see",ifelse(means_nomc$short_trigger == "is_amused","amused",ifelse(means_nomc$short_trigger == "realize","realize",ifelse(means_nomc$short_trigger == "is_aware","aware",ifelse(means_nomc$short_trigger == "noticed","notice",ifelse(means_nomc$short_trigger == "is_annoyed","annoyed","NA")))))))))))),levels=c("establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
+
+# means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
 
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
@@ -305,6 +307,7 @@ ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   ylim(0.3,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+library(ggrepel)
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
@@ -313,7 +316,7 @@ ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_point() +
   # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
-  xlab("Mean not-at-issueness rating") +
+  xlab("Mean not-at-issueness rating ('are you sure')") +
   ylab("Mean projectivity rating") +
   xlim(0.3,1) +
   ylim(0.3,1)
@@ -349,7 +352,8 @@ means_nomc = droplevels(means[means$short_trigger != "MC",])
 nrow(means_nomc)
 means_nomc$cmean_ai = myCenter(means_nomc$mean_ai)
 
-means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
+means_nomc$Trigger = factor(x=ifelse(means_nomc$short_trigger == "established","establish",ifelse(means_nomc$short_trigger == "confessed","confess",ifelse(means_nomc$short_trigger == "revealed","reveal",ifelse(means_nomc$short_trigger == "discovered","discover",ifelse(means_nomc$short_trigger == "learned","learn",ifelse(means_nomc$short_trigger == "found_out","find_out",ifelse(means_nomc$short_trigger == "saw","see",ifelse(means_nomc$short_trigger == "is_amused","amused",ifelse(means_nomc$short_trigger == "realize","realize",ifelse(means_nomc$short_trigger == "is_aware","aware",ifelse(means_nomc$short_trigger == "noticed","notice",ifelse(means_nomc$short_trigger == "is_annoyed","annoyed","NA")))))))))))),levels=c("establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
+
 
 # plot it all -- this will only run if you don't load plyr
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
@@ -411,9 +415,19 @@ summary(m.report.0)
 
 anova(m.report.0,m.report) # p-value for at-issueness -- ns
 
+m.reportcontent = lmer(mean_proj ~ cmean_ai + (1|short_trigger) + (1|content), data = means_nomc, REML=F)
+summary(m.reportcontent)
+
+m.norandomtrigger = lmer(mean_proj~cmean_ai + (1|content),data=means_nomc)
+summary(m.norandomtrigger)
+
+anova(m.norandomtrigger,m.reportcontent) # p-value for random effect (a little dodgy because by-content intercept included in comparison, but because there's no variation anyway it doesn't matter)
+
 # at-issueness significant in model with no random effects
 m.norandom = lm(mean_proj~cmean_ai,data=means_nomc)
 summary(m.norandom)
+
+
 
 # power analysis -- definitely enough power
 library(simr)
@@ -434,6 +448,12 @@ sjp.lmer(m.report,type="fe")
 sjp.lmer(m.report,type="re.qq") # this doesn't look very normally distributed...
 ranef(m.report)
 
+# restricted cubic spline analysis
+library(rms)
+m.rcs = lmer(mean_proj ~ rcs(cmean_ai,3) + (1|short_trigger), data = means_nomc, REML=F)
+summary(m.rcs)
+
+anova(m.report,m.rcs) # restricted cubic spline not warranted
 
 ############# END OF JD'S ANALYSIS CODE ######################
 

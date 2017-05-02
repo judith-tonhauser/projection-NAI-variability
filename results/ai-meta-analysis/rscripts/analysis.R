@@ -55,21 +55,26 @@ d %>%
   group_by(SubExperiment) %>%
   summarise(r=cor(mean_exp1,mean_exp2))
 
+cbPalette <- c("#0072B2", "#D55E00")
+
 ggplot(d, aes(x=mean_exp1,y=mean_exp2,color=SubExperiment)) +
   geom_abline(intercept=0,slope=1, color="gray", linetype="dashed") +
-  geom_text_repel(aes(label=short_trigger),nudge_x=-.05,size=3) +
-  geom_errorbar(aes(ymin=YMin,ymax=YMax),alpha=.5,color="gray") +
-  geom_errorbarh(aes(xmin=XMin,xmax=XMax),alpha=.5,color="gray") +
+  geom_text_repel(aes(label=short_trigger),nudge_x=-.05,size=4,show.legend=F) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),alpha=.8,color="gray") +
+  geom_errorbarh(aes(xmin=XMin,xmax=XMax),alpha=.8,color="gray") +
   geom_point() +
-  xlab("Not-at-issueness ('asking whether', Exp. 1)") +
-  ylab("Not-at-issueness ('are you sure', Exp. 2)") +
+  scale_color_manual(values=cbPalette,name="Sub-experiment") +
+  xlab("Mean not-at-issueness ('asking whether', Exp. 1)") +
+  ylab("Mean not-at-issueness ('are you sure', Exp. 2)") +
   xlim(.3,1) +
-  ylim(.3,1)
-ggsave("graphs/correlation-bytrigger.pdf",width=6,height=4)
+  ylim(.3,1) +
+  theme(legend.position = "top",axis.title = element_text(size=14),legend.text = element_text(size=14),legend.title=element_text(size=14))
+ggsave("graphs/correlation-bytrigger.pdf",width=6,height=6)
 
 # how much does exp 1 measure explain exp 2 measure?
-m = lm(mean_exp2 ~ 1+mean_exp1, data = d)
+m = lm(mean_exp2 ~ 1+mean_exp1 * SubExperiment, data = d)
 summary(m)
+
 
 # aggregate by both trigger and content
 agr1 = exp1 %>%
@@ -92,7 +97,7 @@ d %>%
   group_by(SubExperiment) %>%
   summarise(r=cor(mean_exp1,mean_exp2))
 
-ggplot(d, aes(x=mean_exp1,y=mean_exp2,color=short_trigger)) +
+ggplot(d, aes(x=mean_exp1,y=mean_exp2,color=short_trigger,group=1)) +
   geom_abline(intercept=0,slope=1, color="gray", linetype="dashed") +
   # geom_text_repel(aes(label=short_trigger),nudge_x=-.05,size=3) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),alpha=.5,color="gray") +
@@ -101,5 +106,21 @@ ggplot(d, aes(x=mean_exp1,y=mean_exp2,color=short_trigger)) +
   xlab("Not-at-issueness ('asking whether', Exp. 1)") +
   ylab("Not-at-issueness ('are you sure', Exp. 2)") +
   xlim(0,1) +
-  ylim(0,1)
+  ylim(0,1) +
+  geom_smooth(method="lm")
 ggsave("graphs/correlation-bytrigger-bycontent.pdf",width=7,height=4)
+
+d$cmean_exp1 = myCenter(d$mean_exp1)
+d$SubExp = ifelse(d$SubExperiment == "a",0,1)
+d$cSubExperiment = myCenter(d$SubExp)
+
+library(lmerTest)
+
+# reported in paper
+m = lmer(mean_exp2 ~ 1+cmean_exp1 * cSubExperiment + (1|content), data = d)
+summary(m)
+
+m.simple = lmer(mean_exp2 ~ 1+cmean_exp1 * SubExperiment - cmean_exp1 + (1|content), data = d)
+summary(m.simple)
+
+

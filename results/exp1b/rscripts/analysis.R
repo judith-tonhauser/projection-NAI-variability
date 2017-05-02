@@ -468,7 +468,7 @@ t_nomc$cblock_ai = myCenter(t_nomc$block_ai)
 t_nomc$cai = myCenter(t_nomc$ai)
 contrasts(t_nomc$short_trigger)
 
-t_nomc$Trigger = factor(x=as.character(t_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
+t_nomc$Trigger = factor(x=ifelse(t_nomc$short_trigger == "established","establish",ifelse(t_nomc$short_trigger == "confessed","confess",ifelse(t_nomc$short_trigger == "revealed","reveal",ifelse(t_nomc$short_trigger == "discovered","discover",ifelse(t_nomc$short_trigger == "learned","learn",ifelse(t_nomc$short_trigger == "found_out","find_out",ifelse(t_nomc$short_trigger == "saw","see",ifelse(t_nomc$short_trigger == "is_amused","amused",ifelse(t_nomc$short_trigger == "realize","realize",ifelse(t_nomc$short_trigger == "is_aware","aware",ifelse(t_nomc$short_trigger == "noticed","notice",ifelse(t_nomc$short_trigger == "is_annoyed","annoyed","NA")))))))))))),levels=c("establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
 names(t_nomc)
 table(t_nomc$Trigger)
 
@@ -521,7 +521,7 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_point() +
   # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
-  xlab("Mean not-at-issueness rating") +
+  xlab("Mean not-at-issueness rating ('asking whether')") +
   ylab("Mean projectivity rating") +
   xlim(0.35,1) +
   ylim(0.35,1)
