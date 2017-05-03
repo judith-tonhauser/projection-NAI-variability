@@ -2,9 +2,13 @@
 ## JD working directory
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/ai-meta-analysis/')
 ## JT working directory
-setwd('/Users/judith/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/ai-meta-analysis/')
+setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/ai-meta-analysis/')
 
+theme_set(theme_bw())
+library(ggplot2)
 library(ggrepel)
+library(tidyr)
+library(dplyr)
 
 ## code for both starts here
 source('rscripts/helpers.R')
@@ -26,6 +30,17 @@ nrow(exp1a)
 nrow(exp1b)
 nrow(exp2a)
 nrow(exp2b)
+
+# change trigger name to short version
+str(exp1b$short_trigger)
+str(exp2b$short_trigger)
+exp1b$short_trigger <- as.factor(exp1b$short_trigger)
+
+table(exp1b$short_trigger)
+table(exp2b$short_trigger)
+
+levels(exp1b$short_trigger) <- c('confess','discover','establish','find_out','amused','annoyed','aware','learn','MC','notice','realize','reveal','see')
+levels(exp2b$short_trigger) <- c('confess','discover','establish','find_out','amused','annoyed','aware','learn','MC','notice','realize','reveal','see')
 
 # exp1a$Experiment = "1"
 # exp1b$Experiment = "1"

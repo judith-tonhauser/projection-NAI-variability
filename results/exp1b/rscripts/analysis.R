@@ -681,12 +681,14 @@ mean_proj
 
 t$trigger_proj <-factor(t$short_trigger, levels=mean_proj[order(mean_proj$projective), "short_trigger"])
 
+t$trigger_proj = factor(x=ifelse(t$short_trigger == "established","establish",ifelse(t$short_trigger == "confessed","confess",ifelse(t$short_trigger == "revealed","reveal",ifelse(t$short_trigger == "discovered","discover",ifelse(t$short_trigger == "learned","learn",ifelse(t$short_trigger == "found_out","find_out",ifelse(t$short_trigger == "saw","see",ifelse(t$short_trigger == "is_amused","amused",ifelse(t$short_trigger == "realize","realize",ifelse(t$short_trigger == "is_aware","aware",ifelse(t$short_trigger == "noticed","notice",ifelse(t$short_trigger == "is_annoyed","annoyed","MC")))))))))))),levels=c("MC","establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
+
 ggplot(t, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   theme(text = element_text(size=12)) +
   scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
-  ylab("Projectivity")+
+  ylab("Projectivity rating")+
   xlab("Expression")
 ggsave(f="graphs/boxplot-projection-with-MCs.pdf",height=3,width=10)
 
@@ -740,7 +742,7 @@ ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Projectivity")
+  ylab("Mean projectivity rating")
 ggsave("graphs/projection-subjectmeans.pdf",height=3,width=10)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
@@ -754,6 +756,25 @@ ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
 ggsave("graphs/ai-subjectmeans.pdf",height=3,width=9)
 
 ### plot the not-at-issueness of the different projective content triggers
+
+# with main clauses
+mean_nai = aggregate(ai~short_trigger, data=t, FUN="mean")
+mean_nai$YMin = mean_nai$ai - aggregate(ai~short_trigger, data=t, FUN="ci.low")$ai
+mean_nai$YMax = mean_nai$ai + aggregate(ai~short_trigger, data=t, FUN="ci.high")$ai
+mean_nai
+
+t$trigger_ai <-factor(t$short_trigger, levels=mean_nai[order(mean_nai$ai), "short_trigger"])
+t$trigger_ai = factor(x=ifelse(t$short_trigger == "established","establish",ifelse(t$short_trigger == "confessed","confess",ifelse(t$short_trigger == "revealed","reveal",ifelse(t$short_trigger == "discovered","discover",ifelse(t$short_trigger == "learned","learn",ifelse(t$short_trigger == "found_out","find_out",ifelse(t$short_trigger == "saw","see",ifelse(t$short_trigger == "is_amused","amused",ifelse(t$short_trigger == "realize","realize",ifelse(t$short_trigger == "is_aware","aware",ifelse(t$short_trigger == "noticed","notice",ifelse(t$short_trigger == "is_annoyed","annoyed","MC")))))))))))),levels=c("MC","establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
+
+ggplot(t, aes(x=trigger_ai, y=ai)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness rating \n ('asking whether')")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-not-at-issueness-with-MCs.pdf",height=3,width=9)
+
 
 # calculate mean not-at-issueness for each trigger and relevel by mean
 mean_nai = aggregate(ai~short_trigger, data=t.proj, FUN="mean")

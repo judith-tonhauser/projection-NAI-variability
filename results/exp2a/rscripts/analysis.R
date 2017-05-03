@@ -410,6 +410,24 @@ ggplot(agr, aes(x=short_trigger, y=response)) +
   facet_wrap(~content,ncol=1)
 ggsave(f="graphs/contents-mean-response.pdf",height=20,width=6)
 
+# with main clauses
+mean_nai = aggregate(response~short_trigger, data=t, FUN="mean")
+mean_nai$YMin = mean_nai$response - aggregate(response~short_trigger, data=t, FUN="ci.low")$response
+mean_nai$YMax = mean_nai$response + aggregate(response~short_trigger, data=t, FUN="ci.high")$response
+mean_nai
+
+t$trigger_ai <-factor(t$short_trigger, levels=mean_nai[order(mean_nai$response), "short_trigger"])
+
+ggplot(t, aes(x=trigger_ai, y=response)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness rating \n ('are you sure')")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-not-at-issueness-with-MCs.pdf",height=3,width=6.5)
+
+
 ### plot the not-at-issueness of the different projective content triggers
 t.proj <- droplevels(subset(t,t$short_trigger != "MC"))
 table(t.proj$short_trigger)

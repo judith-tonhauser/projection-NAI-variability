@@ -817,7 +817,7 @@ ggplot(t, aes(x=trigger_proj, y=projective)) +
   stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
   theme(text = element_text(size=12)) +
   scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
-  ylab("Projectivity")+
+  ylab("Projectivity rating")+
   xlab("Expression")
 ggsave(f="graphs/boxplot-projection-with-MCs.pdf",height=3,width=6.5)
 
@@ -871,7 +871,7 @@ ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   xlab("Participant") +
-  ylab("Projectivity")
+  ylab("Mean projectivity rating")
 ggsave("graphs/projection-subjectmeans.pdf",height=3,width=6.5)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
@@ -935,6 +935,23 @@ ggsave("graphs/ai-proj-bytrigger-nofacets.pdf",height=4,width=5.75)
 # color_brewer palettes: Accent, Dark2, Paired, Pastel1, Pastel2, Set1, Set2, Set3
 
 ### plot the not-at-issueness of the different projective content triggers
+
+# with main clauses
+mean_nai = aggregate(ai~short_trigger, data=t, FUN="mean")
+mean_nai$YMin = mean_nai$ai - aggregate(ai~short_trigger, data=t, FUN="ci.low")$ai
+mean_nai$YMax = mean_nai$ai + aggregate(ai~short_trigger, data=t, FUN="ci.high")$ai
+mean_nai
+
+t$trigger_ai <-factor(t$short_trigger, levels=mean_nai[order(mean_nai$ai), "short_trigger"])
+
+ggplot(t, aes(x=trigger_ai, y=ai)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness rating \n ('asking whether')")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-not-at-issueness-with-MCs.pdf",height=3,width=6.5)
 
 # calculate mean not-at-issueness for each trigger and relevel by mean
 mean_nai = aggregate(ai~short_trigger, data=t.proj, FUN="mean")

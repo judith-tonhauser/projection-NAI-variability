@@ -474,10 +474,32 @@ ggplot(agr, aes(x=short_trigger, y=response)) +
 ggsave(f="graphs/contents-mean-response.pdf",height=20,width=6)
 
 ### plot the not-at-issueness of the different projective content triggers
+table(t$short_trigger)
+
+t$trigger_ai = factor(x=ifelse(t$short_trigger == "established","establish",ifelse(t$short_trigger == "confessed","confess",ifelse(t$short_trigger == "revealed","reveal",ifelse(t$short_trigger == "discovered","discover",ifelse(t$short_trigger == "learned","learn",ifelse(t$short_trigger == "found_out","find_out",ifelse(t$short_trigger == "saw","see",ifelse(t$short_trigger == "is_amused","amused",ifelse(t$short_trigger == "realize","realize",ifelse(t$short_trigger == "is_aware","aware",ifelse(t$short_trigger == "noticed","notice",ifelse(t$short_trigger == "is_annoyed","annoyed","MC")))))))))))),levels=c("MC","establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
+table(t$trigger_ai)
+
+# with main clauses
+mean_nai = aggregate(response~trigger_ai, data=t, FUN="mean")
+mean_nai$YMin = mean_nai$response - aggregate(response~trigger_ai, data=t, FUN="ci.low")$response
+mean_nai$YMax = mean_nai$response + aggregate(response~trigger_ai, data=t, FUN="ci.high")$response
+mean_nai
+
+t$trigger_ai <-factor(t$trigger_ai, levels=mean_nai[order(mean_nai$response), "trigger_ai"])
+
+ggplot(t, aes(x=trigger_ai, y=response)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Not-at-issueness rating \n ('are you sure')")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-not-at-issueness-with-MCs.pdf",height=3,width=9)
+
+# calculate mean not-at-issueness for each trigger and relevel by mean
 t.proj <- droplevels(subset(t,t$short_trigger != "MC"))
 table(t.proj$short_trigger)
 
-# calculate mean not-at-issueness for each trigger and relevel by mean
 mean_nai = aggregate(response~short_trigger, data=t.proj, FUN="mean")
 mean_nai$YMin = mean_nai$response - aggregate(response~short_trigger, data=t.proj, FUN="ci.low")$response
 mean_nai$YMax = mean_nai$response + aggregate(response~short_trigger, data=t.proj, FUN="ci.high")$response
@@ -488,12 +510,6 @@ mean_nai_Exp7 <- mean_nai
 saveRDS(mean_nai_Exp7, file="data/mean_nai_Exp7.rds")
 
 t.proj$trigger_ai <-factor(t.proj$short_trigger, levels=mean_nai[order(mean_nai$response), "short_trigger"])
-
-ggplot(t.proj, aes(x=trigger_ai, y=response)) + 
-  geom_violin(trim=TRUE,scale="area",adjust=1,alpha=.5) +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) 
-#geom_boxplot(width=0.1,position=position_dodge(.9))
-ggsave(f="graphs/violin-not-at-issueness.pdf",height=3,width=10)
 
 ggplot(t.proj, aes(x=trigger_ai, y=response)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
