@@ -617,14 +617,7 @@ summary(m.mr.fixedtrigger)
 pc = lsmeans(m.mr.fixedtrigger, revpairwise~short_trigger, adjust="tukey")
 pc
 
-
 ### END OF JUDITH D'S ANALYSIS CODE FOR EXP 1B
-
-
-
-
-
-
 
 
 
