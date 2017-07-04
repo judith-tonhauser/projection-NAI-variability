@@ -383,8 +383,10 @@ FUNCTION {format.names}
   numnames 'namesleft :=
     { namesleft #0 > }
     { nameptr #1 >
-        { s nameptr "{f.~}{vv~}{ll}{, jj}" format.name$ 't := }
-        { s nameptr "{vv~}{ll}{, f.}{, jj}" format.name$ 't := }
+        { s nameptr "{ff~}{vv~}{ll}{, jj}" format.name$ 't := } % JT changed this
+        %{ s nameptr "{f.~}{vv~}{ll}{, jj}" format.name$ 't := } original
+        { s nameptr "{vv~}{ll}{, ff}{, jj}" format.name$ 't := } %JT changed this
+        %{ s nameptr "{vv~}{ll}{, f.}{, jj}" format.name$ 't := } original
       if$
       nameptr #1 >
         {
