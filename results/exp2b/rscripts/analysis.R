@@ -290,6 +290,9 @@ means = tagr %>%
 means_nomc = droplevels(means[means$short_trigger != "MC",])
 nrow(means_nomc) 
 
+# uncollapsed correlation coefficient reported in paper
+cor(means_nomc$mean_ai,means_nomc$mean_proj)
+
 means_nomc$Trigger = factor(x=ifelse(means_nomc$short_trigger == "established","establish",ifelse(means_nomc$short_trigger == "confessed","confess",ifelse(means_nomc$short_trigger == "revealed","reveal",ifelse(means_nomc$short_trigger == "discovered","discover",ifelse(means_nomc$short_trigger == "learned","learn",ifelse(means_nomc$short_trigger == "found_out","find_out",ifelse(means_nomc$short_trigger == "saw","see",ifelse(means_nomc$short_trigger == "is_amused","amused",ifelse(means_nomc$short_trigger == "realize","realize",ifelse(means_nomc$short_trigger == "is_aware","aware",ifelse(means_nomc$short_trigger == "noticed","notice",ifelse(means_nomc$short_trigger == "is_annoyed","annoyed","NA")))))))))))),levels=c("establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
 
 # means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("established","confessed","revealed","discovered","learned","found_out","saw","is_amused","realize","is_aware","noticed","is_annoyed"))
@@ -354,6 +357,8 @@ means_nomc$cmean_ai = myCenter(means_nomc$mean_ai)
 
 means_nomc$Trigger = factor(x=ifelse(means_nomc$short_trigger == "established","establish",ifelse(means_nomc$short_trigger == "confessed","confess",ifelse(means_nomc$short_trigger == "revealed","reveal",ifelse(means_nomc$short_trigger == "discovered","discover",ifelse(means_nomc$short_trigger == "learned","learn",ifelse(means_nomc$short_trigger == "found_out","find_out",ifelse(means_nomc$short_trigger == "saw","see",ifelse(means_nomc$short_trigger == "is_amused","amused",ifelse(means_nomc$short_trigger == "realize","realize",ifelse(means_nomc$short_trigger == "is_aware","aware",ifelse(means_nomc$short_trigger == "noticed","notice",ifelse(means_nomc$short_trigger == "is_annoyed","annoyed","NA")))))))))))),levels=c("establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
 
+# correlation coefficient reported in paper
+cor(means_nomc$mean_ai,means_nomc$mean_proj)
 
 # plot it all -- this will only run if you don't load plyr
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +

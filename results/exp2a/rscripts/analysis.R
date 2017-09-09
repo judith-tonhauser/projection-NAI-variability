@@ -246,6 +246,9 @@ nrow(means_nomc)
 
 means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("only","discover","know","stop","stupid","NRRC","annoyed","NomApp","possNP"))
 
+# uncollapsed correlation coefficient reported in paper
+cor(means_nomc$mean_ai,means_nomc$mean_proj)
+
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
@@ -303,6 +306,9 @@ nrow(means_nomc)
 means_nomc$cmean_ai = myCenter(means_nomc$mean_ai)
 
 means_nomc$Trigger = factor(x=as.character(means_nomc$short_trigger),levels=c("only","discover","know","stop","stupid","NRRC","annoyed","NomApp","possNP"))
+
+# correlation coefficient reported in paper
+cor(means_nomc$mean_ai,means_nomc$mean_proj)
 
 # plot it all -- this will only run if you don't load plyr
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,color=Trigger,group=1)) +
