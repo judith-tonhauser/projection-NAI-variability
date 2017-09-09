@@ -513,7 +513,7 @@ saveRDS(t, file="data/t.rds")
 
 t = readRDS(file="data/t.rds")
 
-### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
+### START OF JD'S PRELIMINARY ANALYSIS CODE
 t = readRDS(file="data/t.rds")
 
 # make main clauses the reference level 
@@ -534,6 +534,9 @@ t_nomc$cai = myCenter(t_nomc$ai)
 contrasts(t_nomc$short_trigger)
 
 t_nomc$Trigger = factor(x=as.character(t_nomc$short_trigger),levels=c("only","discover","know","stop","stupid","NRRC","annoyed","NomApp","possNP"))
+
+# correlation coefficient reported in the paper
+cor(t_nomc$projective,t_nomc$ai)
 
 # this will only run if you don't load plyr
 agr = t_nomc %>%
@@ -564,6 +567,10 @@ agr$YMin = agr$mean_proj - agr$ci.low.proj
 agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
+
+# uncollapsed correlation coefficient reported in paper
+cor(agr$mean_ai,agr$mean_proj)
+
 ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
@@ -814,7 +821,7 @@ t$trigger_proj <-factor(t$short_trigger, levels=mean_proj[order(mean_proj$projec
 
 ggplot(t, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="black",fill="gray70", shape=21, size=3,position=position_dodge(.9)) +
   theme(text = element_text(size=12)) +
   scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Projectivity rating")+
@@ -866,7 +873,8 @@ variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   geom_point() +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  #stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point",color="gray70",  size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=ProjMean-Proj.ci.low,ymax=ProjMean+Proj.ci.high)) +
   theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +

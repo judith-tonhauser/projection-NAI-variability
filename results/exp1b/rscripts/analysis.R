@@ -449,7 +449,7 @@ table(t$short_trigger)
 
 
 
-### START OF JUDITH D'S PRELIMINARY ANALYSIS CODE
+### START OF JD'S PRELIMINARY ANALYSIS CODE
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
@@ -472,6 +472,9 @@ t_nomc$Trigger = factor(x=ifelse(t_nomc$short_trigger == "established","establis
 names(t_nomc)
 table(t_nomc$Trigger)
 
+# correlation coefficient reported in paper
+cor(t_nomc$projective,t_nomc$ai)
+
 # this will only run if you don't load plyr
 agr = t_nomc %>%
   group_by(content,Trigger) %>%
@@ -481,6 +484,9 @@ agr$YMin = agr$mean_proj - agr$ci.low.proj
 agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
+
+# uncollapsed correlation coefficient reported in paper
+cor(agr$mean_ai,agr$mean_proj)
 
 ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
