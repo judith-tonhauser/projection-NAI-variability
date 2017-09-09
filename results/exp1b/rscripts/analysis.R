@@ -684,7 +684,7 @@ t$trigger_proj = factor(x=ifelse(t$short_trigger == "established","establish",if
 
 ggplot(t, aes(x=trigger_proj, y=projective)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="black",fill="gray70", shape=21, size=3,position=position_dodge(.9)) +
   theme(text = element_text(size=12)) +
   scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Projectivity rating")+
@@ -736,7 +736,7 @@ variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   geom_point() +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point",color="gray70",  size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=ProjMean-Proj.ci.low,ymax=ProjMean+Proj.ci.high)) +
   theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +

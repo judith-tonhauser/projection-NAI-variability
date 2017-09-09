@@ -494,7 +494,7 @@ t$trigger_ai <-factor(t$trigger_ai, levels=mean_nai[order(mean_nai$response), "t
 
 ggplot(t, aes(x=trigger_ai, y=response)) + 
   geom_boxplot(width=0.2,position=position_dodge(.9)) +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="black",fill="gray70", shape=21, size=3,position=position_dodge(.9)) +
   theme(text = element_text(size=12)) +
   scale_y_continuous(expand = c(0, 0),limits = c(-0.05,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
   ylab("Not-at-issueness rating \n ('are you sure')")+
@@ -535,7 +535,7 @@ variances = as.data.frame(variances)
 
 ggplot(variances, aes(x=reorder(workerid,AIMean),y=AIMean)) +
   geom_point() +
-  stat_summary(fun.y=mean, geom="point", color="blue", size=2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point",color="gray70",  size=2,position=position_dodge(.9)) +
   geom_errorbar(aes(ymin=AIMean-AI.ci.low,ymax=AIMean+AI.ci.high)) +
   theme(text = element_text(size=12),axis.text.x=element_blank(),axis.ticks.x=element_blank()) +
   scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
