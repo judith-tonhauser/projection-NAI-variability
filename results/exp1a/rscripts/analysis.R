@@ -593,7 +593,9 @@ ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
   ylab("Projectivity rating") +
   xlim(0,1) +
   ylim(0,1) +
-  facet_wrap(~Item,nrow=9,ncol=5) 
+  facet_wrap(~Item,nrow=8,ncol=6) +
+  theme(legend.position="top") +
+  guides(colour = guide_legend(nrow = 1))
 ggsave("graphs/subject_variability_aiproj_exp1a.pdf",height=13.5,width=9.5)
 
 examples = t_nomc %>%
