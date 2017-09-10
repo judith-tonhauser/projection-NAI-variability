@@ -435,6 +435,10 @@ head(t)
 
 # now we have a semi-wide data structure t that codes for each Turker-item pair 
 # the ai and projective response by that Turker to that item
+
+
+
+### START OF JD'S PRELIMINARY ANALYSIS CODE
 t <- readRDS(file="data/t.rds")
 nrow(t)
 
@@ -447,9 +451,6 @@ t$content <- as.factor(t$content)
 head(t)
 table(t$short_trigger)
 
-
-
-### START OF JD'S PRELIMINARY ANALYSIS CODE
 
 # make main clauses the reference level 
 t$short_trigger = as.factor(as.character(t$short_trigger))
@@ -530,19 +531,26 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   xlab("Mean not-at-issueness rating ('asking whether')") +
   ylab("Mean projectivity rating") +
   xlim(0.35,1) +
-  ylim(0.35,1)
+  ylim(0.35,1) 
 ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
 
 t_nomc$Item = as.factor(paste(t_nomc$short_trigger, t_nomc$content))
 ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
   # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_smooth(method="lm") +
-  geom_point() +
+  geom_jitter() +
   scale_color_discrete(name="Target expression") +
   xlab("Not-at-issueness rating") +
   ylab("Projectivity rating") +
-  facet_wrap(~Item) 
-ggsave("graphs/subject_variability_aiproj.pdf",height=18,width=18)
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item,nrow=12) +
+  theme(legend.position="top") +
+  guides(color=guide_legend(nrow=1))
+ggsave("graphs/subject-variability-aiproj-exp1b.pdf",height=20,width=30)
+
+sort(table(t_nomc$Item))
+sort(table(t_nomc$Trigger))
 
 t1 = t_nomc %>%
   filter(Item %in% levels(Item)[1:length(levels(Item))/2])
