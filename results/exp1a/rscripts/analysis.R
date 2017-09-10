@@ -596,7 +596,7 @@ ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
   facet_wrap(~Item,nrow=8,ncol=6) +
   theme(legend.position="top") +
   guides(colour = guide_legend(nrow = 1))
-ggsave("graphs/subject_variability_aiproj_exp1a.pdf",height=13.5,width=9.5)
+ggsave("graphs/subject-variability-aiproj-exp1a.pdf",height=13.5,width=10)
 
 examples = t_nomc %>%
   filter(Item %in% c("stupid cheat", "NRRC aunt"))
