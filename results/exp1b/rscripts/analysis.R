@@ -533,6 +533,52 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   ylim(0.35,1)
 ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
 
+t_nomc$Item = as.factor(paste(t_nomc$short_trigger, t_nomc$content))
+ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point() +
+  scale_color_discrete(name="Target expression") +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  facet_wrap(~Item) 
+ggsave("graphs/subject_variability_aiproj.pdf",height=18,width=18)
+
+t1 = t_nomc %>%
+  filter(Item %in% levels(Item)[1:length(levels(Item))/2])
+
+ggplot(t1, aes(x=ai,y=projective,color=Trigger)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point() +
+  scale_color_discrete(name="Target expression") +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item,nrow=13,ncol=10) +
+  theme(legend.position="top") +
+  guides(color=guide_legend(nrow=1))
+ggsave("graphs/subject_variability_aiproj1.pdf",height=20,width=16)
+
+t2 = t_nomc %>%
+  filter(Item %in% levels(Item)[(length(levels(Item))/2) + 1:length(levels(Item))])
+
+ggplot(t2, aes(x=ai,y=projective,color=Trigger)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point() +
+  scale_color_discrete(name="Target expression") +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item,nrow=13,ncol=10) +
+  theme(legend.position="top") +
+  guides(color=guide_legend(nrow=1))
+ggsave("graphs/subject_variability_aiproj2.pdf",height=20,width=16)
+
+
 agr # proj means of annoyed (.92) and discover (.85) / ai means of annoyed (.94) and discover (.89)
 round(agr$mean_proj,2)
 #established  confessed revealed  discovered  learned found_out saw   is_amused realize is_aware  noticed is_annoyed

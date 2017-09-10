@@ -583,6 +583,32 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
   ylim(0.65,1)
 ggsave(file="graphs/ai-proj-bytrigger.pdf",width=4.8,height=3)
 
+t_nomc$Item = as.factor(paste(t_nomc$short_trigger, t_nomc$content))
+ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point() +
+  scale_color_discrete(name="Target expression") +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item,nrow=9,ncol=5) 
+ggsave("graphs/subject_variability_aiproj_exp1a.pdf",height=13.5,width=9.5)
+
+examples = t_nomc %>%
+  filter(Item %in% c("stupid cheat", "NRRC aunt"))
+ggplot(examples, aes(x=ai,y=projective)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point(size=1) +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item)
+ggsave("graphs/subject_projai_examples.pdf",width=5,height=2.5)
+
 ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
