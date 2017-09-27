@@ -1,4 +1,4 @@
-
+## for centering
 myCenter <- function(x) {
   if (is.numeric(x)) { return(x - mean(x)) }
   if (is.factor(x)) {
@@ -19,32 +19,6 @@ myCenter <- function(x) {
     }
     return(as.data.frame(m))
   }
-}
-
-se <- function(x)
-{
-  y <- x[!is.na(x)] # remove the missing values, if any
-  sqrt(var(as.vector(y))/length(y))
-}
-
-zscore <- function(x){
-  ## Returns z-scored values
-  x.mean <- mean(x)
-  x.sd <- sd(x)
-  
-  x.z <- (x-x.mean)/x.sd
-  
-  return(x.z)
-}
-
-zscoreByGroup <- function(x, groups){ 
-  #Compute zscores within groups
-  out <- rep(NA, length(x))
-  
-  for(i in unique(groups)){
-    out[groups == i] <- zscore(x[groups == i])
-  }
-  return(out)
 }
 
 ## for bootstrapping 95% confidence intervals

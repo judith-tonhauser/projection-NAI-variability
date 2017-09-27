@@ -1,12 +1,11 @@
-# Variability in the information structural status of projective content
+# Projection variability FIXME title to match paper title
 
-## JD's tasks
+This is the repository that accompanies the paper
 
-1. analyze exp 1b like exp 1a and write up
+FIXME REFERENCE
 
-2. analyze exp 2 and write up
+The directory `experiments` contains the experimental files used to run Exps 1a, 1b, 2a, and 2b.
 
-## JT comments
-- NAI predicts projectivity, but the individual triggers also explain additional variance in projectivity 
-	==> look at the factive verb experiment to see if the contents that the triggers were paired with accounts for the variance accounted for by the triggers
-	i.e., are the trigger effects reducible to content effects that the triggers were paired with
+The directory `paper` contains the files used to generate the paper.
+
+The directory `results` contains the (anonymized) data from all four experiments as well as the R scripts used for analysis and visualization.
