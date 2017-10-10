@@ -1,4 +1,4 @@
-## JD working directory
+# set working directory
 setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1b/')
 
 ## JT working directory
