@@ -125,6 +125,11 @@ ggplot(ai.means, aes(x=workerid,y=response)) +
 
 # get the outlier Turkers who are more than 3 standard deviations above the mean on projection 
 p <- p.means[p.means$response > (mean(p.means$response) + 3*sd(p.means$response)),]
+p
+
+# get the outlier Turkers who are more than 3 standard deviations above the mean on at-issueness 
+ai <- ai.means[ai.means$response > (mean(ai.means$response) + 3*sd(ai.means$response)),]
+ai
 
 # exclude all outliers identified above
 d <- subset(d, !(d$workerid %in% p$workerid | d$workerid %in% ai$workerid))

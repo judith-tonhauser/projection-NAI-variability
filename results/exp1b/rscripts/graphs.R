@@ -11,6 +11,9 @@ library(ggrepel)
 # load helper functions
 source('../helpers.R')
 
+# set black and white plot background
+theme_set(theme_bw())
+
 d = read.csv("data/data_preprocessed.csv")
 
 # spread responses over separate columns for projectivity and at-issueness
@@ -108,3 +111,4 @@ ggplot(t, aes(x=trigger_ai, y=ai)) +
   ylab("Not-at-issueness rating \n ('asking whether')")+
   xlab("Expression")
 ggsave(f="graphs/boxplot-not-at-issueness-with-MCs.pdf",height=3,width=10)
+

@@ -7,9 +7,6 @@ setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-exp
 ## code for both starts here
 source('../helpers.R')
 
-# set black and white plot background
-theme_set(theme_bw())
-
 # load required packages for pre-processing data
 library(plyr)
 library(ggplot2)
