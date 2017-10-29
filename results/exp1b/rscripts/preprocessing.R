@@ -8,19 +8,7 @@ setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-exp
 source('../helpers.R')
 
 # load required packages for pre-processing data
-library(plyr)
-library(ggplot2)
-library(tidyr)
-library(dplyr)
-library(languageR)
-library(lme4)
-require(foreign)
-require(ggplot2)
-require(MASS)
-require(Hmisc)
-require(reshape2)
-library(ucminf)
-library(scales)
+require(tidyverse)
 
 # read in the raw data
 d = readRDS(file="data/d.rds")

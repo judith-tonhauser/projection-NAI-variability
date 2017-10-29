@@ -10,18 +10,7 @@ source('../helpers.R')
 theme_set(theme_bw())
 
 # load required packages for pre-processing data
-library(plyr)
-library(ggplot2)
-library(tidyr)
-library(dplyr)
-library(languageR)
-library(lme4)
-require(foreign)
-require(MASS)
-require(Hmisc)
-require(reshape2)
-library(ucminf)
-library(scales)
+require(tidyverse)
 
 # read in the raw data
 d = readRDS(file="data/d.rds")

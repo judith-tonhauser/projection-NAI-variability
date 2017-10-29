@@ -73,3 +73,4 @@ m.mr.fixedtrigger = lmer(projective ~ short_trigger + (1|workerid), data=t_nomc,
 
 pc = lsmeans(m.mr.fixedtrigger, revpairwise~short_trigger, adjust="tukey")
 pc
+
