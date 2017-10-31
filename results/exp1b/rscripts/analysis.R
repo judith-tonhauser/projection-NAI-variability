@@ -1,8 +1,6 @@
-## set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1b/')
-
-## set working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1b/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp1b/')
+setwd("")
 
 # load required packages
 require(tidyverse)

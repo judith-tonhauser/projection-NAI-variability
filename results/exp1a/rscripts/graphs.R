@@ -1,7 +1,6 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
-# JT working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1a/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp1a/')
+setwd("")
 
 # load required packages
 require(tidyverse)
@@ -86,12 +85,10 @@ round(agr$mean_proj,2)
 #0.76   0.86      0.92  0.87  0.85    0.96  0.96    0.95    0.94
 
 ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
   geom_point() +
-  # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
   xlab("Mean not-at-issueness rating ('asking whether')") +
   ylab("Mean projectivity rating") +
@@ -155,7 +152,6 @@ agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
 
 ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
   geom_point() +
@@ -175,8 +171,8 @@ agr$YMax = agr$mean_proj + agr$ci.high.proj
 agr$XMin = agr$mean_ai - agr$ci.low.ai
 agr$XMax = agr$mean_ai + agr$ci.high.ai
 agr$Order = ifelse(agr$block_ai=="block1","ai-proj","proj-ai")
+
 ggplot(agr, aes(x=mean_ai,y=mean_proj,color=Trigger,group=Order)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
   geom_point() +

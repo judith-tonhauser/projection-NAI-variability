@@ -1,7 +1,6 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1a/')
-# JT working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1a/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp1a/')
+setwd("")
 
 # load helper functions
 source('../helpers.R')

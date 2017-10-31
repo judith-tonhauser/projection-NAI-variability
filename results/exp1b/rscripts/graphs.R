@@ -1,8 +1,6 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp1b/')
-
-## JT working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp1b/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp1b/')
+setwd("")
 
 # load required packages
 require(tidyverse)
@@ -83,12 +81,10 @@ agr$XMax = agr$mean_ai + agr$ci.high.ai
 cor(agr$mean_ai,agr$mean_proj)
 
 ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),color="gray50",alpha=.5) +
   geom_point() +
-  # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
   xlab("Mean not-at-issueness rating ('asking whether')") +
   ylab("Mean projectivity rating") +
