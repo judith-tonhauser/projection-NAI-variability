@@ -85,7 +85,6 @@ ggplot(ai.means, aes(x=workerid,y=response)) +
 # standard deviations higher than the mean 
 ai <- ai.means[ai.means$response > (mean(ai.means$response) + 3*sd(ai.means$response)),]
 ai
-# 6 Turkers give unusually high responses: 4, 5, 16, 105, 183, 193
 
 # look at the main clauses that these "outlier" Turkers did
 # make data subset of just the outliers

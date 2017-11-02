@@ -6,6 +6,8 @@ setwd("")
 require(tidyverse)
 library(ggrepel)
 library(lsmeans)
+library(lme4)
+library(lmerTest)
 
 # load helper functions
 source('../helpers.R')

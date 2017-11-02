@@ -8,6 +8,9 @@ require(tidyverse)
 # load helper functions
 source('../helpers.R')
 
+# set black and white plot background
+theme_set(theme_bw())
+
 # load data
 t = read.csv("data/data_preprocessed.csv")
 

@@ -9,6 +9,9 @@ library(ggrepel)
 # load helper functions
 source('../helpers.R')
 
+# set black and white plot background
+theme_set(theme_bw())
+
 d = read.csv("data/data_preprocessed.csv")
 
 # spread responses over separate columns for projectivity and at-issueness

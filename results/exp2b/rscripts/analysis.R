@@ -6,6 +6,7 @@ setwd("")
 require(tidyverse)
 library(simr)
 library(rms)
+library(lmerTest)
 
 # load helper functions
 source('../helpers.R')

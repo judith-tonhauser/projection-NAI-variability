@@ -1,12 +1,11 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/ai-meta-analysis/')
-
-## JT working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/ai-meta-analysis/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/ai-meta-analysis/')
+setwd("")
 
 # load required packages
 require(tidyverse)
 library(ggrepel)
+library(lmerTest)
 
 # load helper functions
 source('../helpers.R')

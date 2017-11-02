@@ -1,12 +1,9 @@
 # set working directory, e.g.
-# setwd('/Users/judith/projection-NAI-variability/results/exp1a/')
+# setwd('/Users/judith/projection-NAI-variability/results/exp1b/')
 setwd("")
 
 # load helper functions
 source('../helpers.R')
-
-# set black and white plot background
-theme_set(theme_bw())
 
 # load required packages for pre-processing data
 require(tidyverse)

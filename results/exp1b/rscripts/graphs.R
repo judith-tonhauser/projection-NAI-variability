@@ -87,7 +87,7 @@ ggplot(agr, aes(x=mean_ai,y=mean_proj,group=1)) +
   geom_point() +
   scale_color_discrete(name="Target expression") +
   xlab("Mean not-at-issueness rating ('asking whether')") +
-  ylab("Mean projectivity rating") +
+  ylab("Mean projectivity ratinsg") +
   xlim(0.35,1) +
   ylim(0.35,1) 
 ggsave(file="graphs/ai-proj-bytrigger-labels.pdf",width=4.2,height=3.5)
