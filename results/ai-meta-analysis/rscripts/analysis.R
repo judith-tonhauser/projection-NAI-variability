@@ -1,5 +1,6 @@
 # set working directory, e.g.
 # setwd('/Users/judith/projection-NAI-variability/results/ai-meta-analysis/')
+setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/ai-meta-analysis')
 setwd("")
 
 # load required packages
@@ -75,7 +76,7 @@ cbPalette <- c("#0072B2", "#D55E00")
 
 # figure 11
 ggplot(d, aes(x=mean_exp1,y=mean_exp2,color=SubExperiment)) +
-  geom_abline(intercept=0,slope=1, color="gray", linetype="dashed") +
+  #geom_abline(intercept=0,slope=1, color="gray", linetype="dashed") +
   geom_text_repel(aes(label=short_trigger),nudge_x=-.05,size=4,show.legend=F) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax),alpha=.8,color="gray") +
   geom_errorbarh(aes(xmin=XMin,xmax=XMax),alpha=.8,color="gray") +
