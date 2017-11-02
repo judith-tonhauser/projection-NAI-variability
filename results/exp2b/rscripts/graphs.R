@@ -1,8 +1,6 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp2b/')
-
-## set working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp2b/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp2b/')
+setwd("")
 
 # load required packages
 require(tidyverse)
@@ -48,12 +46,10 @@ cor(means_nomc$mean_ai,means_nomc$mean_proj) # .54
 
 # figure 9
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
   geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
   geom_point() +
-  # geom_smooth(method="lm") +
   scale_color_discrete(name="Target expression") +
   xlab("Mean not-at-issueness rating ('are you sure')") +
   ylab("Mean projectivity rating") +

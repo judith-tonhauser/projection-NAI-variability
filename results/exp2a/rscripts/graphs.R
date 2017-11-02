@@ -1,8 +1,6 @@
-# set working directory
-setwd('/Users/titlis/cogsci/projects/stanford/projects/projection-NAI-variability/results/exp2a/')
-
-## set working directory
-setwd('/Users/tonhauser.1/Documents/current-research-topics/NSF-NAI/prop-att-experiments/1factive-verbs/Git-variability/results/exp2a/')
+# set working directory, e.g.
+# setwd('/Users/judith/projection-NAI-variability/results/exp2a/')
+setwd("")
 
 # load required packages
 require(tidyverse)
@@ -48,7 +46,6 @@ cor(means_nomc$mean_ai,means_nomc$mean_proj)
 
 # figure 8
 ggplot(means_nomc, aes(x=mean_ai,y=mean_proj,group=1)) +
-  geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
   geom_text_repel(aes(label=Trigger),alpha=.5,color="blue",size=3) +
   geom_errorbar(aes(ymin=ci_min_proj,ymax=ci_max_proj),color="gray50",alpha=.5) +
   geom_errorbarh(aes(xmin=ci_min_ai,xmax=ci_max_ai),color="gray50",alpha=.5) +
@@ -71,6 +68,9 @@ tagr$ci_max_ai = tagr$mean_ai + tagr$ci_high_ai
 
 # aggregate data from exp 1a to merge in projectivity means 
 tagr.proj = t.proj %>%
+  mutate(block_ai = as.factor(ifelse(question_type == "ai", ifelse(block == "block1", "block1", "block2"), ifelse(block == "block1", "block2", "block1")))) %>%
+  select(workerid,content,short_trigger,question_type,response,block_ai) %>%
+  spread(question_type,response) %>%
   group_by(short_trigger, content) %>%
   summarise(mean_proj = mean(projective), ci_low_proj = ci.low(projective), ci_high_proj = ci.high(projective))
 tagr.proj = as.data.frame(tagr.proj)
