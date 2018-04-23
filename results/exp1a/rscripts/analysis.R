@@ -12,7 +12,7 @@ library(lmerTest)
 # load helper functions
 source('../helpers.R')
 
-d = read.csv("data/data_preprocessed.csv")
+d = read.csv("../data/data_preprocessed.csv")
 
 # spread responses over separate columns for projectivity and at-issueness
 t = d %>%

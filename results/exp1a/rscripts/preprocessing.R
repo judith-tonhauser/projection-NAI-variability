@@ -3,13 +3,13 @@
 setwd("")
 
 # load helper functions
-source('../helpers.R')
+source('../../helpers.R')
 
 # load required packages for pre-processing data
 require(tidyverse)
 
 # read in the raw data
-d = readRDS(file="data/d.rds")
+d = readRDS(file="../data/d.rds")
 
 # look at Turkers' comments
 unique(d$comments)

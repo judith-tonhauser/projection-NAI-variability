@@ -12,7 +12,7 @@ source('../helpers.R')
 # set black and white plot background
 theme_set(theme_bw())
 
-d = read.csv("data/data_preprocessed.csv")
+d = read.csv("../data/data_preprocessed.csv")
 
 # spread responses over separate columns for projectivity and at-issueness
 t = d %>%
@@ -143,6 +143,31 @@ ggplot(t_nomc, aes(x=ai,y=projective,color=Trigger)) +
   theme(legend.position="top") +
   guides(colour = guide_legend(nrow = 1))
 ggsave("graphs/subject-variability-aiproj-exp1a.pdf",width=9,height=12.3)
+
+# overall correlation coefficient for evaluative adjectives
+stupid <- droplevels(subset(t_nomc,t_nomc$Trigger == "stupid"))
+stupid
+cor(stupid$projective,stupid$ai) #.57
+
+# collapsed correlation coefficient for evaluative adjectives 
+stupid <- droplevels(subset(agr,agr$Trigger == "stupid"))
+stupid
+cor(stupid$mean_ai,stupid$mean_proj) #.91
+
+# plot for evaluative adjectives paper
+t_nomc$Item = as.factor(paste(t_nomc$short_trigger, t_nomc$content))
+examples = t_nomc %>%
+  filter(Item %in% c("stupid cheat", "stupid kids", "stupid nails", "stupid stuntman"))
+ggplot(examples, aes(x=ai,y=projective)) +
+  # geom_abline(intercept=0,slope=1,linetype="dashed",color="gray50") +
+  geom_smooth(method="lm") +
+  geom_point(size=1) +
+  xlab("Not-at-issueness rating") +
+  ylab("Projectivity rating") +
+  xlim(0,1) +
+  ylim(0,1) +
+  facet_wrap(~Item,ncol=4)
+ggsave("../graphs/subject-projai-stupid.pdf",width=8,height=2.5)
 
 # additional plot: by-item means
 agr = t_nomc %>%

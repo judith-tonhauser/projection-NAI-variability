@@ -9,10 +9,19 @@ library(simr)
 library(lmerTest)
 
 # load helper functions
-source('../helpers.R')
+source('../../helpers.R')
 
 # load data
-t = read.csv("data/data_preprocessed.csv")
+t = read.csv("../data/data_preprocessed.csv")
+
+# aggregate responses by trigger 
+tagr = t %>%
+  group_by(short_trigger) %>%
+  summarise(mean_ai = mean(response), ci_low_ai = ci.low(response), ci_high_ai = ci.high(response))
+tagr = as.data.frame(tagr)
+tagr$ci_min_ai = tagr$mean_ai - tagr$ci_low_ai
+tagr$ci_max_ai = tagr$mean_ai + tagr$ci_high_ai
+tagr
 
 # aggregate responses by trigger and content for merging in means from exp 1a to run regression analysis
 tagr = t %>%
@@ -21,6 +30,7 @@ tagr = t %>%
 tagr = as.data.frame(tagr)
 tagr$ci_min_ai = tagr$mean_ai - tagr$ci_low_ai
 tagr$ci_max_ai = tagr$mean_ai + tagr$ci_high_ai
+tagr
 
 # load and aggregate data from exp 1a to merge in projectivity means
 t.proj <- read.csv(file="../exp1a/data/data_preprocessed.csv")
