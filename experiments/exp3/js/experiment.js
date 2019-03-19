@@ -1225,6 +1225,35 @@ var items_content_mapping = {
 //"MC":["mary","josie","emma","olivia","sophia","mia","isabella","emily","grace","zoe","danny","frank","jackson","jayden","tony","josh","owen","julian","jon","charley"]
 };  
 
+var mcitemnames = ["muffins","pizza","kids","ballet","garage","hat"];
+
+var mcitems = {
+  "muffins": {
+    "question":"these muffins have blueberries in them",
+    "MCq":"Do these muffins have blueberries in them?",
+    "MCa":"These muffins have blueberries in them."},
+  "pizza": {
+    "question":"this pizza has mushrooms on it",
+    "MCq":"Does this pizza have mushrooms on it?",
+    "MCa":"This pizza has mushrooms on it."},
+  "kids": {
+    "question":"Jack was playing outside with the kids",
+    "MCq":"Was Jack playing outside with the kids?",
+    "MCa":"Jack was playing outside with the kids."},
+"ballet": {
+    "question":"Ann dances ballet",
+    "MCq":"Does Ann dance ballet?",
+    "MCa":"Ann dances ballet."},
+"garage": {
+    "question":"John's kids were in the garage",
+    "MCq":"Were John's kids in the garage?",
+    "MCa":"John's kids were in the garage."},
+"hat": {
+    "question":"Samantha has a new hat",
+    "MCq":"Does Samantha have a new hat?",
+    "MCa":"Samantha has a new hat."}
+};
+
 // get trigger contents
   function getContent(trigger) {
 //  		console.log("items_content_mapping before throwing out "+trigger);
@@ -1241,21 +1270,21 @@ var items_content_mapping = {
 //  		console.log("items_content_mapping after shuffling "+trigger);
 //  		console.log(items_content_mapping);
   		var content = items_content_mapping[trigger].shift();//items_content_mapping[trigger][0];
-  		console.log("this is the selected content: " + content);
+  		// console.log("this is the selected content: " + content);
 //		var index = items_content_mapping[trigger].indexOf(content);  		
 //  		items_content_mapping[trigger] = items_content_mapping[trigger].splice(index,1);
 //  		console.log("items_content_mapping at the trigger after throwing it out");
 //  		console.log(items_content_mapping[trigger]);  		  		
   		for (var j in items_content_mapping) {
 			var index = items_content_mapping[j].indexOf(content);  
-			console.log("the next three lines: the array before removal, the index of content, the array after removal")
-			console.log(items_content_mapping[j]);
-			console.log(index);		
+			// console.log("the next three lines: the array before removal, the index of content, the array after removal")
+			// console.log(items_content_mapping[j]);
+			// console.log(index);		
 			if (index != -1)
 			{			  			
 				items_content_mapping[j].splice(index,1);			
 			}
-			console.log(items_content_mapping[j]);			
+			// console.log(items_content_mapping[j]);			
 			}
 //  		console.log("items_content_mapping after throwing out "+trigger);
 //  		console.log(items_content_mapping);
@@ -1263,6 +1292,7 @@ var items_content_mapping = {
 //  		console.log("items_content_mapping at "+j);  			
 //  		console.log(items_content_mapping[j]);  		
 //  		}   		  		
+
   		return content;
   	}
   	  
@@ -1328,13 +1358,52 @@ var items_content_mapping = {
       "question": question
     }
   }
-  exp.stims_block1 = [];
-   exp.stims_block2 = []; 
+
+  function makeMCStim(ind,j) {
+    //get item
+    var item = mcitems[j];
+  //get a speaker
+    var name_data = names[ind];
+    var name = name_data.name;
+    var gender = name_data.gender;
+    // get content
+    var trigger_cont = j;
+    var trigger = "MC";
+    var short_trigger = "MC";
+
+//  console.log("short_trigger: "+short_trigger);
+//  console.log("trigger: "+trigger);
+    console.log("trigger_cont: "+trigger_cont);
+//    console.log("utterance: "+contents[trigger_cont][short_trigger]);    
+//    console.log(contents[trigger_cont]);    
+    var utterance = mcitems[j].MCq;
+    var question = mcitems[j].question;   
+//    console.log(contents[trigger_cont]); 
+    return {
+    "name": name,
+    "gender": gender,   
+    "trigger": trigger,
+    "short_trigger": short_trigger,   
+    "trigger_class": "MC",
+      "content": trigger_cont,
+      "utterance": utterance,
+      "question": question
+    }
+  }  
+
+exp.stims_block1 = [];
+exp.stims_block2 = [];
+
   for (var i=0; i<items.length; i++) {
   	var stim = makeStim(i);
-//    exp.stims_block1.push(makeStim(i));
-	exp.stims_block1.push(jQuery.extend(true, {}, stim));
-	exp.stims_block2.push(jQuery.extend(true, {}, stim));	
+  	exp.stims_block1.push(jQuery.extend(true, {}, stim));
+	  exp.stims_block2.push(jQuery.extend(true, {}, stim));	
+  }  
+
+  for (var j=0; j<mcitemnames.length; j++) {
+    var stim = makeMCStim(j,mcitemnames[j]);
+    exp.stims_block1.push(jQuery.extend(true, {}, stim));
+    exp.stims_block2.push(jQuery.extend(true, {}, stim)); 
   }  
   
 console.log(exp.stims_block1);
@@ -1347,16 +1416,16 @@ console.log(exp.stims_block2);
   var block_order = _.shuffle(["ai","projective"]);
   var block1type = block_order[0];
   var block2type = block_order[1];  
-  console.log(block_order);
-  console.log(block1type);  
-  console.log(block2type);    
+  // console.log(block_order);
+  // console.log(block1type);  
+  // console.log(block2type);
+  // console.log(block1type);    
 
-   for (k in exp.stims_block2) {
-   		exp.stims_block2[k].block = block2type;//block_order[1];   	
-   	}
-   	
-   for (i in exp.stims_block1) {
-   		exp.stims_block1[i].block = block1type;//block_order[0];   	
+   for (var k=0; k<exp.stims_block2.length; k++) {    
+   		exp.stims_block2[k].block = block2type;//block_order[1];
+      // console.log(exp.stims_block2[k].block);   	
+   		exp.stims_block1[k].block = block1type;//block_order[0];   	
+      // console.log(exp.stims_block1[k].block);
    	}
 
 
@@ -1393,7 +1462,7 @@ console.log(exp.stims_block2);
 //  exp.nQs = utils.get_exp_length(); //this does not work if there are stacks of stims (but does work for an experiment with this structure)
                     //relies on structure and slides being defined
                     
-   exp.nQs = 3 + 20 + 1 + 20 + 1; 
+   exp.nQs = 3 + 26 + 1 + 26 + 1; 
   $(".nQs").html(exp.nQs);
 
   $('.slide').hide(); //hide everything
