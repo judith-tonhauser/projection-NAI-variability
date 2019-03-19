@@ -1,13 +1,14 @@
-# set working directory, e.g.
-# setwd('/Users/judith/projection-NAI-variability/results/exp1a/')
-setwd("")
+
+# set working directory to directory of script
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
 
 # load required packages
-require(tidyverse)
+library(tidyverse)
 library(ggrepel)
 
 # load helper functions
-source('../helpers.R')
+source('../../helpers.R')
 
 # set black and white plot background
 theme_set(theme_bw())
@@ -59,6 +60,100 @@ ggplot(variances, aes(x=reorder(workerid,ProjMean),y=ProjMean)) +
   ylab("Mean projectivity rating")
 ggsave("graphs/projection-subjectmeans.pdf",height=3,width=6.5)
 
+# figure with projectivity of factives and stop for Sinn und Bedeutung talk
+head(t)
+table(t$short_trigger)
+
+tmp <- droplevels(subset(t,t$short_trigger == "MC" |
+                           t$short_trigger == "know" | 
+                           t$short_trigger == "discover" |
+                           t$short_trigger == "annoyed" | 
+                           t$short_trigger == "stop"))
+
+mean_proj = aggregate(projective~short_trigger, data=tmp, FUN="mean")
+mean_proj$YMin = mean_proj$projective - aggregate(projective~short_trigger, data=tmp, FUN="ci.low")$projective
+mean_proj$YMax = mean_proj$projective + aggregate(projective~short_trigger, data=tmp, FUN="ci.high")$projective
+mean_proj
+
+mean_proj$short_trigger <- factor(mean_proj$short_trigger, levels=mean_proj[order(mean_proj$projective), "short_trigger"])
+dodge = position_dodge(.9)
+
+ggplot(mean_proj, aes(x=short_trigger, y=projective)) +
+  #geom_point(color="black", size=4) +
+  #geom_point(data=agr_subj, aes(color=content)) +
+  geom_point() +
+  scale_x_discrete(breaks=c("MC", "know", "discover", "annoyed", "stop"), 
+                   labels=c("main clauses", "know", "discover", "annoyed", "stop")) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),width=.25) +
+  #scale_y_continuous(limits = c(0,1),breaks = seq(0,1)) +
+  ylab("Mean certainty rating") +
+  xlab("Projective content")
+ggsave("../graphs/mean-projectivity-by-control-and-stop-and-factives.pdf",height=2,width=4)
+
+# figure with projectivity of factives and NRRCs for ESSLLI talk
+head(t)
+table(t$short_trigger)
+
+t$type <- "other"
+t$type <- ifelse(t$short_trigger == "know" | 
+                   t$short_trigger == "discover" |
+                   t$short_trigger == "annoyed", "factive",ifelse(t$short_trigger == "NRRC","NRRC","other"))
+
+mean_proj = aggregate(projective~type, data=t[t$short_trigger == "know" | 
+                                                    t$short_trigger == "discover" |
+                                                    t$short_trigger == "annoyed" |
+                                                    t$short_trigger == "NRRC",], FUN="mean")
+mean_proj$YMin = mean_proj$projective - aggregate(projective~type, data=t[t$short_trigger == "know" | 
+                                                                   t$short_trigger == "discover" |
+                                                                   t$short_trigger == "annoyed" |
+                                                                   t$short_trigger == "NRRC",], FUN="ci.low")$projective
+mean_proj$YMax = mean_proj$projective + aggregate(projective~type, data=t[t$short_trigger == "know" | 
+                                                                   t$short_trigger == "discover" |
+                                                                   t$short_trigger == "annoyed" |
+                                                                   t$short_trigger == "NRRC",], FUN="ci.high")$projective
+
+head(mean_proj)
+nrow(mean_proj) 
+dodge = position_dodge(.9)
+
+#mean_proj <- mutate(mean_proj,workerid = reorder(workerid, projective, mean))
+
+ggplot(mean_proj, aes(x=type,y=projective),xpd=FALSE) +
+  geom_bar(stat="identity",position=dodge) +
+  geom_bar(stat="identity",fill="white",color="black",show_guide=F,position=dodge) +
+  #geom_point(data=mean.by.worker, aes(y=Mean), color="grey60",width = 1, height = 0) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),width=.25,position=dodge) + 
+  scale_x_discrete(breaks=c("factive", "NRRC"), labels=c("know/annoyed/discover", "NRRC")) +
+  #geom_line(data=mean.by.worker,aes(y=Mean,group=workerid))
+  #theme(axis.text=element_text(size=16), axis.title=element_text(size=22))+
+  xlab("Class of projective content") +
+  ylab("Mean certainty rating")
+  #scale_y_discrete(breaks=seq(1,7))
+ggsave(f="../graphs/factives-versus-NRRC-ESSLLI.pdf",height=3,width=3)
+
+ggplot(mean_proj, aes(x=type,y=projective)) +
+  geom_point() +
+  #facet_wrap(~VerbNum,scales="free_x", ncol=4) +
+  geom_hline(yintercept=0, linetype="dashed", color = "red") +
+  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank()) +
+  theme(panel.background = element_blank(), plot.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  theme(panel.grid.major.y = element_line(colour="grey90", size=0.5)) +
+  ylab("Mean certainty rating") +
+  xlab("122 discourses with \"know\"")
+ggsave(f="../graphs/worker-ratings-of-know-items.pdf",height=2,width=4)
+
+t$trigger_proj <- factor(t$short_trigger, levels=mean_proj[order(mean_proj$projective), "short_trigger"])
+
+ggplot(t, aes(x=trigger_proj, y=projective)) + 
+  geom_boxplot(width=0.2,position=position_dodge(.9)) +
+  stat_summary(fun.y=mean, geom="point", color="black",fill="gray70", shape=21, size=3,position=position_dodge(.9)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
+  ylab("Projectivity rating")+
+  xlab("Expression")
+ggsave(f="graphs/boxplot-projection-with-MCs.pdf",height=3,width=6.5)
 
 # exclude main clauses (fillers)
 t_nomc = droplevels(subset(t, short_trigger != "MC"))
