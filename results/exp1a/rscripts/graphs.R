@@ -14,11 +14,12 @@ source('../../helpers.R')
 theme_set(theme_bw())
 
 d = read.csv("../data/data_preprocessed.csv")
+names(d)
 
 # spread responses over separate columns for projectivity and at-issueness
 t = d %>%
   mutate(block_ai = ifelse(question_type == "ai", ifelse(block == "block1", "block1", "block2"), ifelse(block == "block1", "block2", "block1"))) %>%
-  select(workerid,content,short_trigger,question_type,response,block_ai) %>%
+  dplyr::select(workerid,content,short_trigger,question_type,response,block_ai) %>%
   spread(question_type,response)
 
 
@@ -37,6 +38,33 @@ ggplot(t, aes(x=trigger_proj, y=projective)) +
   ylab("Projectivity rating")+
   xlab("Expression")
 ggsave(f="graphs/boxplot-projection-with-MCs.pdf",height=3,width=6.5)
+
+# point plot version of figure 2a for XPRAG 2019 talk
+mean_proj = aggregate(projective~short_trigger, data=t, FUN="mean")
+mean_proj$YMin = mean_proj$projective - aggregate(projective~short_trigger, data=t, FUN="ci.low")$projective
+mean_proj$YMax = mean_proj$projective + aggregate(projective~short_trigger, data=t, FUN="ci.high")$projective
+mean_proj
+mean_proj$trigger_proj <- factor(mean_proj$short_trigger, levels=mean_proj[order(mean_proj$projective), "short_trigger"])
+
+subjmeans = t %>%
+  group_by(short_trigger,workerid) %>%
+  summarize(projective = mean(projective)) 
+subjmeans$trigger_proj <- factor(subjmeans$short_trigger, levels = unique(levels(mean_proj$trigger_proj)))
+subjmeans
+
+ggplot(mean_proj, aes(x=trigger_proj, y=projective)) + 
+  geom_point() +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),width=.25) +
+  geom_point(shape=21,fill="gray60",data=subjmeans, alpha=.1, color="gray40") +
+  scale_y_continuous(limits = c(-0.05,1.05),breaks = c(0,0.2,0.4,0.6,0.8,1.0)) +
+  scale_alpha(range = c(.3,1)) +
+  theme(text = element_text(size=12), axis.text.x = element_text(size = 12, angle = 45, hjust = 1)) +
+  theme(legend.position = c(0.2, 0.8)) +
+  ylab("Mean projectivity rating") +
+  xlab("Expression") +
+  theme(axis.text.x = element_text(size = 12, angle = 45, hjust = 1))
+ggsave(f="../graphs/projection-means-with-MCs.pdf",height=3,width=6.5)
+
 
 # paper figure 2b (by-subject projectivity means)
 t.proj <- droplevels(subset(t,t$short_trigger != "MC"))
@@ -208,6 +236,55 @@ ggplot(examples, aes(x=ai,y=projective)) +
   ylim(0,1) +
   facet_wrap(~Item)
 ggsave("graphs/subject-projai-examples.pdf",width=5,height=2.5)
+
+# plot of by-content projection variability
+t.proj <- droplevels(subset(t,t$short_trigger != "MC"))
+names(t.proj)
+table(t.proj$content)
+
+mean_proj = aggregate(projective~short_trigger+content, data=t.proj, FUN="mean")
+mean_proj$YMin = mean_proj$projective - aggregate(projective~short_trigger+content, data=t.proj, FUN="ci.low")$projective
+mean_proj$YMax = mean_proj$projective + aggregate(projective~short_trigger+content, data=t.proj, FUN="ci.high")$projective
+mean_proj
+
+variances = t.proj %>%
+  group_by(short_trigger) %>%
+  summarise(ProjVariance = var(projective),ProjMean=mean(projective),Proj.ci.low=ci.low(projective),Proj.ci.high=ci.high(projective))
+variances = as.data.frame(variances)
+variances
+
+ggplot(mean_proj, aes(x=content,y=projective)) +
+  geom_point() +
+  stat_summary(fun.y=mean, geom="point",color="red",  size=2,position=position_dodge(.9)) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  facet_grid(.~short_trigger) +
+  xlab("Content") +
+  ylab("Mean projectivity rating")
+ggsave("graphs/projection-by-content-means.pdf",height=3,width=6.5)
+
+# xprag talk figure to show by-content variability for "know"
+know = mean_proj %>%
+  filter(short_trigger == "know") %>%
+  mutate(content = fct_reorder(content,projective))
+
+discover = mean_proj %>%
+  filter(short_trigger == "discover") %>%
+  mutate(content = fct_reorder(content,projective))
+
+names(t)
+
+ggplot(know, aes(x=content,y=projective)) +
+  geom_point() +
+  #stat_summary(fun.y=mean, geom="point",color="gray70",  size=2,position=position_dodge(.9)) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
+  theme(text = element_text(size=12)) +
+  scale_y_continuous(expand = c(0, 0),limits = c(0,1.05),breaks = c(0.0,0.2,0.4,0.6,0.8,1.0)) +
+  xlab("Content") +
+  ylab("Mean projectivity rating")
+ggsave("../graphs/know-projection-by-content.pdf",height=3,width=6.5)
+
 
 # paper figure 10a (mean at-issueness ratings by target expression)
 mean_nai = aggregate(ai~short_trigger, data=t, FUN="mean")

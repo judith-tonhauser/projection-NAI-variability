@@ -1,6 +1,6 @@
-# set working directory, e.g.
-# setwd('/Users/judith/projection-NAI-variability/results/exp1b/')
-setwd("")
+# set working directory to directory of script
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
 
 # load required packages
 require(tidyverse)
@@ -12,12 +12,12 @@ source('../helpers.R')
 # set black and white plot background
 theme_set(theme_bw())
 
-d = read.csv("data/data_preprocessed.csv")
+d = read.csv("../data/data_preprocessed.csv")
 
 # spread responses over separate columns for projectivity and at-issueness
 t = d %>%
   mutate(block_ai = ifelse(question_type == "ai", ifelse(block == "block1", "block1", "block2"), ifelse(block == "block1", "block2", "block1"))) %>%
-  select(workerid,content,short_trigger,question_type,response,block_ai) %>%
+  dplyr::select(workerid,content,short_trigger,question_type,response,block_ai) %>%
   spread(question_type,response)
 
 t$Trigger = factor(x=ifelse(t$short_trigger == "established","establish",ifelse(t$short_trigger == "confessed","confess",ifelse(t$short_trigger == "revealed","reveal",ifelse(t$short_trigger == "discovered","discover",ifelse(t$short_trigger == "learned","learn",ifelse(t$short_trigger == "found_out","find_out",ifelse(t$short_trigger == "saw","see",ifelse(t$short_trigger == "is_amused","amused",ifelse(t$short_trigger == "realize","realize",ifelse(t$short_trigger == "is_aware","aware",ifelse(t$short_trigger == "noticed","notice",ifelse(t$short_trigger == "is_annoyed","annoyed",ifelse(t$short_trigger == "MC","MC","NA"))))))))))))),levels=c("MC","establish","confess","reveal","discover","learn","find_out","see","amused","realize","aware","notice","annoyed"))
