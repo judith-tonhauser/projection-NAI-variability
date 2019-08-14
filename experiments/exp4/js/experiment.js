@@ -1450,7 +1450,9 @@ var mcitems = {
     //get item
     var item = items[i];
 	//get a speaker
-    var name_data = names[i];
+    // var name_data = names[i];
+    var name_data = names.pop();
+    // console.log(name_data);
     var name = name_data.name;
     var gender = name_data.gender;
     // get content
@@ -1520,7 +1522,10 @@ var mcitems = {
     //get item
     var item = mcitems[j];
   //get a speaker
-    var name_data = names[ind];
+    // var name_data = names[ind];
+    console.log("MC names");
+    var name_data = names.pop();
+    // console.log(name_data);
     var name = name_data.name;
     var gender = name_data.gender;
     // get content
@@ -1558,12 +1563,12 @@ exp.stims_block2 = [];
   	exp.stims_block1.push(jQuery.extend(true, {}, stim));	
   }
 
-console.log(exp.stims_block1);
+// console.log(exp.stims_block1);
 
 	exp.stims_block1 = _.shuffle(exp.stims_block1); 
 
 // I don't understand why here the block type and the prior type are already fixed	
-	console.log(exp.stims_block1);  
+	// console.log(exp.stims_block1);  
 	  
   for (var k=0; k<items.length/2; k++) {
 	var content = exp.stims_block1[k].content;
@@ -1583,7 +1588,7 @@ console.log(exp.stims_block1);
   }  
  
   
-  exp.stims_block2 = exp.stims_block1;
+  exp.stims_block2 = jQuery.extend(true, [], exp.stims_block1);
   
 // here things are bad already because some stim ai, some projective
 
@@ -1593,8 +1598,8 @@ console.log(exp.stims_block2);
 	exp.stims_block1 = _.shuffle(exp.stims_block1);  
 	exp.stims_block2 = _.shuffle(exp.stims_block2); 
 	
-console.log(exp.stims_block1);
-console.log(exp.stims_block2);   	
+// console.log(exp.stims_block1);
+// console.log(exp.stims_bslock2);   	
 	
 // decide which block comes first
   var block_order = _.shuffle(["ai","projective"]);
