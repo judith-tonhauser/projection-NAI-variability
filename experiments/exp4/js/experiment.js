@@ -118,8 +118,9 @@ function make_slides(f) {
         $(".err").hide();    	
 	  this.init_sliders();
       exp.sliderPost = null;	 
-      console.log(this.stim);     
-      var utterance = this.stim.name + " asks: \"<strong><i>"+this.stim.utterance+"</i></strong>\""
+      console.log(this.stim);   
+      var utterance = "<strong> Fact (which "+this.stim.name+" knows):</strong> "+this.stim.prior_fact+".<br><br>" + this.stim.name + " asks: \"<strong><i>"+this.stim.utterance+"</i></strong>\"";  
+      //var utterance = this.stim.name + " asks: \"<strong><i>"+this.stim.utterance+"</i></strong>\""
 	  $(".sentence").html(utterance);
 	  var question = "";
 	  console.log(this.stim.block);
@@ -154,6 +155,8 @@ function make_slides(f) {
    	  "trigger": this.stim.trigger,
    	  "content": this.stim.content,
    	  "trigger_class": this.stim.trigger_class,
+   	  "prior" : this.stim.prior,
+	  "prior_fact" : this.stim.prior_fact,
       "response" : exp.sliderPost,
       "rt" : Date.now() - this.stim.trial_start
       });
@@ -192,6 +195,7 @@ function make_slides(f) {
       exp.sliderPost = null;	      
       var utterance = this.stim.name + " asks: \"<strong><i>"+this.stim.utterance+"</i></strong>\""
 	  $(".sentence").html(utterance);
+	  $(".prior_fact").html(this.stim.prior_fact);
 	  var question = "";
 	  console.log(this.stim.block);	  
 	  if (this.stim.block == "ai") {
@@ -272,46 +276,46 @@ function make_slides(f) {
 function init() {
 
   var names = _.shuffle([
-    {
-      "name":"James",
-      "gender":"M"
-    },
+//     {
+//       "name":"James",
+//       "gender":"M"
+//     },
 //    {
 //      "name":"John",
 //      "gender":"M"
 //    },
-    {
-      "name":"Robert",
-      "gender":"M"
-    },
+//     {
+//       "name":"Robert",
+//       "gender":"M"
+//     },
 //     {
 //       "name":"Michael",
 //       "gender":"M"
 //     },
-    {
-      "name":"William",
-      "gender":"M"
-    },
-    {
-      "name":"David",
-      "gender":"M"
-    },
+//     {
+//       "name":"William",
+//       "gender":"M"
+//     },
+//     {
+//       "name":"David",
+//       "gender":"M"
+//     },
 //    {
 //      "name":"Richard",
 //      "gender":"M"
 //    },
-    {
-      "name":"Joseph",
-      "gender":"M"
-    },
-    {
-      "name":"Charles",
-      "gender":"M"
-    },
-    {
-      "name":"Thomas",
-      "gender":"M"
-    },
+//     {
+//       "name":"Joseph",
+//       "gender":"M"
+//     },
+//     {
+//       "name":"Charles",
+//       "gender":"M"
+//     },
+//     {
+//       "name":"Thomas",
+//       "gender":"M"
+//     },
     {
       "name":"Christopher",
       "gender":"M"
@@ -324,14 +328,14 @@ function init() {
       "name":"Matthew",
       "gender":"M"
     },
-//    {
-//      "name":"Donald",
-//      "gender":"M"
-//    },
-    {
-      "name":"Anthony",
-      "gender":"M"
-    },
+   {
+     "name":"Donald",
+     "gender":"M"
+   },
+//     {
+//       "name":"Anthony",
+//       "gender":"M"
+//     },
     {
       "name":"Paul",
       "gender":"M"
@@ -480,30 +484,30 @@ function init() {
       "name":"Jennifer",
       "gender":"F"
     },
-    {
-      "name":"Elizabeth",
-      "gender":"F"
-    },
-    {
-      "name":"Linda",
-      "gender":"F"
-    },
-    {
-      "name":"Emily",
-      "gender":"F"
-    },
+//     {
+//       "name":"Elizabeth",
+//       "gender":"F"
+//     },
+//     {
+//       "name":"Linda",
+//       "gender":"F"
+//     },
+//     {
+//       "name":"Emily",
+//       "gender":"F"
+//     },
 //    {
 //      "name":"Susan",
 //      "gender":"F"
 //    },
-    {
-      "name":"Margaret",
-      "gender":"F"
-    },
-    {
-      "name":"Jessica",
-      "gender":"F"
-    },
+//     {
+//       "name":"Margaret",
+//       "gender":"F"
+//     },
+//     {
+//       "name":"Jessica",
+//       "gender":"F"
+//     },
     {
       "name":"Dorothy",
       "gender":"F"
@@ -520,10 +524,10 @@ function init() {
       "name":"Nancy",
       "gender":"F"
     },
-//     {
-//       "name":"Betty",
-//       "gender":"F"
-//     },
+    {
+      "name":"Betty",
+      "gender":"F"
+    },
     {
       "name":"Lisa",
       "gender":"F"
@@ -560,10 +564,10 @@ function init() {
       "name":"Emily",
       "gender":"F"
     },
-//     {
-//       "name":"Amanda",
-//       "gender":"F"
-//     },
+    {
+      "name":"Amanda",
+      "gender":"F"
+    },
     {
       "name":"Melissa",
       "gender":"F"
@@ -660,10 +664,10 @@ function init() {
       "name":"Diane",
       "gender":"F"
     },
-//     {
-//       "name":"Joyce",
-//       "gender":"F"
-//     },
+    {
+      "name":"Joyce",
+      "gender":"F"
+    },
     {
       "name":"Julie",
       "gender":"F"
@@ -812,7 +816,9 @@ var items = _.shuffle([
      "establish":"Did Mandy establish that Mary is pregnant?",
      "hear":"Did Mandy hear that Mary is pregnant?",
      "inform":"Did Mandy inform Sam that Mary is pregnant?",
-     "prove":"Did Mandy prove that Mary is pregnant?"
+     "prove":"Did Mandy prove that Mary is pregnant?",
+     "low_prior": "Mary is a middle school student",
+     "high_prior": "Mary is taking a prenatal yoga class"
    },
    "josie": {
      "question":"Josie went on vacation to France",
@@ -836,7 +842,9 @@ var items = _.shuffle([
      "establish":"Did Sarah establish that Josie went on vacation to France?",
      "hear":"Did Sarah hear that Josie went on vacation to France?",
      "inform":"Did Sarah inform Sam that Josie went on vacation to France?",
-     "prove":"Did Sarah prove that Josie went on vacation to France?"
+     "prove":"Did Sarah prove that Josie went on vacation to France?",
+     "low_prior": "Josie doesn't have a passport",
+     "high_prior": "Josie loves France"
    },
    "emma": {
      "question":"Emma studied on Saturday morning",
@@ -860,7 +868,9 @@ var items = _.shuffle([
      "establish":"Did Kim establish that Emma studied on Saturday morning?",
      "hear":"Did Kim hear that Emma studied on Saturday morning?",
      "inform":"Did Kim inform Sam that Emma studied on Saturday morning?",
-     "prove":"Did Kim prove that Emma studied on Saturday morning?"
+     "prove":"Did Kim prove that Emma studied on Saturday morning?",
+     "low_prior": "Emma is in first grade",
+     "high_prior": "Emma is in law school"
    },
    "olivia": {
      "question":"Olivia sleeps until noon",
@@ -884,7 +894,9 @@ var items = _.shuffle([
      "establish":"Did Jane establish that Olivia sleeps until noon?",
      "hear":"Did Jane hear that Olivia sleeps until noon?",
      "inform":"Did Jane inform Sam that Olivia sleeps until noon?",
-     "prove":"Did Jane prove that Olivia sleeps until noon?"
+     "prove":"Did Jane prove that Olivia sleeps until noon?",
+     "low_prior": "Olivia has two small children",
+     "high_prior": "Olivia works the third shift"
    },
    "sophia": {
      "question":"Sophia got a tattoo",
@@ -908,7 +920,9 @@ var items = _.shuffle([
      "establish":"Did Claudia establish that Sophia got a tattoo?",
      "hear":"Did Claudia hear that Sophia got a tattoo?",
      "inform":"Did Claudia inform Sam that Sophia got a tattoo?",
-     "prove":"Did Claudia prove that Sophia got a tattoo?"
+     "prove":"Did Claudia prove that Sophia got a tattoo?",
+     "low_prior": "Sophia is a high end fashion model",
+     "high_prior": "Sophia is a hipster"
    },
    "mia": {
      "question":"Mia drank 2 cocktails last night",
@@ -932,7 +946,9 @@ var items = _.shuffle([
      "establish":"Did Frank establish that Mia drank 2 cocktails last night?",
      "hear":"Did Frank hear that Mia drank 2 cocktails last night?",
      "inform":"Did Frank inform Sam that Mia drank 2 cocktails last night?",
-     "prove":"Did Frank prove that Mia drank 2 cocktails last night?"
+     "prove":"Did Frank prove that Mia drank 2 cocktails last night?",
+     "low_prior": "Mia is a nun",
+     "high_prior": "Mia is a college student"
    },
    "isabella": {
      "question":"Isabella ate a steak on Sunday",
@@ -956,7 +972,9 @@ var items = _.shuffle([
      "establish":"Did Andrea establish that Isabella ate a steak on Sunday?",
      "hear":"Did Andrea hear that Isabella ate a steak on Sunday?",
      "inform":"Did Andrea inform Sam that Isabella ate a steak on Sunday?",
-     "prove":"Did Andrea prove that Isabella ate a steak on Sunday?"
+     "prove":"Did Andrea prove that Isabella ate a steak on Sunday?",
+     "low_prior": "Isabella is a vegetarian",
+     "high_prior": "Isabella is from Argentina"
    },
    "emily": {
      "question":"Emily bought a car yesterday",
@@ -980,7 +998,9 @@ var items = _.shuffle([
      "establish":"Did Chloe establish that Emily bought a car yesterday?",
      "hear":"Did Chloe hear that Emily bought a car yesterday?",
      "inform":"Did Chloe inform Sam that Emily bought a car yesterday?",
-     "prove":"Did Chloe prove that Emily bought a car yesterday?"
+     "prove":"Did Chloe prove that Emily bought a car yesterday?",
+     "low_prior": "Emily never has any money",
+     "high_prior": "Emily has been saving for a year"
    },
    "grace": {
      "question":"Grace visited her sister",
@@ -1004,7 +1024,9 @@ var items = _.shuffle([
      "establish":"Did Andrew establish that Grace visited her sister?",
      "hear":"Did Andrew hear that Grace visited her sister?",
      "inform":"Did Andrew inform Sam that Grace visited her sister?",
-     "prove":"Did Andrew prove that Grace visited her sister?"
+     "prove":"Did Andrew prove that Grace visited her sister?",
+     "low_prior": "Grace hates her sister",
+     "high_prior": "Grace loves her sister"
    },
    "zoe": {
      "question":"Zoe calculated the tip",
@@ -1028,7 +1050,9 @@ var items = _.shuffle([
      "establish":"Did Mark establish that Zoe calculated the tip?",
      "hear":"Did Mark hear that Zoe calculated the tip?",
      "inform":"Did Mark inform Sam that Zoe calculated the tip?",
-     "prove":"Did Mark prove that Zoe calculated the tip?"
+     "prove":"Did Mark prove that Zoe calculated the tip?",
+     "low_prior": "Zoe is 5 years old",
+     "high_prior": "Zoe is a math major"
    },
    "danny": {
      "question":"Danny ate the last cupcake",
@@ -1052,7 +1076,9 @@ var items = _.shuffle([
      "establish":"Did Kathryn establish that Danny ate the last cupcake?",
      "hear":"Did Kathryn hear that Danny ate the last cupcake?",
      "inform":"Did Kathryn inform Sam that Danny ate the last cupcake?",
-     "prove":"Did Kathryn prove that Danny ate the last cupcake?"
+     "prove":"Did Kathryn prove that Danny ate the last cupcake?",
+     "low_prior": "Danny is a diabetic",
+     "high_prior": "Danny loves cake"
    },
    "frank": {
      "question":"Frank got a cat",
@@ -1076,7 +1102,9 @@ var items = _.shuffle([
      "establish":"Did Walt establish that Frank got a cat?",
      "hear":"Did Walt hear that Frank got a cat?",
      "inform":"Did Walt inform Sam that Frank got a cat?",
-     "prove":"Did Walt prove that Frank got a cat?"
+     "prove":"Did Walt prove that Frank got a cat?",
+     "low_prior": "Frank is allergic to cats",
+     "high_prior": "Frank has always wanted a pet"
    },
    "jackson": {
      "question":"Jackson ran 10 miles",
@@ -1100,7 +1128,9 @@ var items = _.shuffle([
      "establish":"Did Randy establish that Jackson ran 10 miles?",
      "hear":"Did Randy hear that Jackson ran 10 miles?",
      "inform":"Did Randy inform Sam that Jackson ran 10 miles?",
-     "prove":"Did Randy prove that Jackson ran 10 miles?"
+     "prove":"Did Randy prove that Jackson ran 10 miles?",
+     "low_prior": "Jackson is obese",
+     "high_prior": "Jackson is training for a marathon"
    },
    "jayden": {
      "question":"Jayden rented a car",
@@ -1124,7 +1154,9 @@ var items = _.shuffle([
      "establish":"Did Herbert establish that Jayden rented a car?",
      "hear":"Did Herbert hear that Jayden rented a car?",
      "inform":"Did Herbert inform Sam that Jayden rented a car?",
-     "prove":"Did Herbert prove that Jayden rented a car?"
+     "prove":"Did Herbert prove that Jayden rented a car?",
+     "low_prior": "Jayden doesn't have a driver's license",
+     "high_prior": "Jayden's car is in the shop"
    },
    "tony": {
      "question":"Tony had a drink last night",
@@ -1148,7 +1180,9 @@ var items = _.shuffle([
      "establish":"Did Helen establish that Tony had a drink last night?",
      "hear":"Did Helen hear that Tony had a drink last night?",
      "inform":"Did Helen inform Sam that Tony had a drink last night?",
-     "prove":"Did Helen prove that Tony had a drink last night?"
+     "prove":"Did Helen prove that Tony had a drink last night?",
+     "low_prior": "Tony has been sober for 20 years",
+     "high_prior": "Tony really likes to party with his friends"
    },
    "josh": {
      "question":"Josh learned to ride a bike yesterday",
@@ -1172,7 +1206,9 @@ var items = _.shuffle([
      "establish":"Did Brad establish that Josh learned to ride a bike yesterday?",
      "hear":"Did Brad hear that Josh learned to ride a bike yesterday?",
      "inform":"Did Brad inform Sam that Josh learned to ride a bike yesterday?",
-     "prove":"Did Brad prove that Josh learned to ride a bike yesterday?"
+     "prove":"Did Brad prove that Josh learned to ride a bike yesterday?",
+     "low_prior": "Josh is a 75-year old man",
+     "high_prior": "Josh is a 5-year old boy"
    },
    "owen": {
      "question":"Owen shoveled snow last winter",
@@ -1196,7 +1232,9 @@ var items = _.shuffle([
      "establish":"Did Jordan establish that Owen shoveled snow last winter?",
      "hear":"Did Jordan hear that Owen shoveled snow last winter?",
      "inform":"Did Jordan inform Sam that Owen shoveled snow last winter?",
-     "prove":"Did Jordan prove that Owen shoveled snow last winter?"
+     "prove":"Did Jordan prove that Owen shoveled snow last winter?",
+     "low_prior": "Owen lives in New Orleans",
+     "high_prior": "Owen lives in Chicago"
    },
    "julian": {
      "question":"Julian dances salsa",
@@ -1220,7 +1258,9 @@ var items = _.shuffle([
      "establish":"Did Cole establish that Julian dances salsa?",
      "hear":"Did Cole hear that Julian dances salsa?",
      "inform":"Did Cole inform Sam that Julian dances salsa?",
-     "prove":"Did Cole prove that Julian dances salsa?"
+     "prove":"Did Cole prove that Julian dances salsa?",
+     "low_prior": "Julian is German",
+     "high_prior": "Julian is Cuban"
    },
    "jon": {
      "question":"Jon walks to work",
@@ -1244,7 +1284,9 @@ var items = _.shuffle([
      "establish":"Did Dexter establish that Jon walks to work?",
      "hear":"Did Dexter hear that Jon walks to work?",
      "inform":"Did Dexter inform Sam that Jon walks to work?",
-     "prove":"Did Dexter prove that Jon walks to work?"
+     "prove":"Did Dexter prove that Jon walks to work?",
+     "low_prior": "Jon lives 10 miles away from work",
+     "high_prior": "Jon lives 2 blocks away from work"
    },
    "charley": {
      "question":"Charley speaks Spanish",
@@ -1268,7 +1310,9 @@ var items = _.shuffle([
      "establish":"Did Anton establish that Charley speaks Spanish?",
      "hear":"Did Anton hear that Charley speaks Spanish?",
      "inform":"Did Anton inform Sam that Charley speaks Spanish?",
-     "prove":"Did Anton prove that Charley speaks Spanish?"
+     "prove":"Did Anton prove that Charley speaks Spanish?",
+     "low_prior": "Charley lives in Korea",
+     "high_prior": "Charley lives in Mexico"
    }
  };
   
@@ -1302,27 +1346,33 @@ var mcitems = {
   "muffins": {
     "question":"these muffins have blueberries in them",
     "MCq":"Do these muffins have blueberries in them?",
-    "MCa":"These muffins have blueberries in them."},
+    "MCa":"These muffins have blueberries in them.",
+    "prior_fact": "Muffins are sold at the bakery"},
   "pizza": {
     "question":"this pizza has mushrooms on it",
     "MCq":"Does this pizza have mushrooms on it?",
-    "MCa":"This pizza has mushrooms on it."},
+    "MCa":"This pizza has mushrooms on it.",
+    "prior_fact": "Pizza is sold at the pizzeria"},
   "kids": {
     "question":"Jack was playing outside with the kids",
     "MCq":"Was Jack playing outside with the kids?",
-    "MCa":"Jack was playing outside with the kids."},
+    "MCa":"Jack was playing outside with the kids.",
+    "prior_fact": "Many children like ice cream"},
 "ballet": {
     "question":"Ann dances ballet",
     "MCq":"Does Ann dance ballet?",
-    "MCa":"Ann dances ballet."},
+    "MCa":"Ann dances ballet.",
+    "prior_fact": "Ballet is a type of dance"},
 "garage": {
-    "question":"John's kids were in the garage",
-    "MCq":"Were John's kids in the garage?",
-    "MCa":"John's kids were in the garage."},
+    "question":"Carl's kids were in the garage",
+    "MCq":"Were Carl's kids in the garage?",
+    "MCa":"Carl's kids were in the garage.",
+    "prior_fact": "Garages are used to store cars and other things"},
 "hat": {
     "question":"Samantha has a new hat",
     "MCq":"Does Samantha have a new hat?",
-    "MCa":"Samantha has a new hat."}
+    "MCa":"Samantha has a new hat.",
+    "prior_fact": "Hats are worn on the head"}
 };
 
 // get trigger contents
@@ -1396,7 +1446,7 @@ var mcitems = {
 //   	"MC5": getContent("MC")
   	};
        
-  function makeStim(i,prior) {
+  function makeStim(i) {
     //get item
     var item = items[i];
 	//get a speaker
@@ -1412,16 +1462,15 @@ var mcitems = {
     	}
 //  console.log("short_trigger: "+short_trigger);
 //	console.log("trigger: "+trigger);
-    console.log("trigger_cont: "+trigger_cont);
+//    console.log("trigger_cont: "+trigger_cont);
 //    console.log("utterance: "+contents[trigger_cont][short_trigger]);    
 //    console.log(contents[trigger_cont]);    
     var utterance = contents[trigger_cont][short_trigger];
-    var question = contents[trigger_cont].question; 
-    var prior  
+    var question = contents[trigger_cont].question;
 //    console.log(contents[trigger_cont]); 
     return {
 	  "name": name,
-	  "gender": gender,	  
+	  //"gender": gender,	  
 	  "trigger": item.trigger,
 	  "short_trigger": short_trigger,	  
 	  "trigger_class": item.trigger_class,
@@ -1481,11 +1530,12 @@ var mcitems = {
 
 //  console.log("short_trigger: "+short_trigger);
 //  console.log("trigger: "+trigger);
-    console.log("trigger_cont: "+trigger_cont);
+//    console.log("trigger_cont: "+trigger_cont);
 //    console.log("utterance: "+contents[trigger_cont][short_trigger]);    
 //    console.log(contents[trigger_cont]);    
     var utterance = mcitems[j].MCq;
-    var question = mcitems[j].question;   
+    var question = mcitems[j].question;  
+    var prior_fact = mcitems[j].prior_fact; 
 //    console.log(contents[trigger_cont]); 
     return {
     "name": name,
@@ -1495,36 +1545,56 @@ var mcitems = {
     "trigger_class": "MC",
       "content": trigger_cont,
       "utterance": utterance,
-      "question": question
+      "question": question,
+      "prior_fact": prior_fact 
     }
   }  
 
 exp.stims_block1 = [];
 exp.stims_block2 = [];
 
-  for (var i=0; i<items.length/2; i++) {
-  	var stim = makeStim(i,"low_prior");
-  	exp.stims_block1.push(jQuery.extend(true, {}, stim));
-	  exp.stims_block2.push(jQuery.extend(true, {}, stim));	
+  for (var i=0; i<items.length; i++) {
+  	var stim = makeStim(i);
+  	exp.stims_block1.push(jQuery.extend(true, {}, stim));	
   }
-  
-  for (var i=items.length/2; i<items.length; i++) {
-  	var stim = makeStim(i,"high_prior");
-  	exp.stims_block1.push(jQuery.extend(true, {}, stim));
-	  exp.stims_block2.push(jQuery.extend(true, {}, stim));	
-  }    
 
-  for (var j=0; j<mcitemnames.length; j++) {
-    var stim = makeMCStim(j,mcitemnames[j]);
-    exp.stims_block1.push(jQuery.extend(true, {}, stim));
-    exp.stims_block2.push(jQuery.extend(true, {}, stim)); 
+console.log(exp.stims_block1);
+
+	exp.stims_block1 = _.shuffle(exp.stims_block1); 
+
+// I don't understand why here the block type and the prior type are already fixed	
+	console.log(exp.stims_block1);  
+	  
+  for (var k=0; k<items.length/2; k++) {
+	var content = exp.stims_block1[k].content;
+	exp.stims_block1[k].prior = "low_prior";
+	exp.stims_block1[k].prior_fact = contents[content]["low_prior"]	
   }  
   
+  for (var j=(items.length/2); j<items.length; j++) {
+	var content = exp.stims_block1[j].content;
+	exp.stims_block1[j].prior = "high_prior";
+	exp.stims_block1[j].prior_fact = contents[content]["high_prior"]		
+  }    
+
+  for (var l=0; l<mcitemnames.length; l++) {
+    var stim = makeMCStim(l,mcitemnames[l]);
+    exp.stims_block1.push(jQuery.extend(true, {}, stim));
+  }  
+ 
+  
+  exp.stims_block2 = exp.stims_block1;
+  
+// here things are bad already because some stim ai, some projective
+
 console.log(exp.stims_block1);
 console.log(exp.stims_block2);   
 
 	exp.stims_block1 = _.shuffle(exp.stims_block1);  
 	exp.stims_block2 = _.shuffle(exp.stims_block2); 
+	
+console.log(exp.stims_block1);
+console.log(exp.stims_block2);   	
 	
 // decide which block comes first
   var block_order = _.shuffle(["ai","projective"]);
